@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    package="com.menar.milkdoser">
+
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+    <uses-permission android:name="android.permission.READ_PHONE_STATE" />
+    <uses-permission android:name="com.google.android.things.permission.USE_PERIPHERAL_IO" />
+    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
+    <uses-permission android:name="android.permission.CHANGE_WIFI_STATE" />
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.CHANGE_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.READ_PHONE_STATE" />
+    <uses-permission android:name="android.permission.GET_TASKS" />
+    <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission
+        android:name="android.permission.WRITE_SETTINGS"
+        tools:ignore="ProtectedPermissions" />
+
+
+    <application
+        android:allowBackup="true"
+        android:icon="@mipmap/ic_launcher"
+        android:label="@string/app_name"
+        android:roundIcon="@mipmap/ic_launcher_round"
+        android:supportsRtl="true"
+        android:theme="@style/Theme.AppCompat.NoActionBar">
+        <activity android:name=".manufa"
+            android:screenOrientation="landscape"/>
+        <activity android:name=".motor_efficiency"
+            android:screenOrientation="landscape"/>
+        <activity android:name=".time_menu"
+            android:screenOrientation="landscape"/>
+        <activity android:name=".using_info"
+            android:screenOrientation="landscape"/>
+        <activity android:name=".errors"
+            android:screenOrientation="landscape"/>
+        <activity android:name=".operator_menu"
+            android:screenOrientation="landscape"/>
+        <activity android:name=".cleaning_journal"
+            android:screenOrientation="landscape"/>
+        <activity android:name=".conctact_viewer"
+            android:screenOrientation="landscape"/>
+        <activity android:name=".machine_info"
+            android:screenOrientation="landscape"/>
+        <activity android:name=".brightness_screen"
+            android:screenOrientation="landscape"/>
+        <activity android:name=".lang_screen"
+            android:screenOrientation="landscape"/>
+        <activity android:name=".poweron_screen"
+            android:screenOrientation="landscape"/>
+        <activity android:name=".power_menu"
+            android:screenOrientation="landscape"/>
+        <activity android:name=".info"
+            android:screenOrientation="landscape"/>
+        <activity android:name=".ota_screen"
+            android:screenOrientation="landscape"/>
+        <activity android:name=".counters"
+            android:screenOrientation="landscape"/>
+        <activity android:name=".wash"
+            android:screenOrientation="landscape"/>
+        <activity android:name=".rinse"
+            android:screenOrientation="landscape"/>
+        <activity android:name=".backdraft"
+            android:screenOrientation="landscape"/>
+        <activity android:name=".parameters1"
+            android:screenOrientation="landscape"/>
+        <activity android:name=".settings"
+            android:screenOrientation="landscape"/>
+        <activity
+            android:name=".pincode"
+            android:screenOrientation="landscape"/>
+        <activity
+            android:name=".dosing"
+            android:label="Milk Doser"
+            android:screenOrientation="landscape">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.HOME" />
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+        </activity>
+        <receiver
+            android:name="com.menar.milkdoser.AdminReceiver"
+            android:label="@string/app_name"
+            android:permission="android.permission.BIND_DEVICE_ADMIN" >
+            <meta-data
+                android:name="android.app.device_admin"
+                android:resource="@xml/device_admin" />
+            <intent-filter>
+                <action android:name="android.app.action.DEVICE_ADMIN_ENABLED" />
+            </intent-filter>
+        </receiver>
+        <service
+            android:name=".KioskService"
+            android:exported="false" />
+    </application>
+
+</manifest>
