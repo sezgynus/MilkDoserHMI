@@ -61,7 +61,7 @@ import java.util.Locale;
 import java.util.Timer;
 import java.util.TimerTask;
 import java.util.function.ToDoubleBiFunction;
-//test
+
 public class dosing extends AppCompatActivity {
     ImageView cb1, cb2, connection, l_rinse, r_rinse, logo_view,waring_view;
     ImageButton manual_l, manual_r, x1l_button, x2l_button, x3l_button, x4l_button, x1r_button, x2r_button, x3r_button, x4r_button, x1l_cncl, x2l_cncl, x3l_cncl, x4l_cncl, x1r_cncl, x2r_cncl, x3r_cncl, x4r_cncl, settings_button, l_hot, l_ice, l_cold, r_hot, r_ice, r_cold, respite_l, start_l, start_l_w,respite_r, start_r, start_r_w, power, info;
