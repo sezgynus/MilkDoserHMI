@@ -2001,7 +2001,7 @@ public class dosing extends AppCompatActivity {
     }
 
     public void reset_wifi()
-    {/*
+    {
         try {
             Runtime.getRuntime().exec(new String[]{ "su", "-c", "svc wifi disable"});
         } catch (IOException e) {
@@ -2011,7 +2011,7 @@ public class dosing extends AppCompatActivity {
             Runtime.getRuntime().exec(new String[]{ "su", "-c", "svc wifi enable"});
         } catch (IOException e) {
             e.printStackTrace();
-        }*/
+        }
     }
     private BroadcastReceiver broadcastReceiver = new BroadcastReceiver() {
         @Override
@@ -2022,7 +2022,7 @@ public class dosing extends AppCompatActivity {
             if (isCharging) {
                 //Toast.makeText(getApplicationContext(), "Charger connected, Battery Charging..", Toast.LENGTH_SHORT).show();
             }
-            else  {/*
+            else  {
                 Process proc = null;
                 try {
                     Runtime.getRuntime().exec(new String[]{ "su", "-c", "reboot -p"});
@@ -2035,7 +2035,7 @@ public class dosing extends AppCompatActivity {
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
-                //Toast.makeText(getApplicationContext(), "Charger disconnected", Toast.LENGTH_SHORT).show();*/
+                //Toast.makeText(getApplicationContext(), "Charger disconnected", Toast.LENGTH_SHORT).show();
             }
         }
     };
