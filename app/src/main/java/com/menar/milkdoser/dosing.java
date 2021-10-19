@@ -2001,12 +2001,12 @@ public class dosing extends AppCompatActivity {
     }
 
     public void reset_wifi()
-    {
+    {/*
         try {
             Runtime.getRuntime().exec(new String[]{ "su", "-c", "svc wifi disable"});
         } catch (IOException e) {
             e.printStackTrace();
-        }
+        }*/
         try {
             Runtime.getRuntime().exec(new String[]{ "su", "-c", "svc wifi enable"});
         } catch (IOException e) {
@@ -2060,6 +2060,8 @@ public class dosing extends AppCompatActivity {
                 wifi_connected=true;
             } catch (IOException e) {
                 wifi_connected=false;
+                //reset_wifi();
+                //connect_wifi();
                 //Log.d("test","error");
                 runOnUiThread(new Runnable() {
                     @Override
