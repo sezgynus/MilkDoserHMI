@@ -1,8 +1,6 @@
 package com.menar.milkdoser;
 
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.constraintlayout.widget.ConstraintLayout;
-
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.PixelFormat;
@@ -17,7 +15,8 @@ import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.Toast;
 
-import java.util.Arrays;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.constraintlayout.widget.ConstraintLayout;
 
 public class pincode extends AppCompatActivity {
 
@@ -28,264 +27,234 @@ public class pincode extends AppCompatActivity {
     int[] om_password={2,4,5,3};
     int[] sm_password={2,6,1,2};
     int[] master_password={5,9,9,7};
-    private Context ctx=null;
 
     ConstraintLayout.LayoutParams params = new ConstraintLayout.LayoutParams(
             ConstraintLayout.LayoutParams.MATCH_PARENT,
             ConstraintLayout.LayoutParams.MATCH_PARENT
     );
 
-    private int currentApiVersion;
-
+    @SuppressLint("ClickableViewAccessibility")
     public void initviews(){
-        d1 = (ImageView) findViewById(R.id.dot1);
-        d2 = (ImageView) findViewById(R.id.dot2);
-        d3 = (ImageView) findViewById(R.id.dot3);
-        d4 = (ImageView) findViewById(R.id.dot4);
-        key0_btn=(ImageButton)findViewById(R.id.key0);
-        key1_btn=(ImageButton)findViewById(R.id.key1);
-        key2_btn=(ImageButton)findViewById(R.id.key2);
-        key3_btn=(ImageButton)findViewById(R.id.key3);
-        key4_btn=(ImageButton)findViewById(R.id.key4);
-        key5_btn=(ImageButton)findViewById(R.id.key5);
-        key6_btn=(ImageButton)findViewById(R.id.key6);
-        key7_btn=(ImageButton)findViewById(R.id.key7);
-        key8_btn=(ImageButton)findViewById(R.id.key8);
-        key9_btn=(ImageButton)findViewById(R.id.key9);
-        del_btn=(ImageButton)findViewById(R.id.del);
-        ok_btn=(ImageButton)findViewById(R.id.ok);
-        home_btn=(ImageButton)findViewById(R.id.home);
-        back_btn=(ImageButton)findViewById(R.id.back);
-        key0_btn.setOnTouchListener(new View.OnTouchListener() {
-            public boolean onTouch(View view, MotionEvent event) {
-                if (event.getAction() == android.view.MotionEvent.ACTION_DOWN) {
-                    params=(ConstraintLayout.LayoutParams)view.getLayoutParams();
-                    params.setMargins(8,0,8,0);
-                    view.setLayoutParams(params);
-                }
-                else if (event.getAction() == android.view.MotionEvent.ACTION_UP) {
-                    params=(ConstraintLayout.LayoutParams)view.getLayoutParams();
-                    params.setMargins(0,0,0,0);
-                    view.setLayoutParams(params);
-                    key0_click();
-                }
-                return true;
+        d1 = findViewById(R.id.dot1);
+        d2 = findViewById(R.id.dot2);
+        d3 = findViewById(R.id.dot3);
+        d4 = findViewById(R.id.dot4);
+        key0_btn= findViewById(R.id.key0);
+        key1_btn= findViewById(R.id.key1);
+        key2_btn= findViewById(R.id.key2);
+        key3_btn= findViewById(R.id.key3);
+        key4_btn= findViewById(R.id.key4);
+        key5_btn= findViewById(R.id.key5);
+        key6_btn= findViewById(R.id.key6);
+        key7_btn= findViewById(R.id.key7);
+        key8_btn= findViewById(R.id.key8);
+        key9_btn= findViewById(R.id.key9);
+        del_btn= findViewById(R.id.del);
+        ok_btn= findViewById(R.id.ok);
+        home_btn= findViewById(R.id.home);
+        back_btn= findViewById(R.id.back);
+        key0_btn.setOnTouchListener((view, event) -> {
+            if (event.getAction() == MotionEvent.ACTION_DOWN) {
+                params=(ConstraintLayout.LayoutParams)view.getLayoutParams();
+                params.setMargins(8,0,8,0);
+                view.setLayoutParams(params);
             }
+            else if (event.getAction() == MotionEvent.ACTION_UP) {
+                params=(ConstraintLayout.LayoutParams)view.getLayoutParams();
+                params.setMargins(0,0,0,0);
+                view.setLayoutParams(params);
+                key0_click();
+            }
+            return true;
         });
-        key1_btn.setOnTouchListener(new View.OnTouchListener() {
-            public boolean onTouch(View view, MotionEvent event) {
-                if (event.getAction() == android.view.MotionEvent.ACTION_DOWN) {
-                    params=(ConstraintLayout.LayoutParams)view.getLayoutParams();
-                    params.setMargins(8,0,8,0);
-                    view.setLayoutParams(params);
-                }
-                else if (event.getAction() == android.view.MotionEvent.ACTION_UP) {
-                    params=(ConstraintLayout.LayoutParams)view.getLayoutParams();
-                    params.setMargins(0,0,0,0);
-                    view.setLayoutParams(params);
-                    key1_click();
-                }
-                return true;
+        key1_btn.setOnTouchListener((view, event) -> {
+            if (event.getAction() == MotionEvent.ACTION_DOWN) {
+                params=(ConstraintLayout.LayoutParams)view.getLayoutParams();
+                params.setMargins(8,0,8,0);
+                view.setLayoutParams(params);
             }
+            else if (event.getAction() == MotionEvent.ACTION_UP) {
+                params=(ConstraintLayout.LayoutParams)view.getLayoutParams();
+                params.setMargins(0,0,0,0);
+                view.setLayoutParams(params);
+                key1_click();
+            }
+            return true;
         });
-        key2_btn.setOnTouchListener(new View.OnTouchListener() {
-            public boolean onTouch(View view, MotionEvent event) {
-                if (event.getAction() == android.view.MotionEvent.ACTION_DOWN) {
-                    params=(ConstraintLayout.LayoutParams)view.getLayoutParams();
-                    params.setMargins(8,0,8,0);
-                    view.setLayoutParams(params);
-                }
-                else if (event.getAction() == android.view.MotionEvent.ACTION_UP) {
-                    params=(ConstraintLayout.LayoutParams)view.getLayoutParams();
-                    params.setMargins(0,0,0,0);
-                    view.setLayoutParams(params);
-                    key2_click();
-                }
-                return true;
+        key2_btn.setOnTouchListener((view, event) -> {
+            if (event.getAction() == MotionEvent.ACTION_DOWN) {
+                params=(ConstraintLayout.LayoutParams)view.getLayoutParams();
+                params.setMargins(8,0,8,0);
+                view.setLayoutParams(params);
             }
+            else if (event.getAction() == MotionEvent.ACTION_UP) {
+                params=(ConstraintLayout.LayoutParams)view.getLayoutParams();
+                params.setMargins(0,0,0,0);
+                view.setLayoutParams(params);
+                key2_click();
+            }
+            return true;
         });
-        key3_btn.setOnTouchListener(new View.OnTouchListener() {
-            public boolean onTouch(View view, MotionEvent event) {
-                if (event.getAction() == android.view.MotionEvent.ACTION_DOWN) {
-                    params=(ConstraintLayout.LayoutParams)view.getLayoutParams();
-                    params.setMargins(8,0,8,0);
-                    view.setLayoutParams(params);
-                }
-                else if (event.getAction() == android.view.MotionEvent.ACTION_UP) {
-                    params=(ConstraintLayout.LayoutParams)view.getLayoutParams();
-                    params.setMargins(0,0,0,0);
-                    view.setLayoutParams(params);
-                    key3_click();
-                }
-                return true;
+        key3_btn.setOnTouchListener((view, event) -> {
+            if (event.getAction() == MotionEvent.ACTION_DOWN) {
+                params=(ConstraintLayout.LayoutParams)view.getLayoutParams();
+                params.setMargins(8,0,8,0);
+                view.setLayoutParams(params);
             }
+            else if (event.getAction() == MotionEvent.ACTION_UP) {
+                params=(ConstraintLayout.LayoutParams)view.getLayoutParams();
+                params.setMargins(0,0,0,0);
+                view.setLayoutParams(params);
+                key3_click();
+            }
+            return true;
         });
-        key4_btn.setOnTouchListener(new View.OnTouchListener() {
-            public boolean onTouch(View view, MotionEvent event) {
-                if (event.getAction() == android.view.MotionEvent.ACTION_DOWN) {
-                    params=(ConstraintLayout.LayoutParams)view.getLayoutParams();
-                    params.setMargins(8,0,8,0);
-                    view.setLayoutParams(params);
-                }
-                else if (event.getAction() == android.view.MotionEvent.ACTION_UP) {
-                    params=(ConstraintLayout.LayoutParams)view.getLayoutParams();
-                    params.setMargins(0,0,0,0);
-                    view.setLayoutParams(params);
-                    key4_click();
-                }
-                return true;
+        key4_btn.setOnTouchListener((view, event) -> {
+            if (event.getAction() == MotionEvent.ACTION_DOWN) {
+                params=(ConstraintLayout.LayoutParams)view.getLayoutParams();
+                params.setMargins(8,0,8,0);
+                view.setLayoutParams(params);
             }
+            else if (event.getAction() == MotionEvent.ACTION_UP) {
+                params=(ConstraintLayout.LayoutParams)view.getLayoutParams();
+                params.setMargins(0,0,0,0);
+                view.setLayoutParams(params);
+                key4_click();
+            }
+            return true;
         });
-        key5_btn.setOnTouchListener(new View.OnTouchListener() {
-            public boolean onTouch(View view, MotionEvent event) {
-                if (event.getAction() == android.view.MotionEvent.ACTION_DOWN) {
-                    params=(ConstraintLayout.LayoutParams)view.getLayoutParams();
-                    params.setMargins(8,0,8,0);
-                    view.setLayoutParams(params);
-                }
-                else if (event.getAction() == android.view.MotionEvent.ACTION_UP) {
-                    params=(ConstraintLayout.LayoutParams)view.getLayoutParams();
-                    params.setMargins(0,0,0,0);
-                    view.setLayoutParams(params);
-                    key5_click();
-                }
-                return true;
+        key5_btn.setOnTouchListener((view, event) -> {
+            if (event.getAction() == MotionEvent.ACTION_DOWN) {
+                params=(ConstraintLayout.LayoutParams)view.getLayoutParams();
+                params.setMargins(8,0,8,0);
+                view.setLayoutParams(params);
             }
+            else if (event.getAction() == MotionEvent.ACTION_UP) {
+                params=(ConstraintLayout.LayoutParams)view.getLayoutParams();
+                params.setMargins(0,0,0,0);
+                view.setLayoutParams(params);
+                key5_click();
+            }
+            return true;
         });
-        key6_btn.setOnTouchListener(new View.OnTouchListener() {
-            public boolean onTouch(View view, MotionEvent event) {
-                if (event.getAction() == android.view.MotionEvent.ACTION_DOWN) {
-                    params=(ConstraintLayout.LayoutParams)view.getLayoutParams();
-                    params.setMargins(8,0,8,0);
-                    view.setLayoutParams(params);
-                }
-                else if (event.getAction() == android.view.MotionEvent.ACTION_UP) {
-                    params=(ConstraintLayout.LayoutParams)view.getLayoutParams();
-                    params.setMargins(0,0,0,0);
-                    view.setLayoutParams(params);
-                    key6_click();
-                }
-                return true;
+        key6_btn.setOnTouchListener((view, event) -> {
+            if (event.getAction() == MotionEvent.ACTION_DOWN) {
+                params=(ConstraintLayout.LayoutParams)view.getLayoutParams();
+                params.setMargins(8,0,8,0);
+                view.setLayoutParams(params);
             }
+            else if (event.getAction() == MotionEvent.ACTION_UP) {
+                params=(ConstraintLayout.LayoutParams)view.getLayoutParams();
+                params.setMargins(0,0,0,0);
+                view.setLayoutParams(params);
+                key6_click();
+            }
+            return true;
         });
-        key7_btn.setOnTouchListener(new View.OnTouchListener() {
-            public boolean onTouch(View view, MotionEvent event) {
-                if (event.getAction() == android.view.MotionEvent.ACTION_DOWN) {
-                    params=(ConstraintLayout.LayoutParams)view.getLayoutParams();
-                    params.setMargins(8,0,8,0);
-                    view.setLayoutParams(params);
-                }
-                else if (event.getAction() == android.view.MotionEvent.ACTION_UP) {
-                    params=(ConstraintLayout.LayoutParams)view.getLayoutParams();
-                    params.setMargins(0,0,0,0);
-                    view.setLayoutParams(params);
-                    key7_click();
-                }
-                return true;
+        key7_btn.setOnTouchListener((view, event) -> {
+            if (event.getAction() == MotionEvent.ACTION_DOWN) {
+                params=(ConstraintLayout.LayoutParams)view.getLayoutParams();
+                params.setMargins(8,0,8,0);
+                view.setLayoutParams(params);
             }
+            else if (event.getAction() == MotionEvent.ACTION_UP) {
+                params=(ConstraintLayout.LayoutParams)view.getLayoutParams();
+                params.setMargins(0,0,0,0);
+                view.setLayoutParams(params);
+                key7_click();
+            }
+            return true;
         });
-        key8_btn.setOnTouchListener(new View.OnTouchListener() {
-            public boolean onTouch(View view, MotionEvent event) {
-                if (event.getAction() == android.view.MotionEvent.ACTION_DOWN) {
-                    params=(ConstraintLayout.LayoutParams)view.getLayoutParams();
-                    params.setMargins(8,0,8,0);
-                    view.setLayoutParams(params);
-                }
-                else if (event.getAction() == android.view.MotionEvent.ACTION_UP) {
-                    params=(ConstraintLayout.LayoutParams)view.getLayoutParams();
-                    params.setMargins(0,0,0,0);
-                    view.setLayoutParams(params);
-                    key8_click();
-                }
-                return true;
+        key8_btn.setOnTouchListener((view, event) -> {
+            if (event.getAction() == MotionEvent.ACTION_DOWN) {
+                params=(ConstraintLayout.LayoutParams)view.getLayoutParams();
+                params.setMargins(8,0,8,0);
+                view.setLayoutParams(params);
             }
+            else if (event.getAction() == MotionEvent.ACTION_UP) {
+                params=(ConstraintLayout.LayoutParams)view.getLayoutParams();
+                params.setMargins(0,0,0,0);
+                view.setLayoutParams(params);
+                key8_click();
+            }
+            return true;
         });
-        key9_btn.setOnTouchListener(new View.OnTouchListener() {
-            public boolean onTouch(View view, MotionEvent event) {
-                if (event.getAction() == android.view.MotionEvent.ACTION_DOWN) {
-                    params=(ConstraintLayout.LayoutParams)view.getLayoutParams();
-                    params.setMargins(8,0,8,0);
-                    view.setLayoutParams(params);
-                }
-                else if (event.getAction() == android.view.MotionEvent.ACTION_UP) {
-                    params=(ConstraintLayout.LayoutParams)view.getLayoutParams();
-                    params.setMargins(0,0,0,0);
-                    view.setLayoutParams(params);
-                    key9_click();
-                }
-                return true;
+        key9_btn.setOnTouchListener((view, event) -> {
+            if (event.getAction() == MotionEvent.ACTION_DOWN) {
+                params=(ConstraintLayout.LayoutParams)view.getLayoutParams();
+                params.setMargins(8,0,8,0);
+                view.setLayoutParams(params);
             }
+            else if (event.getAction() == MotionEvent.ACTION_UP) {
+                params=(ConstraintLayout.LayoutParams)view.getLayoutParams();
+                params.setMargins(0,0,0,0);
+                view.setLayoutParams(params);
+                key9_click();
+            }
+            return true;
         });
-        home_btn.setOnTouchListener(new View.OnTouchListener() {
-            public boolean onTouch(View view, MotionEvent event) {
-                if (event.getAction() == android.view.MotionEvent.ACTION_DOWN) {
-                    params=(ConstraintLayout.LayoutParams)view.getLayoutParams();
-                    params.setMargins(8,0,8,0);
-                    view.setLayoutParams(params);
-                }
-                else if (event.getAction() == android.view.MotionEvent.ACTION_UP) {
-                    params=(ConstraintLayout.LayoutParams)view.getLayoutParams();
-                    params.setMargins(0,0,0,0);
-                    view.setLayoutParams(params);
-                    home_click();
-                }
-                return true;
+        home_btn.setOnTouchListener((view, event) -> {
+            if (event.getAction() == MotionEvent.ACTION_DOWN) {
+                params=(ConstraintLayout.LayoutParams)view.getLayoutParams();
+                params.setMargins(8,0,8,0);
+                view.setLayoutParams(params);
             }
+            else if (event.getAction() == MotionEvent.ACTION_UP) {
+                params=(ConstraintLayout.LayoutParams)view.getLayoutParams();
+                params.setMargins(0,0,0,0);
+                view.setLayoutParams(params);
+                home_click();
+            }
+            return true;
         });
-        ok_btn.setOnTouchListener(new View.OnTouchListener() {
-            public boolean onTouch(View view, MotionEvent event) {
-                if (event.getAction() == android.view.MotionEvent.ACTION_DOWN) {
-                    params=(ConstraintLayout.LayoutParams)view.getLayoutParams();
-                    params.setMargins(8,0,8,0);
-                    view.setLayoutParams(params);
-                }
-                else if (event.getAction() == android.view.MotionEvent.ACTION_UP) {
-                    params=(ConstraintLayout.LayoutParams)view.getLayoutParams();
-                    params.setMargins(0,0,0,0);
-                    view.setLayoutParams(params);
-                    ok_click();
-                }
-                return true;
+        ok_btn.setOnTouchListener((view, event) -> {
+            if (event.getAction() == MotionEvent.ACTION_DOWN) {
+                params=(ConstraintLayout.LayoutParams)view.getLayoutParams();
+                params.setMargins(8,0,8,0);
+                view.setLayoutParams(params);
             }
+            else if (event.getAction() == MotionEvent.ACTION_UP) {
+                params=(ConstraintLayout.LayoutParams)view.getLayoutParams();
+                params.setMargins(0,0,0,0);
+                view.setLayoutParams(params);
+                ok_click();
+            }
+            return true;
         });
-        del_btn.setOnTouchListener(new View.OnTouchListener() {
-            public boolean onTouch(View view, MotionEvent event) {
-                if (event.getAction() == android.view.MotionEvent.ACTION_DOWN) {
-                    params=(ConstraintLayout.LayoutParams)view.getLayoutParams();
-                    params.setMargins(8,0,8,0);
-                    view.setLayoutParams(params);
-                }
-                else if (event.getAction() == android.view.MotionEvent.ACTION_UP) {
-                    params=(ConstraintLayout.LayoutParams)view.getLayoutParams();
-                    params.setMargins(0,0,0,0);
-                    view.setLayoutParams(params);
-                    del_click();
-                }
-                return true;
+        del_btn.setOnTouchListener((view, event) -> {
+            if (event.getAction() == MotionEvent.ACTION_DOWN) {
+                params=(ConstraintLayout.LayoutParams)view.getLayoutParams();
+                params.setMargins(8,0,8,0);
+                view.setLayoutParams(params);
             }
+            else if (event.getAction() == MotionEvent.ACTION_UP) {
+                params=(ConstraintLayout.LayoutParams)view.getLayoutParams();
+                params.setMargins(0,0,0,0);
+                view.setLayoutParams(params);
+                del_click();
+            }
+            return true;
         });
-        back_btn.setOnTouchListener(new View.OnTouchListener() {
-            public boolean onTouch(View view, MotionEvent event) {
-                if (event.getAction() == android.view.MotionEvent.ACTION_DOWN) {
-                    params=(ConstraintLayout.LayoutParams)view.getLayoutParams();
-                    params.setMargins(8,0,8,0);
-                    view.setLayoutParams(params);
-                }
-                else if (event.getAction() == android.view.MotionEvent.ACTION_UP) {
-                    params=(ConstraintLayout.LayoutParams)view.getLayoutParams();
-                    params.setMargins(0,0,0,0);
-                    view.setLayoutParams(params);
-                    back_click();
-                }
-                return true;
+        back_btn.setOnTouchListener((view, event) -> {
+            if (event.getAction() == MotionEvent.ACTION_DOWN) {
+                params=(ConstraintLayout.LayoutParams)view.getLayoutParams();
+                params.setMargins(8,0,8,0);
+                view.setLayoutParams(params);
             }
+            else if (event.getAction() == MotionEvent.ACTION_UP) {
+                params=(ConstraintLayout.LayoutParams)view.getLayoutParams();
+                params.setMargins(0,0,0,0);
+                view.setLayoutParams(params);
+                back_click();
+            }
+            return true;
         });
 
     }
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        currentApiVersion = android.os.Build.VERSION.SDK_INT;
+        int currentApiVersion = Build.VERSION.SDK_INT;
 
         final int flags = View.SYSTEM_UI_FLAG_LAYOUT_STABLE
                 | View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
@@ -299,21 +268,15 @@ public class pincode extends AppCompatActivity {
             getWindow().getDecorView().setSystemUiVisibility(flags);
             final View decorView = getWindow().getDecorView();
             decorView
-                    .setOnSystemUiVisibilityChangeListener(new View.OnSystemUiVisibilityChangeListener()
-                    {
-
-                        @Override
-                        public void onSystemUiVisibilityChange(int visibility)
+                    .setOnSystemUiVisibilityChangeListener(visibility -> {
+                        if((visibility & View.SYSTEM_UI_FLAG_FULLSCREEN) == 0)
                         {
-                            if((visibility & View.SYSTEM_UI_FLAG_FULLSCREEN) == 0)
-                            {
-                                decorView.setSystemUiVisibility(flags);
-                            }
+                            decorView.setSystemUiVisibility(flags);
                         }
                     });
         }
         setContentView(R.layout.activity_pincode);
-        ctx=this;
+        //Context ctx = this;
         //preventStatusBarExpansion(ctx);
         initviews();
     }
@@ -328,7 +291,7 @@ public class pincode extends AppCompatActivity {
         localLayoutParams.width = WindowManager.LayoutParams.MATCH_PARENT;
 
         int resId = context.getResources().getIdentifier("status_bar_height", "dimen", "android");
-        int result = 0;
+        int result;
         if (resId > 0) {
             result = context.getResources().getDimensionPixelSize(resId);
         } else {

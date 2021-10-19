@@ -1,31 +1,28 @@
 package com.menar.milkdoser;
 
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.constraintlayout.widget.ConstraintLayout;
-
+import android.annotation.SuppressLint;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
-import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.graphics.PixelFormat;
 import android.net.wifi.WifiManager;
 import android.os.Build;
 import android.os.Bundle;
-import android.text.Editable;
-import android.text.TextWatcher;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
-import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.constraintlayout.widget.ConstraintLayout;
 
 import java.util.Timer;
 import java.util.TimerTask;
@@ -49,75 +46,68 @@ public class manufa extends AppCompatActivity {
     );
 
 
+    @SuppressLint({"SetTextI18n", "ClickableViewAccessibility"})
     public void initviews() {
 
-        back_btn=(ImageButton) findViewById(R.id.back);
-        home_btn=(ImageButton) findViewById(R.id.home);
-        mono_mode_sw=(Switch) findViewById(R.id.switch1);
-        save_btn = (ImageButton) findViewById(R.id.save);
-        rssi = (TextView) findViewById(R.id.rssi_viewer);
-        rssi.setText("Bağlantı Kalitesi: "+String.valueOf(wManager.getConnectionInfo().getRssi())+"dBm");
-        mac = (EditText) findViewById(R.id.mac_number);
+        back_btn= findViewById(R.id.back);
+        home_btn= findViewById(R.id.home);
+        mono_mode_sw= findViewById(R.id.switch1);
+        save_btn = findViewById(R.id.save);
+        rssi = findViewById(R.id.rssi_viewer);
+        rssi.setText("Bağlantı Kalitesi: "+ wManager.getConnectionInfo().getRssi() +"dBm");
+        mac = findViewById(R.id.mac_number);
         mac.setText(sharedPref.getString("wifi_name",""));
         mono_mode_sw.setChecked(!sharedPref.getBoolean("mono_mode",false));
-        mono_mode_sw.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                editor.putBoolean("mono_mode",!isChecked);
+        mono_mode_sw.setOnCheckedChangeListener((buttonView, isChecked) -> {
+            editor.putBoolean("mono_mode",!isChecked);
+            editor.commit();
+            Log.d("Swithc",":"+isChecked);
+        });
+
+        back_btn.setOnTouchListener((view, event) -> {
+            if (event.getAction() == MotionEvent.ACTION_DOWN) {
+                params=(ConstraintLayout.LayoutParams)view.getLayoutParams();
+                params.setMargins(8,0,8,0);
+                view.setLayoutParams(params);
+            } else if (event.getAction() == MotionEvent.ACTION_UP) {
+                params=(ConstraintLayout.LayoutParams)view.getLayoutParams();
+                params.setMargins(0,0,0,0);
+                view.setLayoutParams(params);
+                Intent i = new Intent(getApplicationContext(),dosing.class);
+                startActivity(i);
+            }
+            return true;
+        });
+
+        home_btn.setOnTouchListener((view, event) -> {
+            if (event.getAction() == MotionEvent.ACTION_DOWN) {
+                params=(ConstraintLayout.LayoutParams)view.getLayoutParams();
+                params.setMargins(8,0,8,0);
+                view.setLayoutParams(params);
+            } else if (event.getAction() == MotionEvent.ACTION_UP) {
+                params=(ConstraintLayout.LayoutParams)view.getLayoutParams();
+                params.setMargins(0,0,0,0);
+                view.setLayoutParams(params);
+                Intent i = new Intent(getApplicationContext(),dosing.class);
+                startActivity(i);
+            }
+            return true;
+        });
+
+        save_btn.setOnTouchListener((view, event) -> {
+            if (event.getAction() == MotionEvent.ACTION_DOWN) {
+                params = (ConstraintLayout.LayoutParams) view.getLayoutParams();
+                params.setMargins(8, 0, 8, 0);
+                view.setLayoutParams(params);
+            } else if (event.getAction() == MotionEvent.ACTION_UP) {
+                params = (ConstraintLayout.LayoutParams) view.getLayoutParams();
+                params.setMargins(0, 0, 0, 0);
+                view.setLayoutParams(params);
+                editor.putString("wifi_name", (String.valueOf(mac.getText())).toUpperCase());
                 editor.commit();
-                Log.d("Swithc",":"+isChecked);
+                Toast.makeText(getApplicationContext(), getApplicationContext().getString(R.string.ayarlanan_parametreler_kaydedildi), Toast.LENGTH_LONG).show();
             }
-        });
-
-        back_btn.setOnTouchListener(new View.OnTouchListener() {
-            public boolean onTouch(View view, MotionEvent event) {
-                if (event.getAction() == android.view.MotionEvent.ACTION_DOWN) {
-                    params=(ConstraintLayout.LayoutParams)view.getLayoutParams();
-                    params.setMargins(8,0,8,0);
-                    view.setLayoutParams(params);
-                } else if (event.getAction() == android.view.MotionEvent.ACTION_UP) {
-                    params=(ConstraintLayout.LayoutParams)view.getLayoutParams();
-                    params.setMargins(0,0,0,0);
-                    view.setLayoutParams(params);
-                    Intent i = new Intent(getApplicationContext(),dosing.class);
-                    startActivity(i);
-                }
-                return true;
-            }
-        });
-
-        home_btn.setOnTouchListener(new View.OnTouchListener() {
-            public boolean onTouch(View view, MotionEvent event) {
-                if (event.getAction() == android.view.MotionEvent.ACTION_DOWN) {
-                    params=(ConstraintLayout.LayoutParams)view.getLayoutParams();
-                    params.setMargins(8,0,8,0);
-                    view.setLayoutParams(params);
-                } else if (event.getAction() == android.view.MotionEvent.ACTION_UP) {
-                    params=(ConstraintLayout.LayoutParams)view.getLayoutParams();
-                    params.setMargins(0,0,0,0);
-                    view.setLayoutParams(params);
-                    Intent i = new Intent(getApplicationContext(),dosing.class);
-                    startActivity(i);
-                }
-                return true;
-            }
-        });
-
-        save_btn.setOnTouchListener(new View.OnTouchListener() {
-            public boolean onTouch(View view, MotionEvent event) {
-                if (event.getAction() == android.view.MotionEvent.ACTION_DOWN) {
-                    params = (ConstraintLayout.LayoutParams) view.getLayoutParams();
-                    params.setMargins(8, 0, 8, 0);
-                    view.setLayoutParams(params);
-                } else if (event.getAction() == android.view.MotionEvent.ACTION_UP) {
-                    params = (ConstraintLayout.LayoutParams) view.getLayoutParams();
-                    params.setMargins(0, 0, 0, 0);
-                    view.setLayoutParams(params);
-                    editor.putString("wifi_name", (String.valueOf(mac.getText())).toUpperCase());
-                    editor.commit();
-                    Toast.makeText(getApplicationContext(), getApplicationContext().getString(R.string.ayarlanan_parametreler_kaydedildi), Toast.LENGTH_LONG).show();
-                }
-                return true;
-            }
+            return true;
         });
     }
     @Override
@@ -132,19 +122,14 @@ public class manufa extends AppCompatActivity {
         ctx=this;
         //preventStatusBarExpansion(ctx);
         wManager = (WifiManager) this.getApplicationContext().getSystemService(Context.WIFI_SERVICE);
-        KeyboardUtils.addKeyboardToggleListener(this, new KeyboardUtils.SoftKeyboardToggleListener()
-        {
-            @Override
-            public void onToggleSoftKeyboard(boolean isVisible)
+        KeyboardUtils.addKeyboardToggleListener(this, isVisible -> {
+            if(!isVisible)
             {
-                if(!isVisible)
-                {
-                    hide_system_ui();
-                }
-                else
-                {
-                    hide_system_ui();
-                }
+                hide_system_ui();
+            }
+            else
+            {
+                hide_system_ui();
             }
         });
         //save_default_params();
@@ -156,29 +141,28 @@ public class manufa extends AppCompatActivity {
     }
 
     final TimerTask timerTask = new TimerTask() {
+        @SuppressLint("SetTextI18n")
         @Override
         public void run() {
-            runOnUiThread(new Runnable() {
-                @Override
-                public void run() {
-                    WifiManager wifiMan=(WifiManager)getApplicationContext().getSystemService(Context.WIFI_SERVICE);
-                    wifiMan.startScan();
-                    int newRssi = wifiMan.getConnectionInfo().getRssi();
-                    rssi.setText("Bağlantı Kalitesi: "+String.valueOf(newRssi)+"dBm");
-                    //Log.d("RSSI Level",""+String.valueOf(newRssi));
-                }
+            runOnUiThread(() -> {
+                WifiManager wifiMan=(WifiManager)getApplicationContext().getSystemService(Context.WIFI_SERVICE);
+                wifiMan.startScan();
+                int newRssi = wifiMan.getConnectionInfo().getRssi();
+                rssi.setText("Bağlantı Kalitesi: "+String.valueOf(newRssi)+"dBm");
+                //Log.d("RSSI Level",""+String.valueOf(newRssi));
             });
         }
     };
     private BroadcastReceiver myRssiChangeReceiver
             = new BroadcastReceiver(){
+        @SuppressLint("SetTextI18n")
         @Override
         public void onReceive(Context arg0, Intent arg1) {
             WifiManager wifiMan=(WifiManager)getApplicationContext().getSystemService(Context.WIFI_SERVICE);
             wifiMan.startScan();
             int newRssi = wifiMan.getConnectionInfo().getRssi();
 
-            rssi.setText("Bağlantı Kalitesi: "+String.valueOf(newRssi)+"dBm");
+            rssi.setText("Bağlantı Kalitesi: "+ newRssi +"dBm");
             //Log.d("RSSI Level",""+String.valueOf(newRssi));
         }
     };
@@ -193,7 +177,7 @@ public class manufa extends AppCompatActivity {
         localLayoutParams.width = WindowManager.LayoutParams.MATCH_PARENT;
 
         int resId = context.getResources().getIdentifier("status_bar_height", "dimen", "android");
-        int result = 0;
+        int result;
         if (resId > 0) {
             result = context.getResources().getDimensionPixelSize(resId);
         } else {
@@ -235,17 +219,11 @@ public class manufa extends AppCompatActivity {
 
             getWindow().getDecorView().setSystemUiVisibility(flags);
             final View decorView = getWindow().getDecorView();
-            decorView.setOnSystemUiVisibilityChangeListener(new View.OnSystemUiVisibilityChangeListener()
-            {
-
-                @Override
-                public void onSystemUiVisibilityChange(int visibility)
+            decorView.setOnSystemUiVisibilityChangeListener(visibility -> {
+                if((visibility & View.SYSTEM_UI_FLAG_FULLSCREEN) == 0)
                 {
-                    if((visibility & View.SYSTEM_UI_FLAG_FULLSCREEN) == 0)
-                    {
-                        hide_system_ui();
-                        decorView.setSystemUiVisibility(flags);
-                    }
+                    hide_system_ui();
+                    decorView.setSystemUiVisibility(flags);
                 }
             });
         }

@@ -1,8 +1,6 @@
 package com.menar.milkdoser;
 
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.constraintlayout.widget.ConstraintLayout;
-
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -16,68 +14,62 @@ import android.view.View;
 import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.ImageButton;
-import android.widget.ImageView;
-import android.widget.TextView;
-import android.widget.Toast;
+
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.constraintlayout.widget.ConstraintLayout;
 
 public class lang_screen extends AppCompatActivity {
     Button[][] lang_buttons=new Button[3][3];
-    ImageButton apply_btn;
 
     SharedPreferences sharedPref;
     SharedPreferences.Editor editor;
     String selected_language="tr";
 
-    private int currentApiVersion;
-    private Context ctx=null;
     ConstraintLayout.LayoutParams params = new ConstraintLayout.LayoutParams(
             ConstraintLayout.LayoutParams.MATCH_PARENT,
             ConstraintLayout.LayoutParams.MATCH_PARENT
     );
 
+    @SuppressLint("ClickableViewAccessibility")
     public void initviews(){
-        lang_buttons[0][0]= (Button)findViewById(R.id.lang1);
-        lang_buttons[0][1]= (Button)findViewById(R.id.lang2);
-        lang_buttons[0][2]= (Button)findViewById(R.id.lang3);
-        lang_buttons[1][0]= (Button)findViewById(R.id.lang4);
-        lang_buttons[1][1]= (Button)findViewById(R.id.lang5);
-        lang_buttons[1][2]= (Button)findViewById(R.id.lang6);
-        lang_buttons[2][0]= (Button)findViewById(R.id.lang7);
-        lang_buttons[2][1]= (Button)findViewById(R.id.lang8);
-        lang_buttons[2][2]= (Button)findViewById(R.id.lang9);
-        ImageButton apply_btn=(ImageButton)findViewById(R.id.apply);
-        apply_btn.setOnTouchListener(new View.OnTouchListener() {
-            public boolean onTouch(View view, MotionEvent event) {
-                if (event.getAction() == android.view.MotionEvent.ACTION_DOWN) {
-                    params=(ConstraintLayout.LayoutParams)view.getLayoutParams();
-                    params.setMargins(8,0,8,0);
-                    view.setLayoutParams(params);
-                } else if (event.getAction() == android.view.MotionEvent.ACTION_UP) {
-                    params=(ConstraintLayout.LayoutParams)view.getLayoutParams();
-                    params.setMargins(0,0,0,0);
-                    view.setLayoutParams(params);
-                    editor.putString("running_lang",selected_language);
-                    editor.commit();
-                }
-                return true;
+        lang_buttons[0][0]= findViewById(R.id.lang1);
+        lang_buttons[0][1]= findViewById(R.id.lang2);
+        lang_buttons[0][2]= findViewById(R.id.lang3);
+        lang_buttons[1][0]= findViewById(R.id.lang4);
+        lang_buttons[1][1]= findViewById(R.id.lang5);
+        lang_buttons[1][2]= findViewById(R.id.lang6);
+        lang_buttons[2][0]= findViewById(R.id.lang7);
+        lang_buttons[2][1]= findViewById(R.id.lang8);
+        lang_buttons[2][2]= findViewById(R.id.lang9);
+        ImageButton apply_btn= findViewById(R.id.apply);
+        apply_btn.setOnTouchListener((view, event) -> {
+            if (event.getAction() == MotionEvent.ACTION_DOWN) {
+                params=(ConstraintLayout.LayoutParams)view.getLayoutParams();
+                params.setMargins(8,0,8,0);
+                view.setLayoutParams(params);
+            } else if (event.getAction() == MotionEvent.ACTION_UP) {
+                params=(ConstraintLayout.LayoutParams)view.getLayoutParams();
+                params.setMargins(0,0,0,0);
+                view.setLayoutParams(params);
+                editor.putString("running_lang",selected_language);
+                editor.commit();
             }
+            return true;
         });
         for(int i=0;i<3;i++)
         {
             for(int j=0;j<3;j++)
             {
-                lang_buttons[i][j].setOnTouchListener(new View.OnTouchListener() {
-                    public boolean onTouch(View view, MotionEvent event) {
-                        if (event.getAction() == android.view.MotionEvent.ACTION_DOWN) {
-                            rst_selection();
-                            Button b=(Button)view;
-                            selectlang(b.getText().toString());
-                            view.setBackgroundResource(R.drawable.langbtn_selected);
-                        } else if (event.getAction() == android.view.MotionEvent.ACTION_UP) {
+                lang_buttons[i][j].setOnTouchListener((view, event) -> {
+                    if (event.getAction() == MotionEvent.ACTION_DOWN) {
+                        rst_selection();
+                        Button b=(Button)view;
+                        selectlang(b.getText().toString());
+                        view.setBackgroundResource(R.drawable.langbtn_selected);
+                    } else if (event.getAction() == MotionEvent.ACTION_UP) {
 
-                        }
-                        return true;
                     }
+                    return true;
                 });
             }
         }
@@ -87,7 +79,7 @@ public class lang_screen extends AppCompatActivity {
         sharedPref = this.getSharedPreferences("sharedPref", Context.MODE_PRIVATE);
         editor = sharedPref.edit();
         super.onCreate(savedInstanceState);
-        currentApiVersion = android.os.Build.VERSION.SDK_INT;
+        int currentApiVersion = Build.VERSION.SDK_INT;
 
         final int flags = View.SYSTEM_UI_FLAG_LAYOUT_STABLE
                 | View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
@@ -101,23 +93,17 @@ public class lang_screen extends AppCompatActivity {
             getWindow().getDecorView().setSystemUiVisibility(flags);
             final View decorView = getWindow().getDecorView();
             decorView
-                    .setOnSystemUiVisibilityChangeListener(new View.OnSystemUiVisibilityChangeListener()
-                    {
-
-                        @Override
-                        public void onSystemUiVisibilityChange(int visibility)
+                    .setOnSystemUiVisibilityChangeListener(visibility -> {
+                        if((visibility & View.SYSTEM_UI_FLAG_FULLSCREEN) == 0)
                         {
-                            if((visibility & View.SYSTEM_UI_FLAG_FULLSCREEN) == 0)
-                            {
-                                decorView.setSystemUiVisibility(flags);
-                            }
+                            decorView.setSystemUiVisibility(flags);
                         }
                     });
         }
         setContentView(R.layout.lang_screen);
         initviews();
         getselectedlang();
-        ctx=this;
+        //Context ctx = this;
         //preventStatusBarExpansion(ctx);
 
     }
@@ -125,16 +111,38 @@ public class lang_screen extends AppCompatActivity {
     {
         String language;
         selected_language=sharedPref.getString("running_lang","tr");
-        if (selected_language.equals("tr"))language="Türkçe";
-        else if (selected_language.equals("en"))language="English";
-        else if (selected_language.equals("de"))language="deutsch";
-        else if (selected_language.equals("it"))language="italiano";
-        else if (selected_language.equals("es"))language="español";
-        else if (selected_language.equals("nl"))language="Nederlands";
-        else if (selected_language.equals("fr"))language="français";
-        else if (selected_language.equals("pl"))language="polski";
-        else if (selected_language.equals("sl"))language="slovensko";
-        else language="Türkçe";
+        switch (selected_language) {
+            case "tr":
+                language = "Türkçe";
+                break;
+            case "en":
+                language = "English";
+                break;
+            case "de":
+                language = "deutsch";
+                break;
+            case "it":
+                language = "italiano";
+                break;
+            case "es":
+                language = "español";
+                break;
+            case "nl":
+                language = "Nederlands";
+                break;
+            case "fr":
+                language = "français";
+                break;
+            case "pl":
+                language = "polski";
+                break;
+            case "sl":
+                language = "slovensko";
+                break;
+            default:
+                language = "Türkçe";
+                break;
+        }
         for(int i=0;i<3;i++)
         {
             for(int j=0;j<3;j++)
@@ -146,16 +154,38 @@ public class lang_screen extends AppCompatActivity {
     }
     public void selectlang(String language)
     {
-        if (language.equals("Türkçe"))selected_language="tr";
-        else if (language.equals("English"))selected_language="en";
-        else if (language.equals("deutsch"))selected_language="de";
-        else if (language.equals("italiano"))selected_language="it";
-        else if (language.equals("español"))selected_language="es";
-        else if (language.equals("Nederlands"))selected_language="nl";
-        else if (language.equals("français"))selected_language="fr";
-        else if (language.equals("polski"))selected_language="pl";
-        else if (language.equals("slovensko"))selected_language="sl";
-        else selected_language="tr";
+        switch (language) {
+            case "Türkçe":
+                selected_language = "tr";
+                break;
+            case "English":
+                selected_language = "en";
+                break;
+            case "deutsch":
+                selected_language = "de";
+                break;
+            case "italiano":
+                selected_language = "it";
+                break;
+            case "español":
+                selected_language = "es";
+                break;
+            case "Nederlands":
+                selected_language = "nl";
+                break;
+            case "français":
+                selected_language = "fr";
+                break;
+            case "polski":
+                selected_language = "pl";
+                break;
+            case "slovensko":
+                selected_language = "sl";
+                break;
+            default:
+                selected_language = "tr";
+                break;
+        }
         Log.d("Selected language= ",selected_language);
     }
 
@@ -180,7 +210,7 @@ public class lang_screen extends AppCompatActivity {
         localLayoutParams.width = WindowManager.LayoutParams.MATCH_PARENT;
 
         int resId = context.getResources().getIdentifier("status_bar_height", "dimen", "android");
-        int result = 0;
+        int result;
         if (resId > 0) {
             result = context.getResources().getDimensionPixelSize(resId);
         } else {

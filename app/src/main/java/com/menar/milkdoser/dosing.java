@@ -58,9 +58,9 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 import java.util.Locale;
+import java.util.Objects;
 import java.util.Timer;
 import java.util.TimerTask;
-import java.util.function.ToDoubleBiFunction;
 
 public class dosing extends AppCompatActivity {
     ImageView cb1, cb2, connection, l_rinse, r_rinse, logo_view,waring_view;
@@ -145,7 +145,6 @@ public class dosing extends AppCompatActivity {
     );
 
     public boolean wifi_connected = false;
-    private int currentApiVersion;
     private PrintWriter output;
     private BufferedReader input;
     final Handler handler = new Handler();
@@ -156,68 +155,65 @@ public class dosing extends AppCompatActivity {
     int t_rinse_cnt_l = 0, t_rinse_cnt_r = 0, n_rinse_cnt_l = 0, a_sweep_cnt = 0, b_sweep_cnt = 0, n_rinse_cnt_r = 0, t_wash_cnt = 0,r_rinse_time=0,l_rinse_time=0;
     int t_rinse_r = 0, t_rinse_l = 0;
     boolean t_rinse_cnt_l_flag = false, t_rinse_cnt_r_flag = false, a_sweep_flag = false, b_sweep_flag = false, a_sweep_timeout_flag = false, b_sweep_timeout_flag = false;
-    boolean left_dosing = false, right_dosing = false, send_command = false, left_dosing_finish = false, right_dosing_finish = false;
+    boolean left_dosing = false, right_dosing = false, left_dosing_finish = false, right_dosing_finish = false;
     boolean r_rinse_after_wash=false,l_rinse_after_wash=false;
     int left_dosing_counter = 1000, right_dosing_counter = 1000;
     int cmd_repeat_cnt = 5, l_start_cmd_cnt = 0, l_stop_cmd_cnt = 0, l_rinse_start_cmd_cnt = 0, l_rinse_stop_cmd_cnt = 0, r_start_cmd_cnt = 0, r_stop_cmd_cnt = 0, r_rinse_start_cmd_cnt = 0, r_rinse_stop_cmd_cnt = 0;
     long encoder_l_value_last=0, encoder_r_value_last=0;
     Resources resources;
-    private void startKioskService() {
-        startService(new Intent(this, KioskService.class));
-    }
 
     @SuppressLint("ClickableViewAccessibility")
     public void initviews() {
-        cb1 = (ImageView) findViewById(R.id.bar);
-        cb2 = (ImageView) findViewById(R.id.bar2);
-        waring_view = (ImageView) findViewById(R.id.warning);
-        l_rinse = (ImageView) findViewById(R.id.rinse_l);
-        r_rinse = (ImageView) findViewById(R.id.rinse_r);
-        connection = (ImageView) findViewById(R.id.connection_status);
-        logo_view = (ImageView) findViewById(R.id.logoviewer);
-        respite_l = (ImageButton) findViewById(R.id.l_respite);
-        start_l = (ImageButton) findViewById(R.id.l_start);
-        start_l_w = (ImageButton) findViewById(R.id.l_start_wash);
-        respite_r = (ImageButton) findViewById(R.id.r_respite);
-        start_r = (ImageButton) findViewById(R.id.r_start);
-        start_r_w = (ImageButton) findViewById(R.id.r_start_wash);
-        manual_l = (ImageButton) findViewById(R.id.manuel_l);
-        manual_r = (ImageButton) findViewById(R.id.manuel_r);
-        settings_button = (ImageButton) findViewById(R.id.settings);
-        x1l_button = (ImageButton) findViewById(R.id.x1_l);
-        x2l_button = (ImageButton) findViewById(R.id.x2_l);
-        x3l_button = (ImageButton) findViewById(R.id.x3_l);
-        x4l_button = (ImageButton) findViewById(R.id.x4_l);
-        x1r_button = (ImageButton) findViewById(R.id.x1_r);
-        x2r_button = (ImageButton) findViewById(R.id.x2_r);
-        x3r_button = (ImageButton) findViewById(R.id.x3_r);
-        x4r_button = (ImageButton) findViewById(R.id.x4_r);
+        cb1 = findViewById(R.id.bar);
+        cb2 = findViewById(R.id.bar2);
+        waring_view = findViewById(R.id.warning);
+        l_rinse = findViewById(R.id.rinse_l);
+        r_rinse = findViewById(R.id.rinse_r);
+        connection = findViewById(R.id.connection_status);
+        logo_view = findViewById(R.id.logoviewer);
+        respite_l = findViewById(R.id.l_respite);
+        start_l = findViewById(R.id.l_start);
+        start_l_w = findViewById(R.id.l_start_wash);
+        respite_r = findViewById(R.id.r_respite);
+        start_r = findViewById(R.id.r_start);
+        start_r_w = findViewById(R.id.r_start_wash);
+        manual_l = findViewById(R.id.manuel_l);
+        manual_r = findViewById(R.id.manuel_r);
+        settings_button = findViewById(R.id.settings);
+        x1l_button = findViewById(R.id.x1_l);
+        x2l_button = findViewById(R.id.x2_l);
+        x3l_button = findViewById(R.id.x3_l);
+        x4l_button = findViewById(R.id.x4_l);
+        x1r_button = findViewById(R.id.x1_r);
+        x2r_button = findViewById(R.id.x2_r);
+        x3r_button = findViewById(R.id.x3_r);
+        x4r_button = findViewById(R.id.x4_r);
 
-        x1l_cncl = (ImageButton) findViewById(R.id.l_cancel1x);
-        x2l_cncl = (ImageButton) findViewById(R.id.l_cancel2x);
-        x3l_cncl = (ImageButton) findViewById(R.id.l_cancel3x);
-        x4l_cncl = (ImageButton) findViewById(R.id.l_cancel4x);
+        x1l_cncl = findViewById(R.id.l_cancel1x);
+        x2l_cncl = findViewById(R.id.l_cancel2x);
+        x3l_cncl = findViewById(R.id.l_cancel3x);
+        x4l_cncl = findViewById(R.id.l_cancel4x);
 
-        x1r_cncl = (ImageButton) findViewById(R.id.r_cancel1x);
-        x2r_cncl = (ImageButton) findViewById(R.id.r_cancel2x);
-        x3r_cncl = (ImageButton) findViewById(R.id.r_cancel3x);
-        x4r_cncl = (ImageButton) findViewById(R.id.r_cancel4x);
+        x1r_cncl = findViewById(R.id.r_cancel1x);
+        x2r_cncl = findViewById(R.id.r_cancel2x);
+        x3r_cncl = findViewById(R.id.r_cancel3x);
+        x4r_cncl = findViewById(R.id.r_cancel4x);
 
-        l_hot = (ImageButton) findViewById(R.id.left_hot);
-        l_ice = (ImageButton) findViewById(R.id.left_ice);
-        l_cold = (ImageButton) findViewById(R.id.left_cold);
-        r_hot = (ImageButton) findViewById(R.id.right_hot);
-        r_ice = (ImageButton) findViewById(R.id.right_ice);
-        r_cold = (ImageButton) findViewById(R.id.right_cold);
-        power = (ImageButton) findViewById(R.id.power_btn);
-        info = (ImageButton) findViewById(R.id.info_btn);
-        l_rinse_txt = (TextView) findViewById(R.id.left_rinse_text);
-        r_rinse_txt = (TextView) findViewById(R.id.right_rinse_text);
-        date = (TextView) findViewById(R.id.date1);
-        time = (TextView) findViewById(R.id.time1);
+        l_hot = findViewById(R.id.left_hot);
+        l_ice = findViewById(R.id.left_ice);
+        l_cold = findViewById(R.id.left_cold);
+        r_hot = findViewById(R.id.right_hot);
+        r_ice = findViewById(R.id.right_ice);
+        r_cold = findViewById(R.id.right_cold);
+        power = findViewById(R.id.power_btn);
+        info = findViewById(R.id.info_btn);
+        l_rinse_txt = findViewById(R.id.left_rinse_text);
+        r_rinse_txt = findViewById(R.id.right_rinse_text);
+        date = findViewById(R.id.date1);
+        time = findViewById(R.id.time1);
 
-        l_att = (TextView) findViewById(R.id.textView41);
-        r_att = (TextView) findViewById(R.id.textView42);
+        l_att = findViewById(R.id.textView41);
+        r_att = findViewById(R.id.textView42);
 
         params = (ConstraintLayout.LayoutParams) l_hot.getLayoutParams();
         params.setMargins(8, 0, 8, 0);
@@ -229,804 +225,741 @@ public class dosing extends AppCompatActivity {
 
         Bitmap bmp = BitmapFactory.decodeFile(home + "/logo/logo.bmp");
         //logo_view.setImageBitmap(bmp);
-        settings_button.setOnTouchListener(new View.OnTouchListener() {
-            public boolean onTouch(View view, MotionEvent event) {
-                if (event.getAction() == android.view.MotionEvent.ACTION_DOWN) {
-                    params = (ConstraintLayout.LayoutParams) view.getLayoutParams();
-                    params.setMargins(8, 0, 8, 0);
-                    view.setLayoutParams(params);
-                    menu_change = true;
-                } else if (event.getAction() == android.view.MotionEvent.ACTION_UP) {
-                    params = (ConstraintLayout.LayoutParams) view.getLayoutParams();
-                    params.setMargins(0, 0, 0, 0);
-                    view.setLayoutParams(params);
-                    wifi_connected = false;
-                    Intent i = new Intent(getApplicationContext(), pincode.class);
-                    startActivity(i);
-                    disconnect_socket();
-                }
-                return true;
+        settings_button.setOnTouchListener((view, event) -> {
+            if (event.getAction() == MotionEvent.ACTION_DOWN) {
+                params = (ConstraintLayout.LayoutParams) view.getLayoutParams();
+                params.setMargins(8, 0, 8, 0);
+                view.setLayoutParams(params);
+                menu_change = true;
+            } else if (event.getAction() == MotionEvent.ACTION_UP) {
+                params = (ConstraintLayout.LayoutParams) view.getLayoutParams();
+                params.setMargins(0, 0, 0, 0);
+                view.setLayoutParams(params);
+                wifi_connected = false;
+                Intent i = new Intent(getApplicationContext(), pincode.class);
+                startActivity(i);
+                disconnect_socket();
             }
+            return true;
         });
-        respite_l.setOnTouchListener(new View.OnTouchListener() {
-            public boolean onTouch(View view, MotionEvent event) {
-                if (event.getAction() == android.view.MotionEvent.ACTION_DOWN) {
-                    params = (ConstraintLayout.LayoutParams) view.getLayoutParams();
-                    params.setMargins(8, 0, 8, 0);
-                    view.setLayoutParams(params);
-                } else if (event.getAction() == android.view.MotionEvent.ACTION_UP) {
-                    params = (ConstraintLayout.LayoutParams) view.getLayoutParams();
-                    params.setMargins(0, 0, 0, 0);
-                    view.setLayoutParams(params);
-                    hide_rinse_screen("left");
-                    save_cleanig_events("A", "rinse_respite");
-                    t_rinse_cnt_l = T_RINSE_TRIG - 3;
-                    editor.putInt("force_rinse_l_cnt",(sharedPref.getInt("force_rinse_l_cnt",0)+1));
+        respite_l.setOnTouchListener((view, event) -> {
+            if (event.getAction() == MotionEvent.ACTION_DOWN) {
+                params = (ConstraintLayout.LayoutParams) view.getLayoutParams();
+                params.setMargins(8, 0, 8, 0);
+                view.setLayoutParams(params);
+            } else if (event.getAction() == MotionEvent.ACTION_UP) {
+                params = (ConstraintLayout.LayoutParams) view.getLayoutParams();
+                params.setMargins(0, 0, 0, 0);
+                view.setLayoutParams(params);
+                hide_rinse_screen("left");
+                save_cleanig_events("A", "rinse_respite");
+                t_rinse_cnt_l = T_RINSE_TRIG - 3;
+                editor.putInt("force_rinse_l_cnt",(sharedPref.getInt("force_rinse_l_cnt",0)+1));
+                editor.commit();
+                if(sharedPref.getInt("force_rinse_l_cnt",0)>2){
+                    editor.putBoolean("force_rinse_l",true);
                     editor.commit();
-                    if(sharedPref.getInt("force_rinse_l_cnt",0)>2){
-                        editor.putBoolean("force_rinse_l",true);
-                        editor.commit();
-                    }
-                    Log.d("ForceL","Flag:"+sharedPref.getBoolean("force_rinse_l",false)+" CNT:"+sharedPref.getInt("force_rinse_l_cnt",0));
                 }
-                return true;
+                Log.d("ForceL","Flag:"+sharedPref.getBoolean("force_rinse_l",false)+" CNT:"+sharedPref.getInt("force_rinse_l_cnt",0));
             }
+            return true;
         });
-        start_l.setOnTouchListener(new View.OnTouchListener() {
-            public boolean onTouch(View view, MotionEvent event) {
-                if (event.getAction() == android.view.MotionEvent.ACTION_DOWN) {
-                    params = (ConstraintLayout.LayoutParams) view.getLayoutParams();
-                    params.setMargins(8, 0, 8, 0);
-                    view.setLayoutParams(params);
-                } else if (event.getAction() == android.view.MotionEvent.ACTION_UP) {
-                    params = (ConstraintLayout.LayoutParams) view.getLayoutParams();
-                    params.setMargins(0, 0, 0, 0);
-                    view.setLayoutParams(params);
-                    if (PUMP_LOCK) l_rinse_start[2] = 0x06;
-                    else l_rinse_start[2] = 0x00;
-                    if (l_wash_prosedure) {
-                        l_cmd = 5;
-                        l_wash = 0;
-                        l_detergent = true;
-                        l_wash_flag = true;
-                        start_l.setVisibility(View.INVISIBLE);
-                        respite_l.setVisibility(View.INVISIBLE);
-                        settings_button.setVisibility(View.INVISIBLE);
-                        l_rinse_txt.setVisibility(View.VISIBLE);
-                        l_rinse_txt.setText(resources.getString(R.string.yikama_islemi) + "1/" + WASH_CYCLE);
-                        Log.d("L_wash", "WASH_TAKE=" + WASH_TAKE + " WASH_DWELL=" + WASH_DWELL + " WASH_CYCLE=" + WASH_CYCLE + " WASH_RINSE=" + WASH_RINSE);
-                    }
-                    else {
-                        if(l_rinse_after_wash) {
-                            l_rinse_start[2] = 0x05;
-                            l_rinse_start[3] = 0x02;
-                            l_rinse_time=WASH_RINSE;
-                            l_att.setVisibility(View.INVISIBLE);
-                        }
-                        else
-                        {
-                            if(PUMP_LOCK)l_rinse_start[2]=0x05;
-                            else l_rinse_start[2]=0x00;
-                            l_rinse_start[3] = 0x14;
-                            l_rinse_time=T_RINSE;
-                        }
-                        l_cmd = 7;
-                        start_l.setVisibility(View.INVISIBLE);
-                        respite_l.setVisibility(View.INVISIBLE);
-                        settings_button.setVisibility(View.INVISIBLE);
-                        l_rinse_txt.setVisibility(View.VISIBLE);
-                        t_rinse_cnt_l_flag = true;
-                        n_rinse_cnt_l = 0;
-                        save_cleanig_events("A", "rinse_start");
-                        Log.d("Rinse", "left: start touch");
-                    }
+        start_l.setOnTouchListener((view, event) -> {
+            if (event.getAction() == MotionEvent.ACTION_DOWN) {
+                params = (ConstraintLayout.LayoutParams) view.getLayoutParams();
+                params.setMargins(8, 0, 8, 0);
+                view.setLayoutParams(params);
+            } else if (event.getAction() == MotionEvent.ACTION_UP) {
+                params = (ConstraintLayout.LayoutParams) view.getLayoutParams();
+                params.setMargins(0, 0, 0, 0);
+                view.setLayoutParams(params);
+                if (PUMP_LOCK) l_rinse_start[2] = 0x06;
+                else l_rinse_start[2] = 0x00;
+                if (l_wash_prosedure) {
+                    l_cmd = 5;
+                    l_wash = 0;
+                    l_detergent = true;
+                    l_wash_flag = true;
+                    start_l.setVisibility(View.INVISIBLE);
+                    respite_l.setVisibility(View.INVISIBLE);
+                    settings_button.setVisibility(View.INVISIBLE);
+                    l_rinse_txt.setVisibility(View.VISIBLE);
+                    l_rinse_txt.setText(resources.getString(R.string.yikama_islemi) + "1/" + WASH_CYCLE);
+                    Log.d("L_wash", "WASH_TAKE=" + WASH_TAKE + " WASH_DWELL=" + WASH_DWELL + " WASH_CYCLE=" + WASH_CYCLE + " WASH_RINSE=" + WASH_RINSE);
                 }
-                return true;
-            }
-        });
-        start_l_w.setOnTouchListener(new View.OnTouchListener() {
-            public boolean onTouch(View view, MotionEvent event) {
-                if (event.getAction() == android.view.MotionEvent.ACTION_DOWN) {
-                    params = (ConstraintLayout.LayoutParams) view.getLayoutParams();
-                    params.setMargins(8, 0, 8, 0);
-                    view.setLayoutParams(params);
-                } else if (event.getAction() == android.view.MotionEvent.ACTION_UP) {
-                    params = (ConstraintLayout.LayoutParams) view.getLayoutParams();
-                    params.setMargins(0, 0, 0, 0);
-                    view.setLayoutParams(params);
-                    if (PUMP_LOCK) l_rinse_start[2] = 0x06;
-                    else l_rinse_start[2] = 0x00;
-                    if (l_wash_prosedure) {
-                        l_cmd = 5;
-                        l_wash = 0;
-                        l_detergent = true;
-                        l_wash_flag = true;
-                        start_l_w.setVisibility(View.INVISIBLE);
-                        respite_l.setVisibility(View.INVISIBLE);
-                        settings_button.setVisibility(View.INVISIBLE);
-                        l_rinse_txt.setVisibility(View.VISIBLE);
-                        l_rinse_txt.setText(resources.getString(R.string.yikama_islemi) + "1/" + WASH_CYCLE);
+                else {
+                    if(l_rinse_after_wash) {
+                        l_rinse_start[2] = 0x05;
+                        l_rinse_start[3] = 0x02;
+                        l_rinse_time=WASH_RINSE;
                         l_att.setVisibility(View.INVISIBLE);
-                        Log.d("L_wash", "WASH_TAKE=" + WASH_TAKE + " WASH_DWELL=" + WASH_DWELL + " WASH_CYCLE=" + WASH_CYCLE + " WASH_RINSE=" + WASH_RINSE);
                     }
-                    else {
-                        if(l_rinse_after_wash) {
-                            l_rinse_start[2] = 0x05;
-                            l_rinse_start[3] = 0x02;
-                            l_rinse_time=WASH_RINSE;
-                            l_att.setVisibility(View.INVISIBLE);
-                        }
-                        else
-                        {
-                            if(PUMP_LOCK)l_rinse_start[2]=0x05;
-                            else l_rinse_start[2]=0x00;
-                            l_rinse_start[3] = 0x14;
-                            l_rinse_time=T_RINSE;
-                            editor.putInt("force_rinse_l_cnt",0);
-                            editor.putBoolean("force_rinse_l",false);
-                            editor.commit();
-                        }
-                        l_cmd = 7;
-                        start_l_w.setVisibility(View.INVISIBLE);
-                        respite_l.setVisibility(View.INVISIBLE);
-                        settings_button.setVisibility(View.INVISIBLE);
-                        l_rinse_txt.setVisibility(View.VISIBLE);
-                        t_rinse_cnt_l_flag = true;
-                        n_rinse_cnt_l = 0;
-                        save_cleanig_events("A", "rinse_start");
-                        Log.d("Rinse", "left: start touch");
+                    else
+                    {
+                        if(PUMP_LOCK)l_rinse_start[2]=0x05;
+                        else l_rinse_start[2]=0x00;
+                        l_rinse_start[3] = 0x14;
+                        l_rinse_time=T_RINSE;
                     }
+                    l_cmd = 7;
+                    start_l.setVisibility(View.INVISIBLE);
+                    respite_l.setVisibility(View.INVISIBLE);
+                    settings_button.setVisibility(View.INVISIBLE);
+                    l_rinse_txt.setVisibility(View.VISIBLE);
+                    t_rinse_cnt_l_flag = true;
+                    n_rinse_cnt_l = 0;
+                    save_cleanig_events("A", "rinse_start");
+                    Log.d("Rinse", "left: start touch");
                 }
-                return true;
             }
+            return true;
         });
-        respite_r.setOnTouchListener(new View.OnTouchListener() {
-            public boolean onTouch(View view, MotionEvent event) {
-                if (event.getAction() == android.view.MotionEvent.ACTION_DOWN) {
-                    params = (ConstraintLayout.LayoutParams) view.getLayoutParams();
-                    params.setMargins(8, 0, 8, 0);
-                    view.setLayoutParams(params);
-                } else if (event.getAction() == android.view.MotionEvent.ACTION_UP) {
-                    params = (ConstraintLayout.LayoutParams) view.getLayoutParams();
-                    params.setMargins(0, 0, 0, 0);
-                    view.setLayoutParams(params);
-                    hide_rinse_screen("right");
-                    save_cleanig_events("B", "rinse_respite");
-                    t_rinse_cnt_r = T_RINSE_TRIG - 3;
-                    editor.putInt("force_rinse_r_cnt",(sharedPref.getInt("force_rinse_r_cnt",0)+1));
-                    editor.commit();
-                    if(sharedPref.getInt("force_rinse_r_cnt",0)>2){
-                        editor.putBoolean("force_rinse_r",true);
+        start_l_w.setOnTouchListener((view, event) -> {
+            if (event.getAction() == MotionEvent.ACTION_DOWN) {
+                params = (ConstraintLayout.LayoutParams) view.getLayoutParams();
+                params.setMargins(8, 0, 8, 0);
+                view.setLayoutParams(params);
+            } else if (event.getAction() == MotionEvent.ACTION_UP) {
+                params = (ConstraintLayout.LayoutParams) view.getLayoutParams();
+                params.setMargins(0, 0, 0, 0);
+                view.setLayoutParams(params);
+                if (PUMP_LOCK) l_rinse_start[2] = 0x06;
+                else l_rinse_start[2] = 0x00;
+                if (l_wash_prosedure) {
+                    l_cmd = 5;
+                    l_wash = 0;
+                    l_detergent = true;
+                    l_wash_flag = true;
+                    start_l_w.setVisibility(View.INVISIBLE);
+                    respite_l.setVisibility(View.INVISIBLE);
+                    settings_button.setVisibility(View.INVISIBLE);
+                    l_rinse_txt.setVisibility(View.VISIBLE);
+                    l_rinse_txt.setText(resources.getString(R.string.yikama_islemi) + "1/" + WASH_CYCLE);
+                    l_att.setVisibility(View.INVISIBLE);
+                    Log.d("L_wash", "WASH_TAKE=" + WASH_TAKE + " WASH_DWELL=" + WASH_DWELL + " WASH_CYCLE=" + WASH_CYCLE + " WASH_RINSE=" + WASH_RINSE);
+                }
+                else {
+                    if(l_rinse_after_wash) {
+                        l_rinse_start[2] = 0x05;
+                        l_rinse_start[3] = 0x02;
+                        l_rinse_time=WASH_RINSE;
+                        l_att.setVisibility(View.INVISIBLE);
+                    }
+                    else
+                    {
+                        if(PUMP_LOCK)l_rinse_start[2]=0x05;
+                        else l_rinse_start[2]=0x00;
+                        l_rinse_start[3] = 0x14;
+                        l_rinse_time=T_RINSE;
+                        editor.putInt("force_rinse_l_cnt",0);
+                        editor.putBoolean("force_rinse_l",false);
                         editor.commit();
                     }
-                    Log.d("ForceR","Flag:"+sharedPref.getBoolean("force_rinse_r",false)+" CNT:"+sharedPref.getInt("force_rinse_r_cnt",0));
+                    l_cmd = 7;
+                    start_l_w.setVisibility(View.INVISIBLE);
+                    respite_l.setVisibility(View.INVISIBLE);
+                    settings_button.setVisibility(View.INVISIBLE);
+                    l_rinse_txt.setVisibility(View.VISIBLE);
+                    t_rinse_cnt_l_flag = true;
+                    n_rinse_cnt_l = 0;
+                    save_cleanig_events("A", "rinse_start");
+                    Log.d("Rinse", "left: start touch");
                 }
-                return true;
             }
+            return true;
         });
-        start_r.setOnTouchListener(new View.OnTouchListener() {
-            public boolean onTouch(View view, MotionEvent event) {
-                if (event.getAction() == android.view.MotionEvent.ACTION_DOWN) {
-                    params = (ConstraintLayout.LayoutParams) view.getLayoutParams();
-                    params.setMargins(8, 0, 8, 0);
-                    view.setLayoutParams(params);
-                } else if (event.getAction() == android.view.MotionEvent.ACTION_UP) {
-                    params = (ConstraintLayout.LayoutParams) view.getLayoutParams();
-                    params.setMargins(0, 0, 0, 0);
-                    view.setLayoutParams(params);
-                    if (PUMP_LOCK) r_rinse_start[2] = 0x60;
-                    else r_rinse_start[2] = 0x00;
-                    if (r_wash_prosedure) {
-                        r_cmd = 5;
-                        r_wash = 0;
-                        r_detergent = true;
-                        r_wash_flag = true;
-                        start_r.setVisibility(View.INVISIBLE);
-                        respite_r.setVisibility(View.INVISIBLE);
-                        settings_button.setVisibility(View.INVISIBLE);
-                        r_rinse_txt.setVisibility(View.VISIBLE);
-                        r_rinse_txt.setText(resources.getString(R.string.yikama_islemi) + "1/" + WASH_CYCLE);
-                        Log.d("R_wash", "WASH_TAKE=" + WASH_TAKE + " WASH_DWELL=" + WASH_DWELL + " WASH_CYCLE=" + WASH_CYCLE + " WASH_RINSE=" + WASH_RINSE);
-                    }
-                    else {
-                        if(r_rinse_after_wash) {
-                            r_rinse_start[2] = 0x50;
-                            r_rinse_start[3] = 0x01;
-                            r_rinse_time=WASH_RINSE;
-                            r_att.setVisibility(View.INVISIBLE);
-                            Log.d("Wash","rinse");
-                        }
-                        else
-                        {
-                            if(PUMP_LOCK)r_rinse_start[2]=0x50;
-                            else r_rinse_start[2]=0x00;
-                            r_rinse_start[3] = 0x28;
-                            r_rinse_time=T_RINSE;
-                        }
-                        r_cmd = 7;
-                        start_r.setVisibility(View.INVISIBLE);
-                        respite_r.setVisibility(View.INVISIBLE);
-                        settings_button.setVisibility(View.INVISIBLE);
-                        r_rinse_txt.setVisibility(View.VISIBLE);
-                        t_rinse_cnt_r_flag = true;
-                        n_rinse_cnt_r = 0;
-                        save_cleanig_events("B", "rinse_start");
-                        Log.d("Rinse", "right: start touch");
-                    }
+        respite_r.setOnTouchListener((view, event) -> {
+            if (event.getAction() == MotionEvent.ACTION_DOWN) {
+                params = (ConstraintLayout.LayoutParams) view.getLayoutParams();
+                params.setMargins(8, 0, 8, 0);
+                view.setLayoutParams(params);
+            } else if (event.getAction() == MotionEvent.ACTION_UP) {
+                params = (ConstraintLayout.LayoutParams) view.getLayoutParams();
+                params.setMargins(0, 0, 0, 0);
+                view.setLayoutParams(params);
+                hide_rinse_screen("right");
+                save_cleanig_events("B", "rinse_respite");
+                t_rinse_cnt_r = T_RINSE_TRIG - 3;
+                editor.putInt("force_rinse_r_cnt",(sharedPref.getInt("force_rinse_r_cnt",0)+1));
+                editor.commit();
+                if(sharedPref.getInt("force_rinse_r_cnt",0)>2){
+                    editor.putBoolean("force_rinse_r",true);
+                    editor.commit();
                 }
-                return true;
+                Log.d("ForceR","Flag:"+sharedPref.getBoolean("force_rinse_r",false)+" CNT:"+sharedPref.getInt("force_rinse_r_cnt",0));
             }
+            return true;
         });
-        start_r_w.setOnTouchListener(new View.OnTouchListener() {
-            public boolean onTouch(View view, MotionEvent event) {
-                if (event.getAction() == android.view.MotionEvent.ACTION_DOWN) {
-                    params = (ConstraintLayout.LayoutParams) view.getLayoutParams();
-                    params.setMargins(8, 0, 8, 0);
-                    view.setLayoutParams(params);
-                } else if (event.getAction() == android.view.MotionEvent.ACTION_UP) {
-                    params = (ConstraintLayout.LayoutParams) view.getLayoutParams();
-                    params.setMargins(0, 0, 0, 0);
-                    view.setLayoutParams(params);
-                    if (PUMP_LOCK) r_rinse_start[2] = 0x60;
-                    else r_rinse_start[2] = 0x00;
-                    if (r_wash_prosedure) {
-                        r_cmd = 5;
-                        r_wash = 0;
-                        r_detergent = true;
-                        r_wash_flag = true;
-                        start_r_w.setVisibility(View.INVISIBLE);
-                        respite_r.setVisibility(View.INVISIBLE);
-                        settings_button.setVisibility(View.INVISIBLE);
-                        r_rinse_txt.setVisibility(View.VISIBLE);
-                        r_rinse_txt.setText(resources.getString(R.string.yikama_islemi) + "1/" + WASH_CYCLE);
+        start_r.setOnTouchListener((view, event) -> {
+            if (event.getAction() == MotionEvent.ACTION_DOWN) {
+                params = (ConstraintLayout.LayoutParams) view.getLayoutParams();
+                params.setMargins(8, 0, 8, 0);
+                view.setLayoutParams(params);
+            } else if (event.getAction() == MotionEvent.ACTION_UP) {
+                params = (ConstraintLayout.LayoutParams) view.getLayoutParams();
+                params.setMargins(0, 0, 0, 0);
+                view.setLayoutParams(params);
+                if (PUMP_LOCK) r_rinse_start[2] = 0x60;
+                else r_rinse_start[2] = 0x00;
+                if (r_wash_prosedure) {
+                    r_cmd = 5;
+                    r_wash = 0;
+                    r_detergent = true;
+                    r_wash_flag = true;
+                    start_r.setVisibility(View.INVISIBLE);
+                    respite_r.setVisibility(View.INVISIBLE);
+                    settings_button.setVisibility(View.INVISIBLE);
+                    r_rinse_txt.setVisibility(View.VISIBLE);
+                    r_rinse_txt.setText(resources.getString(R.string.yikama_islemi) + "1/" + WASH_CYCLE);
+                    Log.d("R_wash", "WASH_TAKE=" + WASH_TAKE + " WASH_DWELL=" + WASH_DWELL + " WASH_CYCLE=" + WASH_CYCLE + " WASH_RINSE=" + WASH_RINSE);
+                }
+                else {
+                    if(r_rinse_after_wash) {
+                        r_rinse_start[2] = 0x50;
+                        r_rinse_start[3] = 0x01;
+                        r_rinse_time=WASH_RINSE;
                         r_att.setVisibility(View.INVISIBLE);
-                        Log.d("R_wash", "WASH_TAKE=" + WASH_TAKE + " WASH_DWELL=" + WASH_DWELL + " WASH_CYCLE=" + WASH_CYCLE + " WASH_RINSE=" + WASH_RINSE);
+                        Log.d("Wash","rinse");
                     }
-                    else {
-                        if(r_rinse_after_wash) {
-                            r_rinse_start[2] = 0x50;
-                            r_rinse_start[3] = 0x01;
-                            r_rinse_time=WASH_RINSE;
-                            r_att.setVisibility(View.INVISIBLE);
-                            Log.d("Wash","rinse");
-                        }
-                        else
-                        {
-                            if(PUMP_LOCK)r_rinse_start[2]=0x50;
-                            else r_rinse_start[2]=0x00;
-                            r_rinse_start[3] = 0x28;
-                            editor.putInt("force_rinse_r_cnt",0);
-                            editor.putBoolean("force_rinse_r",false);
-                            editor.commit();
-                            r_rinse_time=T_RINSE;
-                        }
-                        r_cmd = 7;
-                        start_r_w.setVisibility(View.INVISIBLE);
-                        respite_r.setVisibility(View.INVISIBLE);
-                        settings_button.setVisibility(View.INVISIBLE);
-                        r_rinse_txt.setVisibility(View.VISIBLE);
-                        t_rinse_cnt_r_flag = true;
-                        n_rinse_cnt_r = 0;
-                        save_cleanig_events("B", "rinse_start");
-                        Log.d("Rinse", "right: start touch");
+                    else
+                    {
+                        if(PUMP_LOCK)r_rinse_start[2]=0x50;
+                        else r_rinse_start[2]=0x00;
+                        r_rinse_start[3] = 0x28;
+                        r_rinse_time=T_RINSE;
                     }
+                    r_cmd = 7;
+                    start_r.setVisibility(View.INVISIBLE);
+                    respite_r.setVisibility(View.INVISIBLE);
+                    settings_button.setVisibility(View.INVISIBLE);
+                    r_rinse_txt.setVisibility(View.VISIBLE);
+                    t_rinse_cnt_r_flag = true;
+                    n_rinse_cnt_r = 0;
+                    save_cleanig_events("B", "rinse_start");
+                    Log.d("Rinse", "right: start touch");
                 }
-                return true;
             }
+            return true;
         });
-        manual_r.setOnTouchListener(new View.OnTouchListener() {
-            public boolean onTouch(View view, MotionEvent event) {
-                if (!right_dosing) {
-                    if (event.getAction() == android.view.MotionEvent.ACTION_DOWN) {
-                        params = (ConstraintLayout.LayoutParams) view.getLayoutParams();
-                        params.setMargins(8, 0, 8, 0);
-                        view.setLayoutParams(params);
-                        r_manuel_dosing = true;
-                        r_cmd = 5;
-                        Log.d("Manuel", "R pressed");
-                    } else if (event.getAction() == android.view.MotionEvent.ACTION_UP) {
-                        params = (ConstraintLayout.LayoutParams) view.getLayoutParams();
-                        params.setMargins(0, 0, 0, 0);
-                        view.setLayoutParams(params);
-                        r_manuel_dosing = false;
-                        r_cmd = 6;
-                        Log.d("Manuel", "R released");
+        start_r_w.setOnTouchListener((view, event) -> {
+            if (event.getAction() == MotionEvent.ACTION_DOWN) {
+                params = (ConstraintLayout.LayoutParams) view.getLayoutParams();
+                params.setMargins(8, 0, 8, 0);
+                view.setLayoutParams(params);
+            } else if (event.getAction() == MotionEvent.ACTION_UP) {
+                params = (ConstraintLayout.LayoutParams) view.getLayoutParams();
+                params.setMargins(0, 0, 0, 0);
+                view.setLayoutParams(params);
+                if (PUMP_LOCK) r_rinse_start[2] = 0x60;
+                else r_rinse_start[2] = 0x00;
+                if (r_wash_prosedure) {
+                    r_cmd = 5;
+                    r_wash = 0;
+                    r_detergent = true;
+                    r_wash_flag = true;
+                    start_r_w.setVisibility(View.INVISIBLE);
+                    respite_r.setVisibility(View.INVISIBLE);
+                    settings_button.setVisibility(View.INVISIBLE);
+                    r_rinse_txt.setVisibility(View.VISIBLE);
+                    r_rinse_txt.setText(resources.getString(R.string.yikama_islemi) + "1/" + WASH_CYCLE);
+                    r_att.setVisibility(View.INVISIBLE);
+                    Log.d("R_wash", "WASH_TAKE=" + WASH_TAKE + " WASH_DWELL=" + WASH_DWELL + " WASH_CYCLE=" + WASH_CYCLE + " WASH_RINSE=" + WASH_RINSE);
+                }
+                else {
+                    if(r_rinse_after_wash) {
+                        r_rinse_start[2] = 0x50;
+                        r_rinse_start[3] = 0x01;
+                        r_rinse_time=WASH_RINSE;
+                        r_att.setVisibility(View.INVISIBLE);
+                        Log.d("Wash","rinse");
                     }
-                }
-                return true;
-            }
-        });
-        manual_l.setOnTouchListener(new View.OnTouchListener() {
-            public boolean onTouch(View view, MotionEvent event) {
-                if (!left_dosing) {
-                    if (event.getAction() == android.view.MotionEvent.ACTION_DOWN) {
-                        params = (ConstraintLayout.LayoutParams) view.getLayoutParams();
-                        params.setMargins(8, 0, 8, 0);
-                        view.setLayoutParams(params);
-                        l_manuel_dosing = true;
-                        l_cmd = 5;
-                        Log.d("Manuel", "L pressed");
-                    } else if (event.getAction() == android.view.MotionEvent.ACTION_UP) {
-                        params = (ConstraintLayout.LayoutParams) view.getLayoutParams();
-                        params.setMargins(0, 0, 0, 0);
-                        view.setLayoutParams(params);
-                        l_manuel_dosing = false;
-                        l_cmd = 6;
-                        Log.d("Manuel", "L released");
-                    } else if (event.getAction() == android.view.MotionEvent.ACTION_CANCEL) {
-                        Log.d("Manuel", "L cancelled");
+                    else
+                    {
+                        if(PUMP_LOCK)r_rinse_start[2]=0x50;
+                        else r_rinse_start[2]=0x00;
+                        r_rinse_start[3] = 0x28;
+                        editor.putInt("force_rinse_r_cnt",0);
+                        editor.putBoolean("force_rinse_r",false);
+                        editor.commit();
+                        r_rinse_time=T_RINSE;
                     }
+                    r_cmd = 7;
+                    start_r_w.setVisibility(View.INVISIBLE);
+                    respite_r.setVisibility(View.INVISIBLE);
+                    settings_button.setVisibility(View.INVISIBLE);
+                    r_rinse_txt.setVisibility(View.VISIBLE);
+                    t_rinse_cnt_r_flag = true;
+                    n_rinse_cnt_r = 0;
+                    save_cleanig_events("B", "rinse_start");
+                    Log.d("Rinse", "right: start touch");
                 }
-                return true;
             }
+            return true;
         });
-        l_hot.setOnTouchListener(new View.OnTouchListener() {
-            public boolean onTouch(View view, MotionEvent event) {
-                if (event.getAction() == android.view.MotionEvent.ACTION_DOWN) {
-                    params = (ConstraintLayout.LayoutParams) l_ice.getLayoutParams();
-                    params.setMargins(0, 0, 0, 0);
-                    l_ice.setLayoutParams(params);
-                    params = (ConstraintLayout.LayoutParams) l_cold.getLayoutParams();
-                    params.setMargins(0, 0, 0, 0);
-                    l_cold.setLayoutParams(params);
-                    params = (ConstraintLayout.LayoutParams) view.getLayoutParams();
-                    params.setMargins(8, 0, 8, 0);
-                    x1l_button.setImageResource(R.drawable.hotcup1x);
-                    x2l_button.setImageResource(R.drawable.hotcup2x);
-                    x3l_button.setImageResource(R.drawable.hotcup3x);
-                    x4l_button.setImageResource(R.drawable.hotcup4x);
-                    view.setLayoutParams(params);
-                    dose_l_group = 1;
-                } else if (event.getAction() == android.view.MotionEvent.ACTION_UP) {
-                }
-                return true;
-            }
-        });
-        l_ice.setOnTouchListener(new View.OnTouchListener() {
-            public boolean onTouch(View view, MotionEvent event) {
-                if (event.getAction() == android.view.MotionEvent.ACTION_DOWN) {
-                    params = (ConstraintLayout.LayoutParams) l_hot.getLayoutParams();
-                    params.setMargins(0, 0, 0, 0);
-                    l_hot.setLayoutParams(params);
-                    params = (ConstraintLayout.LayoutParams) l_cold.getLayoutParams();
-                    params.setMargins(0, 0, 0, 0);
-                    l_cold.setLayoutParams(params);
+        manual_r.setOnTouchListener((view, event) -> {
+            if (!right_dosing) {
+                if (event.getAction() == MotionEvent.ACTION_DOWN) {
                     params = (ConstraintLayout.LayoutParams) view.getLayoutParams();
                     params.setMargins(8, 0, 8, 0);
                     view.setLayoutParams(params);
-                    x1l_button.setImageResource(R.drawable.icecup1x);
-                    x2l_button.setImageResource(R.drawable.icecup2x);
-                    x3l_button.setImageResource(R.drawable.icecup3x);
-                    x4l_button.setImageResource(R.drawable.icecup4x);
-                    dose_l_group = 2;
-                } else if (event.getAction() == android.view.MotionEvent.ACTION_UP) {
-                }
-                return true;
-            }
-        });
-        l_cold.setOnTouchListener(new View.OnTouchListener() {
-            public boolean onTouch(View view, MotionEvent event) {
-                if (event.getAction() == android.view.MotionEvent.ACTION_DOWN) {
-                    params = (ConstraintLayout.LayoutParams) l_hot.getLayoutParams();
-                    params.setMargins(0, 0, 0, 0);
-                    l_hot.setLayoutParams(params);
-                    params = (ConstraintLayout.LayoutParams) l_ice.getLayoutParams();
-                    params.setMargins(0, 0, 0, 0);
-                    l_ice.setLayoutParams(params);
-                    params = (ConstraintLayout.LayoutParams) view.getLayoutParams();
-                    params.setMargins(8, 0, 8, 0);
-                    view.setLayoutParams(params);
-                    x1l_button.setImageResource(R.drawable.coldcup1x);
-                    x2l_button.setImageResource(R.drawable.coldcup2x);
-                    x3l_button.setImageResource(R.drawable.coldcup3x);
-                    x4l_button.setImageResource(R.drawable.coldcup4x);
-                    dose_l_group = 3;
-                } else if (event.getAction() == android.view.MotionEvent.ACTION_UP) {
-                }
-                return true;
-            }
-        });
-        r_hot.setOnTouchListener(new View.OnTouchListener() {
-            public boolean onTouch(View view, MotionEvent event) {
-                if (event.getAction() == android.view.MotionEvent.ACTION_DOWN) {
-                    params = (ConstraintLayout.LayoutParams) r_ice.getLayoutParams();
-                    params.setMargins(0, 0, 0, 0);
-                    r_ice.setLayoutParams(params);
-                    params = (ConstraintLayout.LayoutParams) r_cold.getLayoutParams();
-                    params.setMargins(0, 0, 0, 0);
-                    r_cold.setLayoutParams(params);
-                    params = (ConstraintLayout.LayoutParams) view.getLayoutParams();
-                    params.setMargins(8, 0, 8, 0);
-                    view.setLayoutParams(params);
-                    x1r_button.setImageResource(R.drawable.hotcup1x);
-                    x2r_button.setImageResource(R.drawable.hotcup2x);
-                    x3r_button.setImageResource(R.drawable.hotcup3x);
-                    x4r_button.setImageResource(R.drawable.hotcup4x);
-                    dose_r_group = 1;
-                } else if (event.getAction() == android.view.MotionEvent.ACTION_UP) {
-                }
-                return true;
-            }
-        });
-        r_ice.setOnTouchListener(new View.OnTouchListener() {
-            public boolean onTouch(View view, MotionEvent event) {
-                if (event.getAction() == android.view.MotionEvent.ACTION_DOWN) {
-                    params = (ConstraintLayout.LayoutParams) r_hot.getLayoutParams();
-                    params.setMargins(0, 0, 0, 0);
-                    r_hot.setLayoutParams(params);
-                    params = (ConstraintLayout.LayoutParams) r_cold.getLayoutParams();
-                    params.setMargins(0, 0, 0, 0);
-                    r_cold.setLayoutParams(params);
-                    params = (ConstraintLayout.LayoutParams) view.getLayoutParams();
-                    params.setMargins(8, 0, 8, 0);
-                    view.setLayoutParams(params);
-                    x1r_button.setImageResource(R.drawable.icecup1x);
-                    x2r_button.setImageResource(R.drawable.icecup2x);
-                    x3r_button.setImageResource(R.drawable.icecup3x);
-                    x4r_button.setImageResource(R.drawable.icecup4x);
-                    dose_r_group = 2;
-                } else if (event.getAction() == android.view.MotionEvent.ACTION_UP) {
-                }
-                return true;
-            }
-        });
-        r_cold.setOnTouchListener(new View.OnTouchListener() {
-            public boolean onTouch(View view, MotionEvent event) {
-                if (event.getAction() == android.view.MotionEvent.ACTION_DOWN) {
-                    params = (ConstraintLayout.LayoutParams) r_hot.getLayoutParams();
-                    params.setMargins(0, 0, 0, 0);
-                    r_hot.setLayoutParams(params);
-                    params = (ConstraintLayout.LayoutParams) r_ice.getLayoutParams();
-                    params.setMargins(0, 0, 0, 0);
-                    r_ice.setLayoutParams(params);
-                    params = (ConstraintLayout.LayoutParams) view.getLayoutParams();
-                    params.setMargins(8, 0, 8, 0);
-                    view.setLayoutParams(params);
-                    x1r_button.setImageResource(R.drawable.coldcup1x);
-                    x2r_button.setImageResource(R.drawable.coldcup2x);
-                    x3r_button.setImageResource(R.drawable.coldcup3x);
-                    x4r_button.setImageResource(R.drawable.coldcup4x);
-                    dose_r_group = 3;
-                } else if (event.getAction() == android.view.MotionEvent.ACTION_UP) {
-                }
-                return true;
-            }
-        });
-        x1l_button.setOnTouchListener(new View.OnTouchListener() {
-            public boolean onTouch(View view, MotionEvent event) {
-                if (!left_dosing) {
-                    if (event.getAction() == android.view.MotionEvent.ACTION_DOWN) {
-                        params = (ConstraintLayout.LayoutParams) view.getLayoutParams();
-                        params.setMargins(8, 0, 8, 0);
-                        view.setLayoutParams(params);
-                        x1l_button.setImageResource(R.drawable.cup_pressed1x);
-                    } else if (event.getAction() == android.view.MotionEvent.ACTION_UP) {
-                        l_cmd = 1;
-                        x1l_cncl.setVisibility(View.VISIBLE);
-                        if (dose_l_group == 1) dose_l_set = ENCSET_A_11;
-                        else if (dose_l_group == 2) dose_l_set = ENCSET_A_21;
-                        else if (dose_l_group == 3) dose_l_set = ENCSET_A_31;
-                        else dose_l_set = 65535;
-                    }
-                } else {
-                    Log.d("Dose button: ", "locked=" + left_dosing);
-                }
-                return true;
-            }
-        });
-        x2l_button.setOnTouchListener(new View.OnTouchListener() {
-            public boolean onTouch(View view, MotionEvent event) {
-                if (!left_dosing) {
-                    if (event.getAction() == android.view.MotionEvent.ACTION_DOWN) {
-                        params = (ConstraintLayout.LayoutParams) view.getLayoutParams();
-                        params.setMargins(8, 0, 8, 0);
-                        view.setLayoutParams(params);
-                        x2l_button.setImageResource(R.drawable.cup_pressed2x);
-                    } else if (event.getAction() == android.view.MotionEvent.ACTION_UP) {
-                        l_cmd = 2;
-                        x2l_cncl.setVisibility(View.VISIBLE);
-                        if (dose_l_group == 1) dose_l_set = ENCSET_A_12;
-                        else if (dose_l_group == 2) dose_l_set = ENCSET_A_22;
-                        else if (dose_l_group == 3) dose_l_set = ENCSET_A_32;
-                        else dose_l_set = 65535;
-                    }
-                }
-                return true;
-            }
-        });
-        x3l_button.setOnTouchListener(new View.OnTouchListener() {
-            public boolean onTouch(View view, MotionEvent event) {
-                if (!left_dosing) {
-                    if (event.getAction() == android.view.MotionEvent.ACTION_DOWN) {
-                        params = (ConstraintLayout.LayoutParams) view.getLayoutParams();
-                        params.setMargins(8, 0, 8, 0);
-                        view.setLayoutParams(params);
-                        x3l_button.setImageResource(R.drawable.cup_pressed3x);
-                    } else if (event.getAction() == android.view.MotionEvent.ACTION_UP) {
-                        l_cmd = 3;
-                        x3l_cncl.setVisibility(View.VISIBLE);
-                        if (dose_l_group == 1) dose_l_set = ENCSET_A_13;
-                        else if (dose_l_group == 2) dose_l_set = ENCSET_A_23;
-                        else if (dose_l_group == 3) dose_l_set = ENCSET_A_33;
-                        else dose_l_set = 65535;
-                    }
-                }
-                return true;
-            }
-        });
-        x4l_button.setOnTouchListener(new View.OnTouchListener() {
-            public boolean onTouch(View view, MotionEvent event) {
-                if (!left_dosing) {
-                    if (event.getAction() == android.view.MotionEvent.ACTION_DOWN) {
-                        params = (ConstraintLayout.LayoutParams) view.getLayoutParams();
-                        params.setMargins(8, 0, 8, 0);
-                        view.setLayoutParams(params);
-                        x4l_button.setImageResource(R.drawable.cup_pressed4x);
-                    } else if (event.getAction() == android.view.MotionEvent.ACTION_UP) {
-                        l_cmd = 4;
-                        x4l_cncl.setVisibility(View.VISIBLE);
-                        if (dose_l_group == 1) dose_l_set = ENCSET_A_14;
-                        else if (dose_l_group == 2) dose_l_set = ENCSET_A_24;
-                        else if (dose_l_group == 3) dose_l_set = ENCSET_A_34;
-                        else dose_l_set = 65535;
-                    }
-                }
-                return true;
-            }
-        });
-        x1r_button.setOnTouchListener(new View.OnTouchListener() {
-            public boolean onTouch(View view, MotionEvent event) {
-                if (!right_dosing) {
-                    if (event.getAction() == android.view.MotionEvent.ACTION_DOWN) {
-                        params = (ConstraintLayout.LayoutParams) view.getLayoutParams();
-                        params.setMargins(8, 0, 8, 0);
-                        view.setLayoutParams(params);
-                        x1r_button.setImageResource(R.drawable.cup_pressed1x);
-                    } else if (event.getAction() == android.view.MotionEvent.ACTION_UP) {
-                        r_cmd = 1;
-                        x1r_cncl.setVisibility(View.VISIBLE);
-                        if (dose_r_group == 1) dose_r_set = ENCSET_B_11;
-                        else if (dose_r_group == 2) dose_r_set = ENCSET_B_21;
-                        else if (dose_r_group == 3) dose_r_set = ENCSET_B_31;
-                        else dose_r_set = 65535;
-                    }
-                }
-                return true;
-            }
-        });
-        x2r_button.setOnTouchListener(new View.OnTouchListener() {
-            public boolean onTouch(View view, MotionEvent event) {
-                if (!right_dosing) {
-                    if (event.getAction() == android.view.MotionEvent.ACTION_DOWN) {
-                        params = (ConstraintLayout.LayoutParams) view.getLayoutParams();
-                        params.setMargins(8, 0, 8, 0);
-                        view.setLayoutParams(params);
-                        x2r_button.setImageResource(R.drawable.cup_pressed2x);
-                    } else if (event.getAction() == android.view.MotionEvent.ACTION_UP) {
-                        r_cmd = 2;
-                        x2r_cncl.setVisibility(View.VISIBLE);
-                        if (dose_r_group == 1) dose_r_set = ENCSET_B_12;
-                        else if (dose_r_group == 2) dose_r_set = ENCSET_B_22;
-                        else if (dose_r_group == 3) dose_r_set = ENCSET_B_32;
-                        else dose_r_set = 65535;
-                    }
-                }
-                return true;
-            }
-        });
-        x3r_button.setOnTouchListener(new View.OnTouchListener() {
-            public boolean onTouch(View view, MotionEvent event) {
-                if (!right_dosing) {
-                    if (event.getAction() == android.view.MotionEvent.ACTION_DOWN) {
-                        params = (ConstraintLayout.LayoutParams) view.getLayoutParams();
-                        params.setMargins(8, 0, 8, 0);
-                        view.setLayoutParams(params);
-                        x3r_button.setImageResource(R.drawable.cup_pressed3x);
-                    } else if (event.getAction() == android.view.MotionEvent.ACTION_UP) {
-                        r_cmd = 3;
-                        x3r_cncl.setVisibility(View.VISIBLE);
-                        if (dose_r_group == 1) dose_r_set = ENCSET_B_13;
-                        else if (dose_r_group == 2) dose_r_set = ENCSET_B_23;
-                        else if (dose_r_group == 3) dose_r_set = ENCSET_B_33;
-                        else dose_r_set = 65535;
-                    }
-                }
-                return true;
-            }
-        });
-        x4r_button.setOnTouchListener(new View.OnTouchListener() {
-            public boolean onTouch(View view, MotionEvent event) {
-                if (!right_dosing) {
-                    if (event.getAction() == android.view.MotionEvent.ACTION_DOWN) {
-                        params = (ConstraintLayout.LayoutParams) view.getLayoutParams();
-                        params.setMargins(8, 0, 8, 0);
-                        view.setLayoutParams(params);
-                        x4r_button.setImageResource(R.drawable.cup_pressed4x);
-                    } else if (event.getAction() == android.view.MotionEvent.ACTION_UP) {
-                        r_cmd = 4;
-                        x4r_cncl.setVisibility(View.VISIBLE);
-                        if (dose_r_group == 1) dose_r_set = ENCSET_B_14;
-                        else if (dose_r_group == 2) dose_r_set = ENCSET_B_24;
-                        else if (dose_r_group == 3) dose_r_set = ENCSET_B_34;
-                        else dose_r_set = 65535;
-                    }
-                }
-                return true;
-            }
-        });
-        x1l_cncl.setOnTouchListener(new View.OnTouchListener() {
-            public boolean onTouch(View view, MotionEvent event) {
-                if (event.getAction() == android.view.MotionEvent.ACTION_DOWN) {
-                    params = (ConstraintLayout.LayoutParams) view.getLayoutParams();
-                    params.setMargins(8, 0, 8, 0);
-                    view.setLayoutParams(params);
-                } else if (event.getAction() == android.view.MotionEvent.ACTION_UP) {
-                    left_dosing = false;
-                    left_dosing_finish = false;
-                    Log.d("x1l_cncl: ", "left_dosing=" + left_dosing);
-                    l_cmd = 6;
+                    r_manuel_dosing = true;
+                    r_cmd = 5;
+                    Log.d("Manuel", "R pressed");
+                } else if (event.getAction() == MotionEvent.ACTION_UP) {
                     params = (ConstraintLayout.LayoutParams) view.getLayoutParams();
                     params.setMargins(0, 0, 0, 0);
                     view.setLayoutParams(params);
-                    reset_l_button();
-                }
-                return true;
-            }
-        });
-        x2l_cncl.setOnTouchListener(new View.OnTouchListener() {
-            public boolean onTouch(View view, MotionEvent event) {
-                if (event.getAction() == android.view.MotionEvent.ACTION_DOWN) {
-                    params = (ConstraintLayout.LayoutParams) view.getLayoutParams();
-                    params.setMargins(8, 0, 8, 0);
-                    view.setLayoutParams(params);
-                } else if (event.getAction() == android.view.MotionEvent.ACTION_UP) {
-                    left_dosing = false;
-                    l_cmd = 6;
-                    params = (ConstraintLayout.LayoutParams) view.getLayoutParams();
-                    params.setMargins(0, 0, 0, 0);
-                    view.setLayoutParams(params);
-                    reset_l_button();
-                }
-                return true;
-            }
-        });
-        x3l_cncl.setOnTouchListener(new View.OnTouchListener() {
-            public boolean onTouch(View view, MotionEvent event) {
-                if (event.getAction() == android.view.MotionEvent.ACTION_DOWN) {
-                    params = (ConstraintLayout.LayoutParams) view.getLayoutParams();
-                    params.setMargins(8, 0, 8, 0);
-                    view.setLayoutParams(params);
-                } else if (event.getAction() == android.view.MotionEvent.ACTION_UP) {
-                    l_cmd = 6;
-                    left_dosing = false;
-                    params = (ConstraintLayout.LayoutParams) view.getLayoutParams();
-                    params.setMargins(0, 0, 0, 0);
-                    view.setLayoutParams(params);
-                    reset_l_button();
-                }
-                return true;
-            }
-        });
-        x4l_cncl.setOnTouchListener(new View.OnTouchListener() {
-            public boolean onTouch(View view, MotionEvent event) {
-                if (event.getAction() == android.view.MotionEvent.ACTION_DOWN) {
-                    params = (ConstraintLayout.LayoutParams) view.getLayoutParams();
-                    params.setMargins(8, 0, 8, 0);
-                    view.setLayoutParams(params);
-                } else if (event.getAction() == android.view.MotionEvent.ACTION_UP) {
-                    l_cmd = 6;
-                    left_dosing = false;
-                    params = (ConstraintLayout.LayoutParams) view.getLayoutParams();
-                    params.setMargins(0, 0, 0, 0);
-                    view.setLayoutParams(params);
-                    reset_l_button();
-                }
-                return true;
-            }
-        });
-        x1r_cncl.setOnTouchListener(new View.OnTouchListener() {
-            public boolean onTouch(View view, MotionEvent event) {
-                if (event.getAction() == android.view.MotionEvent.ACTION_DOWN) {
-                    params = (ConstraintLayout.LayoutParams) view.getLayoutParams();
-                    params.setMargins(8, 0, 8, 0);
-                    view.setLayoutParams(params);
-                } else if (event.getAction() == android.view.MotionEvent.ACTION_UP) {
+                    r_manuel_dosing = false;
                     r_cmd = 6;
-                    right_dosing = false;
-                    params = (ConstraintLayout.LayoutParams) view.getLayoutParams();
-                    params.setMargins(0, 0, 0, 0);
-                    view.setLayoutParams(params);
-                    reset_r_button();
+                    Log.d("Manuel", "R released");
                 }
-                return true;
             }
+            return true;
         });
-        x2r_cncl.setOnTouchListener(new View.OnTouchListener() {
-            public boolean onTouch(View view, MotionEvent event) {
-                if (event.getAction() == android.view.MotionEvent.ACTION_DOWN) {
+        manual_l.setOnTouchListener((view, event) -> {
+            if (!left_dosing) {
+                if (event.getAction() == MotionEvent.ACTION_DOWN) {
                     params = (ConstraintLayout.LayoutParams) view.getLayoutParams();
                     params.setMargins(8, 0, 8, 0);
                     view.setLayoutParams(params);
-                } else if (event.getAction() == android.view.MotionEvent.ACTION_UP) {
-                    r_cmd = 6;
-                    right_dosing = false;
+                    l_manuel_dosing = true;
+                    l_cmd = 5;
+                    Log.d("Manuel", "L pressed");
+                } else if (event.getAction() == MotionEvent.ACTION_UP) {
                     params = (ConstraintLayout.LayoutParams) view.getLayoutParams();
                     params.setMargins(0, 0, 0, 0);
                     view.setLayoutParams(params);
-                    reset_r_button();
+                    l_manuel_dosing = false;
+                    l_cmd = 6;
+                    Log.d("Manuel", "L released");
+                } else if (event.getAction() == MotionEvent.ACTION_CANCEL) {
+                    Log.d("Manuel", "L cancelled");
                 }
-                return true;
             }
+            return true;
         });
-        x3r_cncl.setOnTouchListener(new View.OnTouchListener() {
-            public boolean onTouch(View view, MotionEvent event) {
-                if (event.getAction() == android.view.MotionEvent.ACTION_DOWN) {
+        l_hot.setOnTouchListener((view, event) -> {
+            if (event.getAction() == MotionEvent.ACTION_DOWN) {
+                params = (ConstraintLayout.LayoutParams) l_ice.getLayoutParams();
+                params.setMargins(0, 0, 0, 0);
+                l_ice.setLayoutParams(params);
+                params = (ConstraintLayout.LayoutParams) l_cold.getLayoutParams();
+                params.setMargins(0, 0, 0, 0);
+                l_cold.setLayoutParams(params);
+                params = (ConstraintLayout.LayoutParams) view.getLayoutParams();
+                params.setMargins(8, 0, 8, 0);
+                x1l_button.setImageResource(R.drawable.hotcup1x);
+                x2l_button.setImageResource(R.drawable.hotcup2x);
+                x3l_button.setImageResource(R.drawable.hotcup3x);
+                x4l_button.setImageResource(R.drawable.hotcup4x);
+                view.setLayoutParams(params);
+                dose_l_group = 1;
+            }
+            else if (event.getAction() == MotionEvent.ACTION_UP)
+            {
+
+            }
+            return true;
+        });
+        l_ice.setOnTouchListener((view, event) -> {
+            if (event.getAction() == MotionEvent.ACTION_DOWN) {
+                params = (ConstraintLayout.LayoutParams) l_hot.getLayoutParams();
+                params.setMargins(0, 0, 0, 0);
+                l_hot.setLayoutParams(params);
+                params = (ConstraintLayout.LayoutParams) l_cold.getLayoutParams();
+                params.setMargins(0, 0, 0, 0);
+                l_cold.setLayoutParams(params);
+                params = (ConstraintLayout.LayoutParams) view.getLayoutParams();
+                params.setMargins(8, 0, 8, 0);
+                view.setLayoutParams(params);
+                x1l_button.setImageResource(R.drawable.icecup1x);
+                x2l_button.setImageResource(R.drawable.icecup2x);
+                x3l_button.setImageResource(R.drawable.icecup3x);
+                x4l_button.setImageResource(R.drawable.icecup4x);
+                dose_l_group = 2;
+            } else if (event.getAction() == MotionEvent.ACTION_UP) {
+            }
+            return true;
+        });
+        l_cold.setOnTouchListener((view, event) -> {
+            if (event.getAction() == MotionEvent.ACTION_DOWN) {
+                params = (ConstraintLayout.LayoutParams) l_hot.getLayoutParams();
+                params.setMargins(0, 0, 0, 0);
+                l_hot.setLayoutParams(params);
+                params = (ConstraintLayout.LayoutParams) l_ice.getLayoutParams();
+                params.setMargins(0, 0, 0, 0);
+                l_ice.setLayoutParams(params);
+                params = (ConstraintLayout.LayoutParams) view.getLayoutParams();
+                params.setMargins(8, 0, 8, 0);
+                view.setLayoutParams(params);
+                x1l_button.setImageResource(R.drawable.coldcup1x);
+                x2l_button.setImageResource(R.drawable.coldcup2x);
+                x3l_button.setImageResource(R.drawable.coldcup3x);
+                x4l_button.setImageResource(R.drawable.coldcup4x);
+                dose_l_group = 3;
+            } else if (event.getAction() == MotionEvent.ACTION_UP) {
+            }
+            return true;
+        });
+        r_hot.setOnTouchListener((view, event) -> {
+            if (event.getAction() == MotionEvent.ACTION_DOWN) {
+                params = (ConstraintLayout.LayoutParams) r_ice.getLayoutParams();
+                params.setMargins(0, 0, 0, 0);
+                r_ice.setLayoutParams(params);
+                params = (ConstraintLayout.LayoutParams) r_cold.getLayoutParams();
+                params.setMargins(0, 0, 0, 0);
+                r_cold.setLayoutParams(params);
+                params = (ConstraintLayout.LayoutParams) view.getLayoutParams();
+                params.setMargins(8, 0, 8, 0);
+                view.setLayoutParams(params);
+                x1r_button.setImageResource(R.drawable.hotcup1x);
+                x2r_button.setImageResource(R.drawable.hotcup2x);
+                x3r_button.setImageResource(R.drawable.hotcup3x);
+                x4r_button.setImageResource(R.drawable.hotcup4x);
+                dose_r_group = 1;
+            } else if (event.getAction() == MotionEvent.ACTION_UP) {
+            }
+            return true;
+        });
+        r_ice.setOnTouchListener((view, event) -> {
+            if (event.getAction() == MotionEvent.ACTION_DOWN) {
+                params = (ConstraintLayout.LayoutParams) r_hot.getLayoutParams();
+                params.setMargins(0, 0, 0, 0);
+                r_hot.setLayoutParams(params);
+                params = (ConstraintLayout.LayoutParams) r_cold.getLayoutParams();
+                params.setMargins(0, 0, 0, 0);
+                r_cold.setLayoutParams(params);
+                params = (ConstraintLayout.LayoutParams) view.getLayoutParams();
+                params.setMargins(8, 0, 8, 0);
+                view.setLayoutParams(params);
+                x1r_button.setImageResource(R.drawable.icecup1x);
+                x2r_button.setImageResource(R.drawable.icecup2x);
+                x3r_button.setImageResource(R.drawable.icecup3x);
+                x4r_button.setImageResource(R.drawable.icecup4x);
+                dose_r_group = 2;
+            } else if (event.getAction() == MotionEvent.ACTION_UP) {
+            }
+            return true;
+        });
+        r_cold.setOnTouchListener((view, event) -> {
+            if (event.getAction() == MotionEvent.ACTION_DOWN) {
+                params = (ConstraintLayout.LayoutParams) r_hot.getLayoutParams();
+                params.setMargins(0, 0, 0, 0);
+                r_hot.setLayoutParams(params);
+                params = (ConstraintLayout.LayoutParams) r_ice.getLayoutParams();
+                params.setMargins(0, 0, 0, 0);
+                r_ice.setLayoutParams(params);
+                params = (ConstraintLayout.LayoutParams) view.getLayoutParams();
+                params.setMargins(8, 0, 8, 0);
+                view.setLayoutParams(params);
+                x1r_button.setImageResource(R.drawable.coldcup1x);
+                x2r_button.setImageResource(R.drawable.coldcup2x);
+                x3r_button.setImageResource(R.drawable.coldcup3x);
+                x4r_button.setImageResource(R.drawable.coldcup4x);
+                dose_r_group = 3;
+            } else if (event.getAction() == MotionEvent.ACTION_UP) {
+            }
+            return true;
+        });
+        x1l_button.setOnTouchListener((view, event) -> {
+            if (!left_dosing) {
+                if (event.getAction() == MotionEvent.ACTION_DOWN) {
                     params = (ConstraintLayout.LayoutParams) view.getLayoutParams();
                     params.setMargins(8, 0, 8, 0);
                     view.setLayoutParams(params);
-                } else if (event.getAction() == android.view.MotionEvent.ACTION_UP) {
-                    r_cmd = 6;
-                    right_dosing = false;
-                    params = (ConstraintLayout.LayoutParams) view.getLayoutParams();
-                    params.setMargins(0, 0, 0, 0);
-                    view.setLayoutParams(params);
-                    reset_r_button();
+                    x1l_button.setImageResource(R.drawable.cup_pressed1x);
+                } else if (event.getAction() == MotionEvent.ACTION_UP) {
+                    l_cmd = 1;
+                    x1l_cncl.setVisibility(View.VISIBLE);
+                    if (dose_l_group == 1) dose_l_set = ENCSET_A_11;
+                    else if (dose_l_group == 2) dose_l_set = ENCSET_A_21;
+                    else if (dose_l_group == 3) dose_l_set = ENCSET_A_31;
+                    else dose_l_set = 65535;
                 }
-                return true;
+            } else {
+                Log.d("Dose button: ", "locked=" + left_dosing);
             }
+            return true;
         });
-        x4r_cncl.setOnTouchListener(new View.OnTouchListener() {
-            public boolean onTouch(View view, MotionEvent event) {
-                if (event.getAction() == android.view.MotionEvent.ACTION_DOWN) {
+        x2l_button.setOnTouchListener((view, event) -> {
+            if (!left_dosing) {
+                if (event.getAction() == MotionEvent.ACTION_DOWN) {
                     params = (ConstraintLayout.LayoutParams) view.getLayoutParams();
                     params.setMargins(8, 0, 8, 0);
                     view.setLayoutParams(params);
-                } else if (event.getAction() == android.view.MotionEvent.ACTION_UP) {
-                    r_cmd = 6;
-                    right_dosing = false;
-                    params = (ConstraintLayout.LayoutParams) view.getLayoutParams();
-                    params.setMargins(0, 0, 0, 0);
-                    view.setLayoutParams(params);
-                    reset_r_button();
+                    x2l_button.setImageResource(R.drawable.cup_pressed2x);
+                } else if (event.getAction() == MotionEvent.ACTION_UP) {
+                    l_cmd = 2;
+                    x2l_cncl.setVisibility(View.VISIBLE);
+                    if (dose_l_group == 1) dose_l_set = ENCSET_A_12;
+                    else if (dose_l_group == 2) dose_l_set = ENCSET_A_22;
+                    else if (dose_l_group == 3) dose_l_set = ENCSET_A_32;
+                    else dose_l_set = 65535;
                 }
-                return true;
             }
+            return true;
         });
-        power.setOnTouchListener(new View.OnTouchListener() {
-            public boolean onTouch(View view, MotionEvent event) {
-                if (event.getAction() == android.view.MotionEvent.ACTION_DOWN) {
+        x3l_button.setOnTouchListener((view, event) -> {
+            if (!left_dosing) {
+                if (event.getAction() == MotionEvent.ACTION_DOWN) {
                     params = (ConstraintLayout.LayoutParams) view.getLayoutParams();
                     params.setMargins(8, 0, 8, 0);
                     view.setLayoutParams(params);
-                    menu_change = true;
-                } else if (event.getAction() == android.view.MotionEvent.ACTION_UP) {
-                    params = (ConstraintLayout.LayoutParams) view.getLayoutParams();
-                    params.setMargins(0, 0, 0, 0);
-                    view.setLayoutParams(params);
-                    Intent i = new Intent(getApplicationContext(), power_menu.class);
-                    startActivity(i);
-                    disconnect_socket();
+                    x3l_button.setImageResource(R.drawable.cup_pressed3x);
+                } else if (event.getAction() == MotionEvent.ACTION_UP) {
+                    l_cmd = 3;
+                    x3l_cncl.setVisibility(View.VISIBLE);
+                    if (dose_l_group == 1) dose_l_set = ENCSET_A_13;
+                    else if (dose_l_group == 2) dose_l_set = ENCSET_A_23;
+                    else if (dose_l_group == 3) dose_l_set = ENCSET_A_33;
+                    else dose_l_set = 65535;
                 }
-                return true;
             }
+            return true;
         });
-        info.setOnTouchListener(new View.OnTouchListener() {
-            public boolean onTouch(View view, MotionEvent event) {
-                if (event.getAction() == android.view.MotionEvent.ACTION_DOWN) {
+        x4l_button.setOnTouchListener((view, event) -> {
+            if (!left_dosing) {
+                if (event.getAction() == MotionEvent.ACTION_DOWN) {
                     params = (ConstraintLayout.LayoutParams) view.getLayoutParams();
                     params.setMargins(8, 0, 8, 0);
                     view.setLayoutParams(params);
-                } else if (event.getAction() == android.view.MotionEvent.ACTION_UP) {
-                    params = (ConstraintLayout.LayoutParams) view.getLayoutParams();
-                    params.setMargins(0, 0, 0, 0);
-                    view.setLayoutParams(params);
-                    menu_change = true;
-                    Intent i = new Intent(getApplicationContext(), info.class);
-                    startActivity(i);
-                    disconnect_socket();
+                    x4l_button.setImageResource(R.drawable.cup_pressed4x);
+                } else if (event.getAction() == MotionEvent.ACTION_UP) {
+                    l_cmd = 4;
+                    x4l_cncl.setVisibility(View.VISIBLE);
+                    if (dose_l_group == 1) dose_l_set = ENCSET_A_14;
+                    else if (dose_l_group == 2) dose_l_set = ENCSET_A_24;
+                    else if (dose_l_group == 3) dose_l_set = ENCSET_A_34;
+                    else dose_l_set = 65535;
                 }
-                return true;
             }
+            return true;
+        });
+        x1r_button.setOnTouchListener((view, event) -> {
+            if (!right_dosing) {
+                if (event.getAction() == MotionEvent.ACTION_DOWN) {
+                    params = (ConstraintLayout.LayoutParams) view.getLayoutParams();
+                    params.setMargins(8, 0, 8, 0);
+                    view.setLayoutParams(params);
+                    x1r_button.setImageResource(R.drawable.cup_pressed1x);
+                } else if (event.getAction() == MotionEvent.ACTION_UP) {
+                    r_cmd = 1;
+                    x1r_cncl.setVisibility(View.VISIBLE);
+                    if (dose_r_group == 1) dose_r_set = ENCSET_B_11;
+                    else if (dose_r_group == 2) dose_r_set = ENCSET_B_21;
+                    else if (dose_r_group == 3) dose_r_set = ENCSET_B_31;
+                    else dose_r_set = 65535;
+                }
+            }
+            return true;
+        });
+        x2r_button.setOnTouchListener((view, event) -> {
+            if (!right_dosing) {
+                if (event.getAction() == MotionEvent.ACTION_DOWN) {
+                    params = (ConstraintLayout.LayoutParams) view.getLayoutParams();
+                    params.setMargins(8, 0, 8, 0);
+                    view.setLayoutParams(params);
+                    x2r_button.setImageResource(R.drawable.cup_pressed2x);
+                } else if (event.getAction() == MotionEvent.ACTION_UP) {
+                    r_cmd = 2;
+                    x2r_cncl.setVisibility(View.VISIBLE);
+                    if (dose_r_group == 1) dose_r_set = ENCSET_B_12;
+                    else if (dose_r_group == 2) dose_r_set = ENCSET_B_22;
+                    else if (dose_r_group == 3) dose_r_set = ENCSET_B_32;
+                    else dose_r_set = 65535;
+                }
+            }
+            return true;
+        });
+        x3r_button.setOnTouchListener((view, event) -> {
+            if (!right_dosing) {
+                if (event.getAction() == MotionEvent.ACTION_DOWN) {
+                    params = (ConstraintLayout.LayoutParams) view.getLayoutParams();
+                    params.setMargins(8, 0, 8, 0);
+                    view.setLayoutParams(params);
+                    x3r_button.setImageResource(R.drawable.cup_pressed3x);
+                } else if (event.getAction() == MotionEvent.ACTION_UP) {
+                    r_cmd = 3;
+                    x3r_cncl.setVisibility(View.VISIBLE);
+                    if (dose_r_group == 1) dose_r_set = ENCSET_B_13;
+                    else if (dose_r_group == 2) dose_r_set = ENCSET_B_23;
+                    else if (dose_r_group == 3) dose_r_set = ENCSET_B_33;
+                    else dose_r_set = 65535;
+                }
+            }
+            return true;
+        });
+        x4r_button.setOnTouchListener((view, event) -> {
+            if (!right_dosing) {
+                if (event.getAction() == MotionEvent.ACTION_DOWN) {
+                    params = (ConstraintLayout.LayoutParams) view.getLayoutParams();
+                    params.setMargins(8, 0, 8, 0);
+                    view.setLayoutParams(params);
+                    x4r_button.setImageResource(R.drawable.cup_pressed4x);
+                } else if (event.getAction() == MotionEvent.ACTION_UP) {
+                    r_cmd = 4;
+                    x4r_cncl.setVisibility(View.VISIBLE);
+                    if (dose_r_group == 1) dose_r_set = ENCSET_B_14;
+                    else if (dose_r_group == 2) dose_r_set = ENCSET_B_24;
+                    else if (dose_r_group == 3) dose_r_set = ENCSET_B_34;
+                    else dose_r_set = 65535;
+                }
+            }
+            return true;
+        });
+        x1l_cncl.setOnTouchListener((view, event) -> {
+            if (event.getAction() == MotionEvent.ACTION_DOWN) {
+                params = (ConstraintLayout.LayoutParams) view.getLayoutParams();
+                params.setMargins(8, 0, 8, 0);
+                view.setLayoutParams(params);
+            } else if (event.getAction() == MotionEvent.ACTION_UP) {
+                left_dosing = false;
+                left_dosing_finish = false;
+                Log.d("x1l_cncl: ", "left_dosing=" + left_dosing);
+                l_cmd = 6;
+                params = (ConstraintLayout.LayoutParams) view.getLayoutParams();
+                params.setMargins(0, 0, 0, 0);
+                view.setLayoutParams(params);
+                reset_l_button();
+            }
+            return true;
+        });
+        x2l_cncl.setOnTouchListener((view, event) -> {
+            if (event.getAction() == MotionEvent.ACTION_DOWN) {
+                params = (ConstraintLayout.LayoutParams) view.getLayoutParams();
+                params.setMargins(8, 0, 8, 0);
+                view.setLayoutParams(params);
+            } else if (event.getAction() == MotionEvent.ACTION_UP) {
+                left_dosing = false;
+                l_cmd = 6;
+                params = (ConstraintLayout.LayoutParams) view.getLayoutParams();
+                params.setMargins(0, 0, 0, 0);
+                view.setLayoutParams(params);
+                reset_l_button();
+            }
+            return true;
+        });
+        x3l_cncl.setOnTouchListener((view, event) -> {
+            if (event.getAction() == MotionEvent.ACTION_DOWN) {
+                params = (ConstraintLayout.LayoutParams) view.getLayoutParams();
+                params.setMargins(8, 0, 8, 0);
+                view.setLayoutParams(params);
+            } else if (event.getAction() == MotionEvent.ACTION_UP) {
+                l_cmd = 6;
+                left_dosing = false;
+                params = (ConstraintLayout.LayoutParams) view.getLayoutParams();
+                params.setMargins(0, 0, 0, 0);
+                view.setLayoutParams(params);
+                reset_l_button();
+            }
+            return true;
+        });
+        x4l_cncl.setOnTouchListener((view, event) -> {
+            if (event.getAction() == MotionEvent.ACTION_DOWN) {
+                params = (ConstraintLayout.LayoutParams) view.getLayoutParams();
+                params.setMargins(8, 0, 8, 0);
+                view.setLayoutParams(params);
+            } else if (event.getAction() == MotionEvent.ACTION_UP) {
+                l_cmd = 6;
+                left_dosing = false;
+                params = (ConstraintLayout.LayoutParams) view.getLayoutParams();
+                params.setMargins(0, 0, 0, 0);
+                view.setLayoutParams(params);
+                reset_l_button();
+            }
+            return true;
+        });
+        x1r_cncl.setOnTouchListener((view, event) -> {
+            if (event.getAction() == MotionEvent.ACTION_DOWN) {
+                params = (ConstraintLayout.LayoutParams) view.getLayoutParams();
+                params.setMargins(8, 0, 8, 0);
+                view.setLayoutParams(params);
+            } else if (event.getAction() == MotionEvent.ACTION_UP) {
+                r_cmd = 6;
+                right_dosing = false;
+                params = (ConstraintLayout.LayoutParams) view.getLayoutParams();
+                params.setMargins(0, 0, 0, 0);
+                view.setLayoutParams(params);
+                reset_r_button();
+            }
+            return true;
+        });
+        x2r_cncl.setOnTouchListener((view, event) -> {
+            if (event.getAction() == MotionEvent.ACTION_DOWN) {
+                params = (ConstraintLayout.LayoutParams) view.getLayoutParams();
+                params.setMargins(8, 0, 8, 0);
+                view.setLayoutParams(params);
+            } else if (event.getAction() == MotionEvent.ACTION_UP) {
+                r_cmd = 6;
+                right_dosing = false;
+                params = (ConstraintLayout.LayoutParams) view.getLayoutParams();
+                params.setMargins(0, 0, 0, 0);
+                view.setLayoutParams(params);
+                reset_r_button();
+            }
+            return true;
+        });
+        x3r_cncl.setOnTouchListener((view, event) -> {
+            if (event.getAction() == MotionEvent.ACTION_DOWN) {
+                params = (ConstraintLayout.LayoutParams) view.getLayoutParams();
+                params.setMargins(8, 0, 8, 0);
+                view.setLayoutParams(params);
+            } else if (event.getAction() == MotionEvent.ACTION_UP) {
+                r_cmd = 6;
+                right_dosing = false;
+                params = (ConstraintLayout.LayoutParams) view.getLayoutParams();
+                params.setMargins(0, 0, 0, 0);
+                view.setLayoutParams(params);
+                reset_r_button();
+            }
+            return true;
+        });
+        x4r_cncl.setOnTouchListener((view, event) -> {
+            if (event.getAction() == MotionEvent.ACTION_DOWN) {
+                params = (ConstraintLayout.LayoutParams) view.getLayoutParams();
+                params.setMargins(8, 0, 8, 0);
+                view.setLayoutParams(params);
+            } else if (event.getAction() == MotionEvent.ACTION_UP) {
+                r_cmd = 6;
+                right_dosing = false;
+                params = (ConstraintLayout.LayoutParams) view.getLayoutParams();
+                params.setMargins(0, 0, 0, 0);
+                view.setLayoutParams(params);
+                reset_r_button();
+            }
+            return true;
+        });
+        power.setOnTouchListener((view, event) -> {
+            if (event.getAction() == MotionEvent.ACTION_DOWN) {
+                params = (ConstraintLayout.LayoutParams) view.getLayoutParams();
+                params.setMargins(8, 0, 8, 0);
+                view.setLayoutParams(params);
+                menu_change = true;
+            } else if (event.getAction() == MotionEvent.ACTION_UP) {
+                params = (ConstraintLayout.LayoutParams) view.getLayoutParams();
+                params.setMargins(0, 0, 0, 0);
+                view.setLayoutParams(params);
+                Intent i = new Intent(getApplicationContext(), power_menu.class);
+                startActivity(i);
+                disconnect_socket();
+            }
+            return true;
+        });
+        info.setOnTouchListener((view, event) -> {
+            if (event.getAction() == MotionEvent.ACTION_DOWN) {
+                params = (ConstraintLayout.LayoutParams) view.getLayoutParams();
+                params.setMargins(8, 0, 8, 0);
+                view.setLayoutParams(params);
+            } else if (event.getAction() == MotionEvent.ACTION_UP) {
+                params = (ConstraintLayout.LayoutParams) view.getLayoutParams();
+                params.setMargins(0, 0, 0, 0);
+                view.setLayoutParams(params);
+                menu_change = true;
+                Intent i = new Intent(getApplicationContext(), info.class);
+                startActivity(i);
+                disconnect_socket();
+            }
+            return true;
         });
         x1l_cncl.setVisibility(View.INVISIBLE);
         x2l_cncl.setVisibility(View.INVISIBLE);
@@ -1044,9 +977,7 @@ public class dosing extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         sharedPref = this.getSharedPreferences("sharedPref", Context.MODE_PRIVATE);
         editor = sharedPref.edit();
-        //noinspection deprecation
         home = Environment.getExternalStorageDirectory().getPath() + "/Android/data/com.menar.milkdoser";
-        //noinspection deprecation
         File folder = new File(home);
         File logo = new File(home + "/logo");
         File parameters = new File(home + "/parameters");
@@ -1071,8 +1002,8 @@ public class dosing extends AppCompatActivity {
         } else {
             //Toast.makeText(dosing.this, "Failed - Error", Toast.LENGTH_SHORT).show();
         }
-        copyFile(dosing.this);
-        currentApiVersion = android.os.Build.VERSION.SDK_INT;
+        copyFile();
+        int currentApiVersion = Build.VERSION.SDK_INT;
 
         final int flags = View.SYSTEM_UI_FLAG_LAYOUT_STABLE
                 | View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
@@ -1083,12 +1014,9 @@ public class dosing extends AppCompatActivity {
         if (currentApiVersion >= Build.VERSION_CODES.KITKAT) {
             getWindow().getDecorView().setSystemUiVisibility(flags);
             final View decorView = getWindow().getDecorView();
-            decorView.setOnSystemUiVisibilityChangeListener(new View.OnSystemUiVisibilityChangeListener() {
-                @Override
-                public void onSystemUiVisibilityChange(int visibility) {
-                    if ((visibility & View.SYSTEM_UI_FLAG_FULLSCREEN) == 0) {
-                        decorView.setSystemUiVisibility(flags);
-                    }
+            decorView.setOnSystemUiVisibilityChangeListener(visibility -> {
+                if ((visibility & View.SYSTEM_UI_FLAG_FULLSCREEN) == 0) {
+                    decorView.setSystemUiVisibility(flags);
                 }
             });
         }
@@ -1116,7 +1044,7 @@ public class dosing extends AppCompatActivity {
             return;
         } else {
             device_id = Settings.Secure.getString(this.getContentResolver(), Settings.Secure.ANDROID_ID);
-            if (device_id != sharedPref.getString("saved_device_id", "")) {
+            if (!Objects.equals(device_id, sharedPref.getString("saved_device_id", ""))) {
                 Log.d("Android", "Android ID : Kayıtlı değil >> " + device_id);
             }
         }
@@ -1212,11 +1140,10 @@ public class dosing extends AppCompatActivity {
             int networkId = wManager.addNetwork(conf);
             if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
                 wManager.enableNetwork(networkId, true);
-                return;
             }
         }
     }
-    private void copyFile(final Context context) {
+    private void copyFile() {
         try {
             File sd = new File(home+"/parameters");
             File data = Environment.getDataDirectory();
@@ -1239,7 +1166,7 @@ public class dosing extends AppCompatActivity {
         }
     }
     public void save_using_events(String cleanig_event_channel, String cleanig_event_type) {
-        int using_event_count=0;
+        int using_event_count;
         using_event_count=sharedPref.getInt("using_event_cnt",0);
         using_event_count++;
         Calendar c = Calendar.getInstance();
@@ -1255,7 +1182,7 @@ public class dosing extends AppCompatActivity {
         editor.commit();
     }
     public void save_cleanig_events(String cleanig_event_channel, String cleanig_event_type) {
-     int cleaning_event_count=0;
+     int cleaning_event_count;
         cleaning_event_count=sharedPref.getInt("cleaning_event_cnt",0);
         cleaning_event_count++;
         if(cleaning_event_count>5)
@@ -1282,7 +1209,7 @@ public class dosing extends AppCompatActivity {
         editor.commit();
     }
     public void save_error_events(String error_event_channel, String error_event_type) {
-        int error_event_count=0;
+        int error_event_count;
         error_event_count=sharedPref.getInt("error_event_cnt",0);
         error_event_count++;
         Calendar c = Calendar.getInstance();
@@ -1393,7 +1320,7 @@ public class dosing extends AppCompatActivity {
         localLayoutParams.width = WindowManager.LayoutParams.MATCH_PARENT;
 
         int resId = context.getResources().getIdentifier("status_bar_height", "dimen", "android");
-        int result = 0;
+        int result;
         if (resId > 0) {
             result = context.getResources().getDimensionPixelSize(resId);
         } else {
@@ -1425,12 +1352,7 @@ public class dosing extends AppCompatActivity {
         @Override
         public void run() {
             if(wifi_connected) {
-                    handler.post(new Runnable() {
-                        @Override
-                        public void run() {
-                            new Thread(new dosing.Thread3(query_buf)).start();
-                        }
-                    });
+                    handler.post(() -> new Thread(new Thread3(query_buf)).start());
             }
             else {
                 Thread1 = new Thread(new dosing.Thread1());
@@ -1441,17 +1363,14 @@ public class dosing extends AppCompatActivity {
     final TimerTask connection_timer_task = new TimerTask() {
         @Override
         public void run() {
-            runOnUiThread(new Runnable() {
-                @Override
-                public void run() {
-                    if(connection.getVisibility()==View.VISIBLE)
-                    {
-                        connection.setVisibility(View.INVISIBLE);
-                    }
-                    else if(connection.getVisibility()==View.INVISIBLE)
-                    {
-                        connection.setVisibility(View.VISIBLE);
-                    }
+            runOnUiThread(() -> {
+                if(connection.getVisibility()==View.VISIBLE)
+                {
+                    connection.setVisibility(View.INVISIBLE);
+                }
+                else if(connection.getVisibility()==View.INVISIBLE)
+                {
+                    connection.setVisibility(View.VISIBLE);
                 }
             });
         }
@@ -1489,13 +1408,10 @@ public class dosing extends AppCompatActivity {
                             l_wash_prosedure=false;
                             l_rinse_after_wash=true;
 
-                            runOnUiThread(new Runnable() {
-                                @Override
-                                public void run() {
-                                    l_att.setText("Temizleme haznesini yıkayın Temizleme haznesine \n10lt su doldurun Durulamayı başlatın");
-                                    hide_wash_screen("left");
-                                    show_rinse_screen("left");
-                                }
+                            runOnUiThread(() -> {
+                                l_att.setText("Temizleme haznesini yıkayın Temizleme haznesine \n10lt su doldurun Durulamayı başlatın");
+                                hide_wash_screen("left");
+                                show_rinse_screen("left");
                             });
                         }
 
@@ -1505,12 +1421,7 @@ public class dosing extends AppCompatActivity {
                             l_wait=false;
                             l_wait_cnt=0;
                             l_detergent=true;
-                            runOnUiThread(new Runnable() {
-                                @Override
-                                public void run() {
-                                    l_rinse_txt.setText(resources.getString(R.string.yikama_islemi)+(l_wash+1)+"/"+WASH_CYCLE);
-                                }
-                            });
+                            runOnUiThread(() -> l_rinse_txt.setText(resources.getString(R.string.yikama_islemi)+(l_wash+1)+"/"+WASH_CYCLE));
                         }
 
                     }
@@ -1554,13 +1465,10 @@ public class dosing extends AppCompatActivity {
                             r_wash_flag=false;
                             r_wash_prosedure=false;
                             r_rinse_after_wash=true;
-                            runOnUiThread(new Runnable() {
-                                @Override
-                                public void run() {
-                                    r_att.setText("Temizleme haznesini yıkayın Temizleme haznesine \n10lt su doldurun Durulamayı başlatın");
-                                    hide_wash_screen("right");
-                                    show_rinse_screen("right");
-                                }
+                            runOnUiThread(() -> {
+                                r_att.setText("Temizleme haznesini yıkayın Temizleme haznesine \n10lt su doldurun Durulamayı başlatın");
+                                hide_wash_screen("right");
+                                show_rinse_screen("right");
                             });
                         }
                         else {
@@ -1568,12 +1476,7 @@ public class dosing extends AppCompatActivity {
                             r_wait = false;
                             r_wait_cnt = 0;
                             r_detergent = true;
-                            runOnUiThread(new Runnable() {
-                                @Override
-                                public void run() {
-                                    r_rinse_txt.setText(resources.getString(R.string.yikama_islemi) + (r_wash + 1) + "/" + WASH_CYCLE);
-                                }
-                            });
+                            runOnUiThread(() -> r_rinse_txt.setText(resources.getString(R.string.yikama_islemi) + (r_wash + 1) + "/" + WASH_CYCLE));
                         }
 
                     }
@@ -1593,24 +1496,16 @@ public class dosing extends AppCompatActivity {
                     t_rinse_cnt_l_flag=false;
                     t_rinse_l = 0;
                     t_rinse_cnt_l=0;
-                    runOnUiThread(new Runnable() {
-                        @Override
-                        public void run() {
-                            hide_rinse_screen("left");
-                            l_rinse.setImageResource(R.drawable.rinse);
-                            if(!t_rinse_cnt_r_flag)settings_button.setVisibility(View.VISIBLE);
-                        }
+                    runOnUiThread(() -> {
+                        hide_rinse_screen("left");
+                        l_rinse.setImageResource(R.drawable.rinse);
+                        if(!t_rinse_cnt_r_flag)settings_button.setVisibility(View.VISIBLE);
                     });
                     a_sweep_timeout_flag=true;
                     if(l_rinse_after_wash)editor.putBoolean("l_wash_flag",false);editor.commit();
                     l_rinse_after_wash=false;
                 }
-                runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        l_rinse_txt.setText(resources.getString(R.string.durulamanin_bitmesine)+ (l_rinse_time-t_rinse_l) + resources.getString(R.string.saniye_kaldi));
-                    }
-                });
+                runOnUiThread(() -> l_rinse_txt.setText(resources.getString(R.string.durulamanin_bitmesine)+ (l_rinse_time-t_rinse_l) + resources.getString(R.string.saniye_kaldi)));
             }
             else if(a_sweep_timeout_flag)
             {
@@ -1635,24 +1530,16 @@ public class dosing extends AppCompatActivity {
                     t_rinse_cnt_r_flag=false;
                     t_rinse_r = 0;
                     t_rinse_cnt_r=0;
-                    runOnUiThread(new Runnable() {
-                        @Override
-                        public void run() {
-                            hide_rinse_screen("right");
-                            r_rinse.setImageResource(R.drawable.rinse);
-                            if(!t_rinse_cnt_l_flag)settings_button.setVisibility(View.VISIBLE);
-                        }
+                    runOnUiThread(() -> {
+                        hide_rinse_screen("right");
+                        r_rinse.setImageResource(R.drawable.rinse);
+                        if(!t_rinse_cnt_l_flag)settings_button.setVisibility(View.VISIBLE);
                     });
                     if(r_rinse_after_wash)editor.putBoolean("r_wash_flag",false);editor.commit();
                     b_sweep_timeout_flag=true;
                     r_rinse_after_wash=false;
                 }
-                runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        r_rinse_txt.setText(resources.getString(R.string.durulamanin_bitmesine)+ (r_rinse_time-t_rinse_r) + resources.getString(R.string.saniye_kaldi));
-                    }
-                });
+                runOnUiThread(() -> r_rinse_txt.setText(resources.getString(R.string.durulamanin_bitmesine)+ (r_rinse_time-t_rinse_r) + resources.getString(R.string.saniye_kaldi)));
             }
             else if(b_sweep_timeout_flag)
             {
@@ -1681,23 +1568,13 @@ public class dosing extends AppCompatActivity {
             if((t_rinse_cnt_l>T_RINSE_TRIG)&&(!t_rinse_cnt_l_flag))
             {
                 if(!no_rinse_t) {
-                    runOnUiThread(new Runnable() {
-                        @Override
-                        public void run() {
-                            show_rinse_screen("left");
-                        }
-                    });
+                    runOnUiThread(() -> show_rinse_screen("left"));
                 }
             }
             if((t_rinse_cnt_r>T_RINSE_TRIG)&&(!t_rinse_cnt_r_flag)&&(!mono_mode))
             {
                 if(!no_rinse_t) {
-                    runOnUiThread(new Runnable() {
-                        @Override
-                        public void run() {
-                            show_rinse_screen("right");
-                        }
-                    });
+                    runOnUiThread(() -> show_rinse_screen("right"));
                 }
             }
         }
@@ -1705,30 +1582,27 @@ public class dosing extends AppCompatActivity {
     final TimerTask time_timer_task = new TimerTask() {
         @Override
         public void run() {
-                runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        Calendar c = Calendar.getInstance();
-                        SimpleDateFormat df = new SimpleDateFormat("dd/MM/yyyy");
-                        SimpleDateFormat tf = new SimpleDateFormat("HH:mm");
-                        String formattedDate = df.format(c.getTime());
-                        String formattedTime = tf.format(c.getTime());
-                        if((hour==c.get(Calendar.HOUR_OF_DAY))&&(minute==c.get(Calendar.MINUTE)&&(1==c.get(Calendar.SECOND))))
-                        {
-                            editor.putBoolean("l_wash_flag",true);
-                            editor.putBoolean("r_wash_flag",true);
-                            editor.commit();
-                            l_wash_prosedure = true;
-                            r_wash_prosedure = true;
-                            show_wash_screen("left");
-                            if(!mono_mode) {
-                                show_wash_screen("right");
-                            }
-
+                runOnUiThread(() -> {
+                    Calendar c = Calendar.getInstance();
+                    SimpleDateFormat df = new SimpleDateFormat("dd/MM/yyyy");
+                    SimpleDateFormat tf = new SimpleDateFormat("HH:mm");
+                    String formattedDate = df.format(c.getTime());
+                    String formattedTime = tf.format(c.getTime());
+                    if((hour==c.get(Calendar.HOUR_OF_DAY))&&(minute==c.get(Calendar.MINUTE)&&(1==c.get(Calendar.SECOND))))
+                    {
+                        editor.putBoolean("l_wash_flag",true);
+                        editor.putBoolean("r_wash_flag",true);
+                        editor.commit();
+                        l_wash_prosedure = true;
+                        r_wash_prosedure = true;
+                        show_wash_screen("left");
+                        if(!mono_mode) {
+                            show_wash_screen("right");
                         }
-                        date.setText(formattedDate);
-                        time.setText(formattedTime);
+
                     }
+                    date.setText(formattedDate);
+                    time.setText(formattedTime);
                 });
         }
     };
@@ -2013,7 +1887,7 @@ public class dosing extends AppCompatActivity {
             e.printStackTrace();
         }
     }
-    private BroadcastReceiver broadcastReceiver = new BroadcastReceiver() {
+    private final BroadcastReceiver broadcastReceiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
             int status = intent.getIntExtra(BatteryManager.EXTRA_STATUS, -1);
@@ -2023,7 +1897,7 @@ public class dosing extends AppCompatActivity {
                 //Toast.makeText(getApplicationContext(), "Charger connected, Battery Charging..", Toast.LENGTH_SHORT).show();
             }
             else  {
-                Process proc = null;
+                //Process proc = null;
                 try {
                     Runtime.getRuntime().exec(new String[]{ "su", "-c", "reboot -p"});
                     if(sharedPref.getBoolean("power_flag",false))
@@ -2048,12 +1922,9 @@ public class dosing extends AppCompatActivity {
                                 Charset.forName("ISO-8859-1").newEncoder())),
                         true);
                 input = new BufferedReader(new InputStreamReader(socket.getInputStream(),"ISO-8859-1"));
-                runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        //waring_view.setVisibility(View.INVISIBLE);
-                        connection.setImageResource(R.drawable.connected);
-                    }
+                runOnUiThread(() -> {
+                    //waring_view.setVisibility(View.INVISIBLE);
+                    connection.setImageResource(R.drawable.connected);
                 });
                 new Thread(new dosing.Thread2()).start();
                 //Log.d("test","success");
@@ -2063,12 +1934,9 @@ public class dosing extends AppCompatActivity {
                 //reset_wifi();
                 //connect_wifi();
                 //Log.d("test","error");
-                runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        //waring_view.setVisibility(View.VISIBLE);
-                        connection.setImageResource(R.drawable.disconnected);
-                    }
+                runOnUiThread(() -> {
+                    //waring_view.setVisibility(View.VISIBLE);
+                    connection.setImageResource(R.drawable.disconnected);
                 });
                 //e.printStackTrace();
             }
@@ -2097,116 +1965,113 @@ public class dosing extends AppCompatActivity {
                         Log.d("Received", ":  " + Integer.toHexString(in_buf[0]) + "-" + Integer.toHexString(in_buf[1]) + "-" + Integer.toHexString(in_buf[2]) + "-" + Integer.toHexString(in_buf[3]) + "-" + Integer.toHexString(in_buf[4]) + "-" + Integer.toHexString(in_buf[5]) + "-" + Integer.toHexString(in_buf[6]) + "-" + Integer.toHexString(in_buf[7]));
                         sum = sum & 0xFF;
                         if (in_buf[7] == sum) {
-                            runOnUiThread(new Runnable() {
-                                @Override
-                                public void run() {
-                                    int io_stat=in_buf[1];
-                                    int MA_F=io_stat&0x01;
-                                    int MA_R=io_stat&0x02;
-                                    int MB_F=io_stat&0x04;
-                                    int MB_R=io_stat&0x08;
-                                    int encoder_l_value_H=in_buf[6];
-                                    int encoder_l_value_L=in_buf[5];
-                                    long encoder_l_value=0;
-                                    encoder_l_value=encoder_l_value_H<<8;
-                                    encoder_l_value=encoder_l_value + encoder_l_value_L;
-                                    if(left_dosing){
-                                        if(MB_F==0){
-                                            left_dosing_finish=true;
-                                        }
-                                        else {
-                                            encoder_l_value = map(encoder_l_value, utils.ml_to_pulse(dose_l_set,PPML_A,true), 65535, 0, 100);
-                                            l_cupbar_setlevel((int) encoder_l_value);
-                                        }
+                            runOnUiThread(() -> {
+                                int io_stat=in_buf[1];
+                                int MA_F=io_stat&0x01;
+                                int MA_R=io_stat&0x02;
+                                int MB_F=io_stat&0x04;
+                                int MB_R=io_stat&0x08;
+                                int encoder_l_value_H=in_buf[6];
+                                int encoder_l_value_L=in_buf[5];
+                                long encoder_l_value=0;
+                                encoder_l_value=encoder_l_value_H<<8;
+                                encoder_l_value=encoder_l_value + encoder_l_value_L;
+                                if(left_dosing){
+                                    if(MB_F==0){
+                                        left_dosing_finish=true;
                                     }
-                                    if(left_dosing_finish){
-                                        left_dosing_finish=false;
-                                        left_dosing_counter++;
-                                        if(left_dosing_counter==5){
-                                            left_dosing_finish=true;
-                                            left_dosing_counter=0;
-                                            l_cmd=10;
-                                        }
+                                    else {
+                                        encoder_l_value = map(encoder_l_value, utils.ml_to_pulse(dose_l_set,PPML_A,true), 65535, 0, 100);
+                                        l_cupbar_setlevel((int) encoder_l_value);
                                     }
-                                    if(left_dosing&&(encoder_l_value==encoder_l_value_last))
+                                }
+                                if(left_dosing_finish){
+                                    left_dosing_finish=false;
+                                    left_dosing_counter++;
+                                    if(left_dosing_counter==5){
+                                        left_dosing_finish=true;
+                                        left_dosing_counter=0;
+                                        l_cmd=10;
+                                    }
+                                }
+                                if(left_dosing&&(encoder_l_value==encoder_l_value_last))
+                                {
+                                    Log.d("encoderror","left");
+                                    a_flow_timeout_cnt++;
+                                    if(a_flow_timeout_cnt>flow_timeout)
                                     {
-                                        Log.d("encoderror","left");
-                                        a_flow_timeout_cnt++;
-                                        if(a_flow_timeout_cnt>flow_timeout)
-                                        {
-                                            if(!l_manuel_dosing)l_cmd=6;
-                                            save_error_events("A","encoder_error");
-                                            left_dosing_finish=true;
-                                            a_flow_timeout_cnt=0;
-                                        }
-                                    }
-                                    else{
-                                        encoder_l_value_last=encoder_l_value;
+                                        if(!l_manuel_dosing)l_cmd=6;
+                                        save_error_events("A","encoder_error");
+                                        left_dosing_finish=true;
                                         a_flow_timeout_cnt=0;
+                                    }
+                                }
+                                else{
+                                    encoder_l_value_last=encoder_l_value;
+                                    a_flow_timeout_cnt=0;
 
-                                    }
-                                    if((left_dosing&&left_dosing_finish)&&!l_manuel_dosing){
-                                        if(a_sweep_flag)a_sweep_flag=false;
-                                        reset_l_button();
-                                        left_dosing_finish=false;
-                                        n_rinse_cnt_l++;
-                                        if(n_rinse_cnt_l>=N_RINSE_TRIG)
-                                        {
-                                            if(!no_rinse_n) {
-                                                show_rinse_screen("left");
-                                            }
-                                        }
-                                    }
-                                    int encoder_r_value_H=in_buf[4];
-                                    int encoder_r_value_L=in_buf[3];
-                                    long encoder_r_value=0;
-                                    encoder_r_value=encoder_r_value_H<<8;
-                                    encoder_r_value=encoder_r_value + encoder_r_value_L;
-                                    if(right_dosing){
-                                        if(MA_F==0){
-                                            right_dosing_finish=true;
-                                        }
-                                        else {
-                                            encoder_r_value = map(encoder_r_value, utils.ml_to_pulse(dose_r_set,PPML_B,true), 65535, 0, 100);
-                                            //Log.d("Progressbar left ",": "+encoder_l_value);
-                                            r_cupbar_setlevel((int) encoder_r_value);
-                                        }
-                                    }
-                                    if(right_dosing_finish){
-                                        right_dosing_finish=false;
-                                        right_dosing_counter++;
-                                        if(right_dosing_counter==5){
-                                            right_dosing_finish=true;
-                                            right_dosing_counter=0;
-                                            r_cmd=10;
-                                        }
-                                    }
-                                    if(right_dosing&&(encoder_r_value==encoder_r_value_last))
+                                }
+                                if((left_dosing&&left_dosing_finish)&&!l_manuel_dosing){
+                                    if(a_sweep_flag)a_sweep_flag=false;
+                                    reset_l_button();
+                                    left_dosing_finish=false;
+                                    n_rinse_cnt_l++;
+                                    if(n_rinse_cnt_l>=N_RINSE_TRIG)
                                     {
-                                        b_flow_timeout_cnt++;
-                                        if(b_flow_timeout_cnt>flow_timeout)
-                                        {
-                                            r_cmd=6;
-                                            save_error_events("B","encoder_error");
-                                            right_dosing_finish=true;
-                                            b_flow_timeout_cnt=0;
+                                        if(!no_rinse_n) {
+                                            show_rinse_screen("left");
                                         }
                                     }
-                                    else{
-                                        encoder_r_value_last=encoder_r_value;
+                                }
+                                int encoder_r_value_H=in_buf[4];
+                                int encoder_r_value_L=in_buf[3];
+                                long encoder_r_value=0;
+                                encoder_r_value=encoder_r_value_H<<8;
+                                encoder_r_value=encoder_r_value + encoder_r_value_L;
+                                if(right_dosing){
+                                    if(MA_F==0){
+                                        right_dosing_finish=true;
+                                    }
+                                    else {
+                                        encoder_r_value = map(encoder_r_value, utils.ml_to_pulse(dose_r_set,PPML_B,true), 65535, 0, 100);
+                                        //Log.d("Progressbar left ",": "+encoder_l_value);
+                                        r_cupbar_setlevel((int) encoder_r_value);
+                                    }
+                                }
+                                if(right_dosing_finish){
+                                    right_dosing_finish=false;
+                                    right_dosing_counter++;
+                                    if(right_dosing_counter==5){
+                                        right_dosing_finish=true;
+                                        right_dosing_counter=0;
+                                        r_cmd=10;
+                                    }
+                                }
+                                if(right_dosing&&(encoder_r_value==encoder_r_value_last))
+                                {
+                                    b_flow_timeout_cnt++;
+                                    if(b_flow_timeout_cnt>flow_timeout)
+                                    {
+                                        r_cmd=6;
+                                        save_error_events("B","encoder_error");
+                                        right_dosing_finish=true;
                                         b_flow_timeout_cnt=0;
                                     }
-                                    if(right_dosing&&right_dosing_finish){
-                                        Log.d("Views","R reset");
-                                        if(b_sweep_flag)b_sweep_flag=false;
-                                        reset_r_button();
-                                        right_dosing_finish=false;
-                                        n_rinse_cnt_l++;
-                                        if(n_rinse_cnt_r>=N_RINSE_TRIG)
-                                        {
-                                            if(!no_rinse_n) {
-                                                show_rinse_screen("right");
-                                            }
+                                }
+                                else{
+                                    encoder_r_value_last=encoder_r_value;
+                                    b_flow_timeout_cnt=0;
+                                }
+                                if(right_dosing&&right_dosing_finish){
+                                    Log.d("Views","R reset");
+                                    if(b_sweep_flag)b_sweep_flag=false;
+                                    reset_r_button();
+                                    right_dosing_finish=false;
+                                    n_rinse_cnt_l++;
+                                    if(n_rinse_cnt_r>=N_RINSE_TRIG)
+                                    {
+                                        if(!no_rinse_n) {
+                                            show_rinse_screen("right");
                                         }
                                     }
                                 }
@@ -2218,10 +2083,7 @@ public class dosing extends AppCompatActivity {
                         }
                         sum = 0;
                         if (message != null) {
-                            runOnUiThread(new Runnable() {
-                                @Override
-                                public void run() {
-                                }
+                            runOnUiThread(() -> {
                             });
                         } else {
 
@@ -2234,12 +2096,9 @@ public class dosing extends AppCompatActivity {
                 } catch (IOException e) {
                     wifi_connected=false;
                     reset_wifi();
-                    runOnUiThread(new Runnable() {
-                        @Override
-                        public void run() {
-                            connection.setImageResource(R.drawable.disconnected);
-                            //waring_view.setVisibility(View.VISIBLE);
-                        }
+                    runOnUiThread(() -> {
+                        connection.setImageResource(R.drawable.disconnected);
+                        //waring_view.setVisibility(View.VISIBLE);
                     });
                     if(!menu_change)save_error_events("A","connection_error");
                     Log.d("Socket status:","Connection reset!");
@@ -2270,12 +2129,7 @@ public class dosing extends AppCompatActivity {
                             left_dosing=true;
                             Log.d("Left_cmd: ","l_buf");
                         } else {
-                            runOnUiThread(new Runnable() {
-                                @Override
-                                public void run() {
-                                    reset_l_button();
-                                }
-                            });
+                            runOnUiThread(dosing.this::reset_l_button);
                         }
                         l_cmd = 0;
                     } else if (l_cmd == 5) {
@@ -2344,12 +2198,7 @@ public class dosing extends AppCompatActivity {
                             Log.d("Right_cmd: ","r_buf");
                             V1=true;
                         } else {
-                            runOnUiThread(new Runnable() {
-                                @Override
-                                public void run() {
-                                    reset_r_button();
-                                }
-                            });
+                            runOnUiThread(dosing.this::reset_r_button);
                         }
                         r_cmd = 0;
                     } else if (r_cmd == 5) {

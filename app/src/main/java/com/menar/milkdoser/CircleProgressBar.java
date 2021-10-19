@@ -17,7 +17,6 @@ public class CircleProgressBar extends View {
     private int min = 0;
     private int max = 100;
 
-    private int startAngle = -90;
     private int color = Color.DKGRAY;
     private RectF rectF;
     private Paint backgroundPaint;
@@ -113,6 +112,7 @@ public class CircleProgressBar extends View {
 
         canvas.drawOval(rectF, backgroundPaint);
         float angle = 360 * progress / max;
+        int startAngle = -90;
         canvas.drawArc(rectF, startAngle, angle, false, foregroundPaint);
 
     }

@@ -1,8 +1,6 @@
 package com.menar.milkdoser;
 
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.constraintlayout.widget.ConstraintLayout;
-
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -11,7 +9,6 @@ import android.os.Build;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
-import android.util.Log;
 import android.view.Gravity;
 import android.view.MotionEvent;
 import android.view.View;
@@ -20,6 +17,9 @@ import android.view.WindowManager;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.Toast;
+
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.constraintlayout.widget.ConstraintLayout;
 
 public class parameters1 extends AppCompatActivity {
     private int currentApiVersion;
@@ -45,21 +45,22 @@ public class parameters1 extends AppCompatActivity {
     );
 
 
+    @SuppressLint("ClickableViewAccessibility")
     public void initviews() {
-        a1_input=(EditText) findViewById(R.id.a1);
-        a2_input=(EditText) findViewById(R.id.a2);
-        a3_input=(EditText) findViewById(R.id.a3);
-        a4_input=(EditText) findViewById(R.id.a4);
-        b1_input=(EditText) findViewById(R.id.b1);
-        b2_input=(EditText) findViewById(R.id.b2);
-        b3_input=(EditText) findViewById(R.id.b3);
-        b4_input=(EditText) findViewById(R.id.b4);
-        save_btn=(ImageButton) findViewById(R.id.save);
-        back_btn=(ImageButton) findViewById(R.id.back);
-        home_btn=(ImageButton) findViewById(R.id.home);
-        default_btn=(ImageButton) findViewById(R.id.load_default);
-        next_page=(ImageButton) findViewById(R.id.next_page_btn);
-        prev_page=(ImageButton) findViewById(R.id.prev_page_btn);
+        a1_input= findViewById(R.id.a1);
+        a2_input= findViewById(R.id.a2);
+        a3_input= findViewById(R.id.a3);
+        a4_input= findViewById(R.id.a4);
+        b1_input= findViewById(R.id.b1);
+        b2_input= findViewById(R.id.b2);
+        b3_input= findViewById(R.id.b3);
+        b4_input= findViewById(R.id.b4);
+        save_btn= findViewById(R.id.save);
+        back_btn= findViewById(R.id.back);
+        home_btn= findViewById(R.id.home);
+        default_btn= findViewById(R.id.load_default);
+        next_page= findViewById(R.id.next_page_btn);
+        prev_page= findViewById(R.id.prev_page_btn);
         load_dose_group_values(1);
 
         a1_input.addTextChangedListener(new TextWatcher() {
@@ -72,6 +73,7 @@ public class parameters1 extends AppCompatActivity {
                                           int count, int after) {
             }
 
+            @SuppressLint("SetTextI18n")
             @Override
             public void onTextChanged(CharSequence s, int start,
                                       int before, int count) {
@@ -93,6 +95,7 @@ public class parameters1 extends AppCompatActivity {
                                           int count, int after) {
             }
 
+            @SuppressLint("SetTextI18n")
             @Override
             public void onTextChanged(CharSequence s, int start,
                                       int before, int count) {
@@ -113,6 +116,7 @@ public class parameters1 extends AppCompatActivity {
                                           int count, int after) {
             }
 
+            @SuppressLint("SetTextI18n")
             @Override
             public void onTextChanged(CharSequence s, int start,
                                       int before, int count) {
@@ -133,6 +137,7 @@ public class parameters1 extends AppCompatActivity {
                                           int count, int after) {
             }
 
+            @SuppressLint("SetTextI18n")
             @Override
             public void onTextChanged(CharSequence s, int start,
                                       int before, int count) {
@@ -153,6 +158,7 @@ public class parameters1 extends AppCompatActivity {
                                           int count, int after) {
             }
 
+            @SuppressLint("SetTextI18n")
             @Override
             public void onTextChanged(CharSequence s, int start,
                                       int before, int count) {
@@ -173,6 +179,7 @@ public class parameters1 extends AppCompatActivity {
                                           int count, int after) {
             }
 
+            @SuppressLint("SetTextI18n")
             @Override
             public void onTextChanged(CharSequence s, int start,
                                       int before, int count) {
@@ -193,6 +200,7 @@ public class parameters1 extends AppCompatActivity {
                                           int count, int after) {
             }
 
+            @SuppressLint("SetTextI18n")
             @Override
             public void onTextChanged(CharSequence s, int start,
                                       int before, int count) {
@@ -213,6 +221,7 @@ public class parameters1 extends AppCompatActivity {
                                           int count, int after) {
             }
 
+            @SuppressLint("SetTextI18n")
             @Override
             public void onTextChanged(CharSequence s, int start,
                                       int before, int count) {
@@ -223,111 +232,99 @@ public class parameters1 extends AppCompatActivity {
                 }
             }
         });
-        next_page.setOnTouchListener(new View.OnTouchListener() {
-            public boolean onTouch(View view, MotionEvent event) {
-                if (event.getAction() == android.view.MotionEvent.ACTION_DOWN) {
-                    params=(ConstraintLayout.LayoutParams)view.getLayoutParams();
-                    params.setMargins(8,0,8,0);
-                    view.setLayoutParams(params);
-                } else if (event.getAction() == android.view.MotionEvent.ACTION_UP) {
-                    params=(ConstraintLayout.LayoutParams)view.getLayoutParams();
-                    params.setMargins(0,0,0,0);
-                    view.setLayoutParams(params);
-                    Intent i = new Intent(getApplicationContext(),backdraft.class);
-                    startActivity(i);
-                }
-                return true;
+        next_page.setOnTouchListener((view, event) -> {
+            if (event.getAction() == MotionEvent.ACTION_DOWN) {
+                params=(ConstraintLayout.LayoutParams)view.getLayoutParams();
+                params.setMargins(8,0,8,0);
+                view.setLayoutParams(params);
+            } else if (event.getAction() == MotionEvent.ACTION_UP) {
+                params=(ConstraintLayout.LayoutParams)view.getLayoutParams();
+                params.setMargins(0,0,0,0);
+                view.setLayoutParams(params);
+                Intent i = new Intent(getApplicationContext(),backdraft.class);
+                startActivity(i);
             }
+            return true;
         });
 
 
-        prev_page.setOnTouchListener(new View.OnTouchListener() {
-            public boolean onTouch(View view, MotionEvent event) {
-                if (event.getAction() == android.view.MotionEvent.ACTION_DOWN) {
-                    params=(ConstraintLayout.LayoutParams)view.getLayoutParams();
-                    params.setMargins(8,0,8,0);
-                    view.setLayoutParams(params);
-                } else if (event.getAction() == android.view.MotionEvent.ACTION_UP) {
-                    params=(ConstraintLayout.LayoutParams)view.getLayoutParams();
-                    params.setMargins(0,0,0,0);
-                    view.setLayoutParams(params);
-                    Intent i = new Intent(getApplicationContext(),motor_efficiency.class);
-                    startActivity(i);
-                }
-                return true;
+        prev_page.setOnTouchListener((view, event) -> {
+            if (event.getAction() == MotionEvent.ACTION_DOWN) {
+                params=(ConstraintLayout.LayoutParams)view.getLayoutParams();
+                params.setMargins(8,0,8,0);
+                view.setLayoutParams(params);
+            } else if (event.getAction() == MotionEvent.ACTION_UP) {
+                params=(ConstraintLayout.LayoutParams)view.getLayoutParams();
+                params.setMargins(0,0,0,0);
+                view.setLayoutParams(params);
+                Intent i = new Intent(getApplicationContext(),motor_efficiency.class);
+                startActivity(i);
             }
+            return true;
         });
 
-        save_btn.setOnTouchListener(new View.OnTouchListener() {
-            public boolean onTouch(View view, MotionEvent event) {
-                if (event.getAction() == android.view.MotionEvent.ACTION_DOWN) {
-                    params=(ConstraintLayout.LayoutParams)view.getLayoutParams();
-                    params.setMargins(8,0,8,0);
-                    view.setLayoutParams(params);
-                } else if (event.getAction() == android.view.MotionEvent.ACTION_UP) {
-                    params=(ConstraintLayout.LayoutParams)view.getLayoutParams();
-                    params.setMargins(0,0,0,0);
-                    view.setLayoutParams(params);
-                    save_dose_group_values(1);
-                    save_dose_group_values(2);
-                    save_dose_group_values(3);
-                    Toast.makeText(getApplicationContext(),getApplicationContext().getString(R.string.ayarlanan_parametreler_kaydedildi),Toast.LENGTH_LONG).show();
-                }
-                return true;
+        save_btn.setOnTouchListener((view, event) -> {
+            if (event.getAction() == MotionEvent.ACTION_DOWN) {
+                params=(ConstraintLayout.LayoutParams)view.getLayoutParams();
+                params.setMargins(8,0,8,0);
+                view.setLayoutParams(params);
+            } else if (event.getAction() == MotionEvent.ACTION_UP) {
+                params=(ConstraintLayout.LayoutParams)view.getLayoutParams();
+                params.setMargins(0,0,0,0);
+                view.setLayoutParams(params);
+                save_dose_group_values(1);
+                save_dose_group_values(2);
+                save_dose_group_values(3);
+                Toast.makeText(getApplicationContext(),getApplicationContext().getString(R.string.ayarlanan_parametreler_kaydedildi),Toast.LENGTH_LONG).show();
             }
+            return true;
         });
 
-        back_btn.setOnTouchListener(new View.OnTouchListener() {
-            public boolean onTouch(View view, MotionEvent event) {
-                if (event.getAction() == android.view.MotionEvent.ACTION_DOWN) {
-                    params=(ConstraintLayout.LayoutParams)view.getLayoutParams();
-                    params.setMargins(8,0,8,0);
-                    view.setLayoutParams(params);
-                } else if (event.getAction() == android.view.MotionEvent.ACTION_UP) {
-                    params=(ConstraintLayout.LayoutParams)view.getLayoutParams();
-                    params.setMargins(0,0,0,0);
-                    view.setLayoutParams(params);
-                    Intent i = new Intent(getApplicationContext(),settings.class);
-                    startActivity(i);
-                }
-                return true;
+        back_btn.setOnTouchListener((view, event) -> {
+            if (event.getAction() == MotionEvent.ACTION_DOWN) {
+                params=(ConstraintLayout.LayoutParams)view.getLayoutParams();
+                params.setMargins(8,0,8,0);
+                view.setLayoutParams(params);
+            } else if (event.getAction() == MotionEvent.ACTION_UP) {
+                params=(ConstraintLayout.LayoutParams)view.getLayoutParams();
+                params.setMargins(0,0,0,0);
+                view.setLayoutParams(params);
+                Intent i = new Intent(getApplicationContext(),settings.class);
+                startActivity(i);
             }
+            return true;
         });
 
-        home_btn.setOnTouchListener(new View.OnTouchListener() {
-            public boolean onTouch(View view, MotionEvent event) {
-                if (event.getAction() == android.view.MotionEvent.ACTION_DOWN) {
-                    params=(ConstraintLayout.LayoutParams)view.getLayoutParams();
-                    params.setMargins(8,0,8,0);
-                    view.setLayoutParams(params);
-                } else if (event.getAction() == android.view.MotionEvent.ACTION_UP) {
-                    params=(ConstraintLayout.LayoutParams)view.getLayoutParams();
-                    params.setMargins(0,0,0,0);
-                    view.setLayoutParams(params);
-                    Intent i = new Intent(getApplicationContext(),dosing.class);
-                    startActivity(i);
-                }
-                return true;
+        home_btn.setOnTouchListener((view, event) -> {
+            if (event.getAction() == MotionEvent.ACTION_DOWN) {
+                params=(ConstraintLayout.LayoutParams)view.getLayoutParams();
+                params.setMargins(8,0,8,0);
+                view.setLayoutParams(params);
+            } else if (event.getAction() == MotionEvent.ACTION_UP) {
+                params=(ConstraintLayout.LayoutParams)view.getLayoutParams();
+                params.setMargins(0,0,0,0);
+                view.setLayoutParams(params);
+                Intent i = new Intent(getApplicationContext(),dosing.class);
+                startActivity(i);
             }
+            return true;
         });
 
-        default_btn.setOnTouchListener(new View.OnTouchListener() {
-            public boolean onTouch(View view, MotionEvent event) {
-                if (event.getAction() == android.view.MotionEvent.ACTION_DOWN) {
-                    params=(ConstraintLayout.LayoutParams)view.getLayoutParams();
-                    params.setMargins(8,0,8,0);
-                    view.setLayoutParams(params);
-                } else if (event.getAction() == android.view.MotionEvent.ACTION_UP) {
-                    params=(ConstraintLayout.LayoutParams)view.getLayoutParams();
-                    params.setMargins(0,0,0,0);
-                    view.setLayoutParams(params);
-                    save_default_params();
-                    init_params();
-                    load_dose_group_values(selected_group);
-                    Toast.makeText(getApplicationContext(),getApplicationContext().getString(R.string.varsayılan_parametreler_kaydedildi),Toast.LENGTH_LONG).show();
-                }
-                return true;
+        default_btn.setOnTouchListener((view, event) -> {
+            if (event.getAction() == MotionEvent.ACTION_DOWN) {
+                params=(ConstraintLayout.LayoutParams)view.getLayoutParams();
+                params.setMargins(8,0,8,0);
+                view.setLayoutParams(params);
+            } else if (event.getAction() == MotionEvent.ACTION_UP) {
+                params=(ConstraintLayout.LayoutParams)view.getLayoutParams();
+                params.setMargins(0,0,0,0);
+                view.setLayoutParams(params);
+                save_default_params();
+                init_params();
+                load_dose_group_values(selected_group);
+                Toast.makeText(getApplicationContext(),getApplicationContext().getString(R.string.varsayılan_parametreler_kaydedildi),Toast.LENGTH_LONG).show();
             }
+            return true;
         });
     }
     @Override
@@ -343,25 +340,20 @@ public class parameters1 extends AppCompatActivity {
         //preventStatusBarExpansion(ctx);
 
 
-        KeyboardUtils.addKeyboardToggleListener(this, new KeyboardUtils.SoftKeyboardToggleListener()
-        {
-            @Override
-            public void onToggleSoftKeyboard(boolean isVisible)
+        KeyboardUtils.addKeyboardToggleListener(this, isVisible -> {
+            if(!isVisible)
             {
-                if(!isVisible)
-                {
-                    hide_system_ui();
-                }
-                else
-                {
-                    hide_system_ui();
-                }
+                hide_system_ui();
+            }
+            else
+            {
+                hide_system_ui();
             }
         });
         //save_default_params();
         init_params();
         initviews();
-        layout=(ConstraintLayout)findViewById(R.id.parameters_layout);
+        layout= findViewById(R.id.parameters_layout);
 
     }
     public static void preventStatusBarExpansion(Context context) {
@@ -375,7 +367,7 @@ public class parameters1 extends AppCompatActivity {
         localLayoutParams.width = WindowManager.LayoutParams.MATCH_PARENT;
 
         int resId = context.getResources().getIdentifier("status_bar_height", "dimen", "android");
-        int result = 0;
+        int result;
         if (resId > 0) {
             result = context.getResources().getDimensionPixelSize(resId);
         } else {
@@ -417,19 +409,13 @@ public class parameters1 extends AppCompatActivity {
 
             getWindow().getDecorView().setSystemUiVisibility(flags);
             final View decorView = getWindow().getDecorView();
-            decorView.setOnSystemUiVisibilityChangeListener(new View.OnSystemUiVisibilityChangeListener()
-                    {
-
-                        @Override
-                        public void onSystemUiVisibilityChange(int visibility)
-                        {
-                            if((visibility & View.SYSTEM_UI_FLAG_FULLSCREEN) == 0)
-                            {
-                                hide_system_ui();
-                                decorView.setSystemUiVisibility(flags);
-                            }
-                        }
-                    });
+            decorView.setOnSystemUiVisibilityChangeListener(visibility -> {
+                if((visibility & View.SYSTEM_UI_FLAG_FULLSCREEN) == 0)
+                {
+                    hide_system_ui();
+                    decorView.setSystemUiVisibility(flags);
+                }
+            });
         }
     }
 
@@ -574,6 +560,7 @@ public class parameters1 extends AppCompatActivity {
 
         }
     }
+    @SuppressLint("SetTextI18n")
     public void load_dose_group_values(int dose_group)
     {
         if(dose_group==1)

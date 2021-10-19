@@ -31,47 +31,44 @@ public class cleaning_journal extends AppCompatActivity {
     int event_count=0;
     SharedPreferences sharedPref;
     SharedPreferences.Editor editor;
-    private int currentApiVersion;
     ConstraintLayout.LayoutParams params = new ConstraintLayout.LayoutParams(
             ConstraintLayout.LayoutParams.MATCH_PARENT,
             ConstraintLayout.LayoutParams.MATCH_PARENT
     );
 
     public void initviews(){
-        cleaning_lines[0]=(TextView)findViewById(R.id.cleaning_line1);
-        cleaning_lines[1]=(TextView)findViewById(R.id.cleaning_line2);
-        cleaning_lines[2]=(TextView)findViewById(R.id.cleaning_line3);
-        cleaning_lines[3]=(TextView)findViewById(R.id.cleaning_line4);
-        cleaning_lines[4]=(TextView)findViewById(R.id.cleaning_line5);
-        time_lines[0]=(TextView)findViewById(R.id.time_line1);
-        time_lines[1]=(TextView)findViewById(R.id.time_line2);
-        time_lines[2]=(TextView)findViewById(R.id.time_line3);
-        time_lines[3]=(TextView)findViewById(R.id.time_line4);
-        time_lines[4]=(TextView)findViewById(R.id.time_line5);
-        date_lines[0]=(TextView)findViewById(R.id.date_line1);
-        date_lines[1]=(TextView)findViewById(R.id.date_line2);
-        date_lines[2]=(TextView)findViewById(R.id.date_line3);
-        date_lines[3]=(TextView)findViewById(R.id.date_line4);
-        date_lines[4]=(TextView)findViewById(R.id.date_line5);
-        rst_cleaning_info=(ImageButton)findViewById(R.id.reset_cleaning_info);
+        cleaning_lines[0]= findViewById(R.id.cleaning_line1);
+        cleaning_lines[1]= findViewById(R.id.cleaning_line2);
+        cleaning_lines[2]= findViewById(R.id.cleaning_line3);
+        cleaning_lines[3]= findViewById(R.id.cleaning_line4);
+        cleaning_lines[4]= findViewById(R.id.cleaning_line5);
+        time_lines[0]= findViewById(R.id.time_line1);
+        time_lines[1]= findViewById(R.id.time_line2);
+        time_lines[2]= findViewById(R.id.time_line3);
+        time_lines[3]= findViewById(R.id.time_line4);
+        time_lines[4]= findViewById(R.id.time_line5);
+        date_lines[0]= findViewById(R.id.date_line1);
+        date_lines[1]= findViewById(R.id.date_line2);
+        date_lines[2]= findViewById(R.id.date_line3);
+        date_lines[3]= findViewById(R.id.date_line4);
+        date_lines[4]= findViewById(R.id.date_line5);
+        rst_cleaning_info= findViewById(R.id.reset_cleaning_info);
 
-        rst_cleaning_info.setOnTouchListener(new View.OnTouchListener() {
-            public boolean onTouch(View view, MotionEvent event) {
-                if (event.getAction() == android.view.MotionEvent.ACTION_DOWN) {
-                    params=(ConstraintLayout.LayoutParams)view.getLayoutParams();
-                    params.setMargins(8,0,8,0);
-                    view.setLayoutParams(params);
-                } else if (event.getAction() == android.view.MotionEvent.ACTION_UP) {
-                    params=(ConstraintLayout.LayoutParams)view.getLayoutParams();
-                    params.setMargins(0,0,0,0);
-                    view.setLayoutParams(params);
-                    editor.putInt("cleaning_event_cnt",0);
-                    editor.commit();
-                    Toast.makeText(getApplicationContext(),getApplicationContext().getString(R.string.hijyen_gunluğu_sifirlandi),Toast.LENGTH_LONG).show();
-                    reset_list();
-                }
-                return true;
+        rst_cleaning_info.setOnTouchListener((view, event) -> {
+            if (event.getAction() == MotionEvent.ACTION_DOWN) {
+                params=(ConstraintLayout.LayoutParams)view.getLayoutParams();
+                params.setMargins(8,0,8,0);
+                view.setLayoutParams(params);
+            } else if (event.getAction() == MotionEvent.ACTION_UP) {
+                params=(ConstraintLayout.LayoutParams)view.getLayoutParams();
+                params.setMargins(0,0,0,0);
+                view.setLayoutParams(params);
+                editor.putInt("cleaning_event_cnt",0);
+                editor.commit();
+                Toast.makeText(getApplicationContext(),getApplicationContext().getString(R.string.hijyen_gunluğu_sifirlandi),Toast.LENGTH_LONG).show();
+                reset_list();
             }
+            return true;
         });
     }
     @Override
@@ -81,7 +78,7 @@ public class cleaning_journal extends AppCompatActivity {
         editor = sharedPref.edit();
 
         super.onCreate(savedInstanceState);
-        currentApiVersion = android.os.Build.VERSION.SDK_INT;
+        int currentApiVersion = Build.VERSION.SDK_INT;
 
         final int flags = View.SYSTEM_UI_FLAG_LAYOUT_STABLE
                 | View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
@@ -95,16 +92,10 @@ public class cleaning_journal extends AppCompatActivity {
             getWindow().getDecorView().setSystemUiVisibility(flags);
             final View decorView = getWindow().getDecorView();
             decorView
-                    .setOnSystemUiVisibilityChangeListener(new View.OnSystemUiVisibilityChangeListener()
-                    {
-
-                        @Override
-                        public void onSystemUiVisibilityChange(int visibility)
+                    .setOnSystemUiVisibilityChangeListener(visibility -> {
+                        if((visibility & View.SYSTEM_UI_FLAG_FULLSCREEN) == 0)
                         {
-                            if((visibility & View.SYSTEM_UI_FLAG_FULLSCREEN) == 0)
-                            {
-                                decorView.setSystemUiVisibility(flags);
-                            }
+                            decorView.setSystemUiVisibility(flags);
                         }
                     });
         }
@@ -126,14 +117,19 @@ public class cleaning_journal extends AppCompatActivity {
         for(int i=0;i<line_end;i++)
         {
             if(cleaning_events[i]!=null) {
-                if (cleaning_events[cleaning_events.length - 1 - i + event_index].cleaning_type.equals("rinse_start")) {
-                    cleaning_lines[i].setText(getApplicationContext().getString(R.string.kanal) + cleaning_events[cleaning_events.length - 1 - i + event_index].cleaning_channel + getApplicationContext().getString(R.string.icin_ara_durulama_yapildi));
-                } else if (cleaning_events[cleaning_events.length - 1 - i + event_index].cleaning_type.equals("rinse_respite")) {
-                    cleaning_lines[i].setText(getApplicationContext().getString(R.string.kanal) + cleaning_events[cleaning_events.length - 1 - i + event_index].cleaning_channel + getApplicationContext().getString(R.string.icin_ara_durulama_ertelendi));
-                } else if (cleaning_events[cleaning_events.length - 1 - i + event_index].cleaning_type.equals("wash")) {
-                    cleaning_lines[i].setText(getApplicationContext().getString(R.string.kanal) + cleaning_events[cleaning_events.length - 1 - i + event_index].cleaning_channel + getApplicationContext().getString(R.string.icin_yikama_yapildi));
-                } else {
+                switch (cleaning_events[cleaning_events.length - 1 - i + event_index].cleaning_type) {
+                    case "rinse_start":
+                        cleaning_lines[i].setText(getApplicationContext().getString(R.string.kanal) + cleaning_events[cleaning_events.length - 1 - i + event_index].cleaning_channel + getApplicationContext().getString(R.string.icin_ara_durulama_yapildi));
+                        break;
+                    case "rinse_respite":
+                        cleaning_lines[i].setText(getApplicationContext().getString(R.string.kanal) + cleaning_events[cleaning_events.length - 1 - i + event_index].cleaning_channel + getApplicationContext().getString(R.string.icin_ara_durulama_ertelendi));
+                        break;
+                    case "wash":
+                        cleaning_lines[i].setText(getApplicationContext().getString(R.string.kanal) + cleaning_events[cleaning_events.length - 1 - i + event_index].cleaning_channel + getApplicationContext().getString(R.string.icin_yikama_yapildi));
+                        break;
+                    default:
 
+                        break;
                 }
                 time_lines[i].setText(cleaning_events[cleaning_events.length - 1 - i + event_index].cleaning_time);
                 date_lines[i].setText(cleaning_events[cleaning_events.length - 1 - i + event_index].cleaning_date);

@@ -1,8 +1,5 @@
 package com.menar.milkdoser;
 
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.constraintlayout.widget.ConstraintLayout;
-
 import android.annotation.SuppressLint;
 import android.app.AlarmManager;
 import android.app.DatePickerDialog;
@@ -16,11 +13,10 @@ import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.Button;
-import android.widget.DatePicker;
-import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.TimePicker;
-import android.widget.Toast;
+
+import androidx.appcompat.app.AppCompatActivity;
 
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -31,11 +27,6 @@ public class time_menu extends AppCompatActivity {
     Button time_button,date_button;
     SharedPreferences sharedPref;
     SharedPreferences.Editor editor;
-    private int currentApiVersion;
-    ConstraintLayout.LayoutParams params = new ConstraintLayout.LayoutParams(
-            ConstraintLayout.LayoutParams.MATCH_PARENT,
-            ConstraintLayout.LayoutParams.MATCH_PARENT
-    );
     DatePickerDialog datePickerDialog;
     Calendar c;
     SimpleDateFormat df;
@@ -43,88 +34,79 @@ public class time_menu extends AppCompatActivity {
     String formattedDate;
     String formattedTime;
     int year,month,dayOfMonth,hour,minute;
+    @SuppressLint({"ClickableViewAccessibility", "SimpleDateFormat"})
     public void initviews(){
-        dtview=(TextView)findViewById(R.id.dateview);
-        tmview=(TextView)findViewById(R.id.timeview);
-        time_button=(Button)findViewById(R.id.timebtn);
-        date_button=(Button)findViewById(R.id.datebtn);
+        dtview= findViewById(R.id.dateview);
+        tmview= findViewById(R.id.timeview);
+        time_button= findViewById(R.id.timebtn);
+        date_button= findViewById(R.id.datebtn);
         tmview.setText(formattedTime);
         dtview.setText(formattedDate);
-        date_button.setOnTouchListener(new View.OnTouchListener() {
-            @SuppressLint("ClickableViewAccessibility")
-            public boolean onTouch(View view, MotionEvent event) {
+        date_button.setOnTouchListener((view, event) -> {
 
-                if (event.getAction() == android.view.MotionEvent.ACTION_DOWN) {
-                    c = Calendar.getInstance();
-                    year = c.get(Calendar.YEAR);
-                    month = c.get(Calendar.MONTH);
-                    dayOfMonth = c.get(Calendar.DAY_OF_MONTH);
-                    hour= c.get(Calendar.HOUR_OF_DAY);
-                    minute = c.get(Calendar.MINUTE);
+            if (event.getAction() == MotionEvent.ACTION_DOWN) {
+                c = Calendar.getInstance();
+                year = c.get(Calendar.YEAR);
+                month = c.get(Calendar.MONTH);
+                dayOfMonth = c.get(Calendar.DAY_OF_MONTH);
+                hour= c.get(Calendar.HOUR_OF_DAY);
+                minute = c.get(Calendar.MINUTE);
 
-                    datePickerDialog = new DatePickerDialog(time_menu.this,
-                            new DatePickerDialog.OnDateSetListener() {
-                                @Override
-                                public void onDateSet(DatePicker datePicker, int year_picker, int month_picker, int day_picker) {
-                                    c.set(year_picker,month_picker,day_picker,hour,minute);
+                datePickerDialog = new DatePickerDialog(time_menu.this,
+                        (datePicker, year_picker, month_picker, day_picker) -> {
+                            c.set(year_picker,month_picker,day_picker,hour,minute);
 
-                                    utils.changeSystemTime(year_picker,(month_picker+1),day_picker,hour,minute);
-                                    df = new SimpleDateFormat("dd/MM/yyyy");
-                                    formattedDate=df.format(c.getTime());
-                                    dtview.setText(formattedDate);
-                                    hide_system_ui();
-                                }
-                            }, year, month, dayOfMonth);
-                    datePickerDialog.show();
-                    hide_system_ui();
-                    Log.d("date","pressed");
+                            utils.changeSystemTime(year_picker,(month_picker+1),day_picker,hour,minute);
+                            df = new SimpleDateFormat("dd/MM/yyyy");
+                            formattedDate=df.format(c.getTime());
+                            dtview.setText(formattedDate);
+                            hide_system_ui();
+                        }, year, month, dayOfMonth);
+                datePickerDialog.show();
+                hide_system_ui();
+                Log.d("date","pressed");
 
-                }
-                else if (event.getAction() == android.view.MotionEvent.ACTION_UP) {
-
-                }
-                return true;
             }
+            else if (event.getAction() == MotionEvent.ACTION_UP) {
+
+            }
+            return true;
         });
-        time_button.setOnTouchListener(new View.OnTouchListener() {
-            public boolean onTouch(View view, MotionEvent event) {
+        time_button.setOnTouchListener((view, event) -> {
 
-                if (event.getAction() == android.view.MotionEvent.ACTION_DOWN) {
-                    c = Calendar.getInstance();
-                    year = c.get(Calendar.YEAR);
-                    month = c.get(Calendar.MONTH);
-                    dayOfMonth = c.get(Calendar.DAY_OF_MONTH);
-                    hour= c.get(Calendar.HOUR_OF_DAY);
-                    minute = c.get(Calendar.MINUTE);
+            if (event.getAction() == MotionEvent.ACTION_DOWN) {
+                c = Calendar.getInstance();
+                year = c.get(Calendar.YEAR);
+                month = c.get(Calendar.MONTH);
+                dayOfMonth = c.get(Calendar.DAY_OF_MONTH);
+                hour= c.get(Calendar.HOUR_OF_DAY);
+                minute = c.get(Calendar.MINUTE);
 
-                    TimePickerDialog tpd = new TimePickerDialog(time_menu.this,
-                            new TimePickerDialog.OnTimeSetListener() {
-                                @Override
-                                public void onTimeSet(TimePicker view, int hourOfDay_picker, int minute_picker) {
-                                    Log.d("Time","Hour:"+hourOfDay_picker+" Minute:"+minute_picker);
-                                    AlarmManager am = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
-                                    c.set(year,month,dayOfMonth,hourOfDay_picker,minute_picker);
-                                    utils.changeSystemTime(year,(month+1),dayOfMonth,hourOfDay_picker,minute_picker);
-                                    tf = new SimpleDateFormat("HH:mm");
-                                    formattedTime = tf.format(c.getTime());
-                                    long timeStamp = c.getTimeInMillis();
-                                    //am.setTime(timeStamp);
-                                    tmview.setText(formattedTime);
-                                    hide_system_ui();
-                                }
-                            }, hour, minute, true);
-                    tpd.setButton(TimePickerDialog.BUTTON_POSITIVE, "Seç", tpd);
-                    tpd.setButton(TimePickerDialog.BUTTON_NEGATIVE, "İptal", tpd);
-                    tpd.show();
-                    hide_system_ui();
-                }
-                else if (event.getAction() == android.view.MotionEvent.ACTION_UP) {
-
-                }
-                return true;
+                TimePickerDialog tpd = new TimePickerDialog(time_menu.this,
+                        (view1, hourOfDay_picker, minute_picker) -> {
+                            Log.d("Time","Hour:"+hourOfDay_picker+" Minute:"+minute_picker);
+                            AlarmManager am = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
+                            c.set(year,month,dayOfMonth,hourOfDay_picker,minute_picker);
+                            utils.changeSystemTime(year,(month+1),dayOfMonth,hourOfDay_picker,minute_picker);
+                            tf = new SimpleDateFormat("HH:mm");
+                            formattedTime = tf.format(c.getTime());
+                            long timeStamp = c.getTimeInMillis();
+                            //am.setTime(timeStamp);
+                            tmview.setText(formattedTime);
+                            hide_system_ui();
+                        }, hour, minute, true);
+                tpd.setButton(TimePickerDialog.BUTTON_POSITIVE, "Seç", tpd);
+                tpd.setButton(TimePickerDialog.BUTTON_NEGATIVE, "İptal", tpd);
+                tpd.show();
+                hide_system_ui();
             }
+            else if (event.getAction() == MotionEvent.ACTION_UP) {
+
+            }
+            return true;
         });
     }
+    @SuppressLint("SimpleDateFormat")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
 
@@ -143,7 +125,7 @@ public class time_menu extends AppCompatActivity {
     }
     public void hide_system_ui()
     {
-        currentApiVersion = android.os.Build.VERSION.SDK_INT;
+        int currentApiVersion = Build.VERSION.SDK_INT;
 
         final int flags = View.SYSTEM_UI_FLAG_LAYOUT_STABLE
                 | View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
@@ -157,16 +139,10 @@ public class time_menu extends AppCompatActivity {
             getWindow().getDecorView().setSystemUiVisibility(flags);
             final View decorView = getWindow().getDecorView();
             decorView
-                    .setOnSystemUiVisibilityChangeListener(new View.OnSystemUiVisibilityChangeListener()
-                    {
-
-                        @Override
-                        public void onSystemUiVisibilityChange(int visibility)
+                    .setOnSystemUiVisibilityChangeListener(visibility -> {
+                        if((visibility & View.SYSTEM_UI_FLAG_FULLSCREEN) == 0)
                         {
-                            if((visibility & View.SYSTEM_UI_FLAG_FULLSCREEN) == 0)
-                            {
-                                decorView.setSystemUiVisibility(flags);
-                            }
+                            decorView.setSystemUiVisibility(flags);
                         }
                     });
         }

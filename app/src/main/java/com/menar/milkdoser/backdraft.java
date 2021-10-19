@@ -37,122 +37,109 @@ public class backdraft extends AppCompatActivity {
 
 
     public void initviews() {
-        edit_pipe_add=(EditText)findViewById(R.id.pipe_add);
-        edit_a_back=(EditText)findViewById(R.id.a_back);
-        edit_b_back=(EditText)findViewById(R.id.b_back);
-        edit_idle=(EditText)findViewById(R.id.idle_back);
-        save_btn=(ImageButton) findViewById(R.id.save);
-        back_btn=(ImageButton) findViewById(R.id.back);
-        home_btn=(ImageButton) findViewById(R.id.home);
-        default_btn=(ImageButton) findViewById(R.id.load_default);
-        next_page=(ImageButton) findViewById(R.id.next_page_btn);
-        prev_page=(ImageButton) findViewById(R.id.prev_page_btn);
+        edit_pipe_add= findViewById(R.id.pipe_add);
+        edit_a_back= findViewById(R.id.a_back);
+        edit_b_back= findViewById(R.id.b_back);
+        edit_idle= findViewById(R.id.idle_back);
+        save_btn= findViewById(R.id.save);
+        back_btn= findViewById(R.id.back);
+        home_btn= findViewById(R.id.home);
+        default_btn= findViewById(R.id.load_default);
+        next_page= findViewById(R.id.next_page_btn);
+        prev_page= findViewById(R.id.prev_page_btn);
         load_params();
 
-        next_page.setOnTouchListener(new View.OnTouchListener() {
-            public boolean onTouch(View view, MotionEvent event) {
-                if (event.getAction() == android.view.MotionEvent.ACTION_DOWN) {
-                    params=(ConstraintLayout.LayoutParams)view.getLayoutParams();
-                    params.setMargins(8,0,8,0);
-                    view.setLayoutParams(params);
-                } else if (event.getAction() == android.view.MotionEvent.ACTION_UP) {
-                    params=(ConstraintLayout.LayoutParams)view.getLayoutParams();
-                    params.setMargins(0,0,0,0);
-                    view.setLayoutParams(params);
-                    Intent i = new Intent(getApplicationContext(),rinse.class);
-                    startActivity(i);
-                }
-                return true;
+        next_page.setOnTouchListener((view, event) -> {
+            if (event.getAction() == MotionEvent.ACTION_DOWN) {
+                params=(ConstraintLayout.LayoutParams)view.getLayoutParams();
+                params.setMargins(8,0,8,0);
+                view.setLayoutParams(params);
+            } else if (event.getAction() == MotionEvent.ACTION_UP) {
+                params=(ConstraintLayout.LayoutParams)view.getLayoutParams();
+                params.setMargins(0,0,0,0);
+                view.setLayoutParams(params);
+                Intent i = new Intent(getApplicationContext(),rinse.class);
+                startActivity(i);
             }
+            return true;
         });
 
 
-        prev_page.setOnTouchListener(new View.OnTouchListener() {
-            public boolean onTouch(View view, MotionEvent event) {
-                if (event.getAction() == android.view.MotionEvent.ACTION_DOWN) {
-                    params=(ConstraintLayout.LayoutParams)view.getLayoutParams();
-                    params.setMargins(8,0,8,0);
-                    view.setLayoutParams(params);
-                } else if (event.getAction() == android.view.MotionEvent.ACTION_UP) {
-                    params=(ConstraintLayout.LayoutParams)view.getLayoutParams();
-                    params.setMargins(0,0,0,0);
-                    view.setLayoutParams(params);
-                    Intent i = new Intent(getApplicationContext(),parameters1.class);
-                    startActivity(i);
-                }
-                return true;
+        prev_page.setOnTouchListener((view, event) -> {
+            if (event.getAction() == MotionEvent.ACTION_DOWN) {
+                params=(ConstraintLayout.LayoutParams)view.getLayoutParams();
+                params.setMargins(8,0,8,0);
+                view.setLayoutParams(params);
+            } else if (event.getAction() == MotionEvent.ACTION_UP) {
+                params=(ConstraintLayout.LayoutParams)view.getLayoutParams();
+                params.setMargins(0,0,0,0);
+                view.setLayoutParams(params);
+                Intent i = new Intent(getApplicationContext(),parameters1.class);
+                startActivity(i);
             }
+            return true;
         });
 
-        save_btn.setOnTouchListener(new View.OnTouchListener() {
-            @SuppressLint("ClickableViewAccessibility")
-            public boolean onTouch(View view, MotionEvent event) {
-                if (event.getAction() == android.view.MotionEvent.ACTION_DOWN) {
-                    params=(ConstraintLayout.LayoutParams)view.getLayoutParams();
-                    params.setMargins(8,0,8,0);
-                    view.setLayoutParams(params);
-                } else if (event.getAction() == android.view.MotionEvent.ACTION_UP) {
-                    params=(ConstraintLayout.LayoutParams)view.getLayoutParams();
-                    params.setMargins(0,0,0,0);
-                    view.setLayoutParams(params);
-                    save_params();
-                    Toast.makeText(getApplicationContext(),getApplicationContext().getString(R.string.ayarlanan_parametreler_kaydedildi),Toast.LENGTH_LONG).show();
-                }
-                return true;
+        save_btn.setOnTouchListener((view, event) -> {
+            if (event.getAction() == MotionEvent.ACTION_DOWN) {
+                params=(ConstraintLayout.LayoutParams)view.getLayoutParams();
+                params.setMargins(8,0,8,0);
+                view.setLayoutParams(params);
+            } else if (event.getAction() == MotionEvent.ACTION_UP) {
+                params=(ConstraintLayout.LayoutParams)view.getLayoutParams();
+                params.setMargins(0,0,0,0);
+                view.setLayoutParams(params);
+                save_params();
+                Toast.makeText(getApplicationContext(),getApplicationContext().getString(R.string.ayarlanan_parametreler_kaydedildi),Toast.LENGTH_LONG).show();
             }
+            return true;
         });
 
-        back_btn.setOnTouchListener(new View.OnTouchListener() {
-            public boolean onTouch(View view, MotionEvent event) {
-                if (event.getAction() == android.view.MotionEvent.ACTION_DOWN) {
-                    params=(ConstraintLayout.LayoutParams)view.getLayoutParams();
-                    params.setMargins(8,0,8,0);
-                    view.setLayoutParams(params);
-                } else if (event.getAction() == android.view.MotionEvent.ACTION_UP) {
-                    params=(ConstraintLayout.LayoutParams)view.getLayoutParams();
-                    params.setMargins(0,0,0,0);
-                    view.setLayoutParams(params);
-                    Intent i = new Intent(getApplicationContext(),settings.class);
-                    startActivity(i);
-                }
-                return true;
+        back_btn.setOnTouchListener((view, event) -> {
+            if (event.getAction() == MotionEvent.ACTION_DOWN) {
+                params=(ConstraintLayout.LayoutParams)view.getLayoutParams();
+                params.setMargins(8,0,8,0);
+                view.setLayoutParams(params);
+            } else if (event.getAction() == MotionEvent.ACTION_UP) {
+                params=(ConstraintLayout.LayoutParams)view.getLayoutParams();
+                params.setMargins(0,0,0,0);
+                view.setLayoutParams(params);
+                Intent i = new Intent(getApplicationContext(),settings.class);
+                startActivity(i);
             }
+            return true;
         });
 
-        home_btn.setOnTouchListener(new View.OnTouchListener() {
-            public boolean onTouch(View view, MotionEvent event) {
-                if (event.getAction() == android.view.MotionEvent.ACTION_DOWN) {
-                    params=(ConstraintLayout.LayoutParams)view.getLayoutParams();
-                    params.setMargins(8,0,8,0);
-                    view.setLayoutParams(params);
-                } else if (event.getAction() == android.view.MotionEvent.ACTION_UP) {
-                    params=(ConstraintLayout.LayoutParams)view.getLayoutParams();
-                    params.setMargins(0,0,0,0);
-                    view.setLayoutParams(params);
-                    Intent i = new Intent(getApplicationContext(),dosing.class);
-                    startActivity(i);
-                }
-                return true;
+        home_btn.setOnTouchListener((view, event) -> {
+            if (event.getAction() == MotionEvent.ACTION_DOWN) {
+                params=(ConstraintLayout.LayoutParams)view.getLayoutParams();
+                params.setMargins(8,0,8,0);
+                view.setLayoutParams(params);
+            } else if (event.getAction() == MotionEvent.ACTION_UP) {
+                params=(ConstraintLayout.LayoutParams)view.getLayoutParams();
+                params.setMargins(0,0,0,0);
+                view.setLayoutParams(params);
+                Intent i = new Intent(getApplicationContext(),dosing.class);
+                startActivity(i);
             }
+            return true;
         });
 
-        default_btn.setOnTouchListener(new View.OnTouchListener() {
-            public boolean onTouch(View view, MotionEvent event) {
-                if (event.getAction() == android.view.MotionEvent.ACTION_DOWN) {
-                    params=(ConstraintLayout.LayoutParams)view.getLayoutParams();
-                    params.setMargins(8,0,8,0);
-                    view.setLayoutParams(params);
-                } else if (event.getAction() == android.view.MotionEvent.ACTION_UP) {
-                    params=(ConstraintLayout.LayoutParams)view.getLayoutParams();
-                    params.setMargins(0,0,0,0);
-                    view.setLayoutParams(params);
-                    save_default_params();
-                    init_params();
-                    load_params();
-                    Toast.makeText(getApplicationContext(),getApplicationContext().getString(R.string.varsayılan_parametreler_kaydedildi),Toast.LENGTH_LONG).show();
-                }
-                return true;
+        default_btn.setOnTouchListener((view, event) -> {
+            if (event.getAction() == MotionEvent.ACTION_DOWN) {
+                params=(ConstraintLayout.LayoutParams)view.getLayoutParams();
+                params.setMargins(8,0,8,0);
+                view.setLayoutParams(params);
+            } else if (event.getAction() == MotionEvent.ACTION_UP) {
+                params=(ConstraintLayout.LayoutParams)view.getLayoutParams();
+                params.setMargins(0,0,0,0);
+                view.setLayoutParams(params);
+                save_default_params();
+                init_params();
+                load_params();
+                Toast.makeText(getApplicationContext(),getApplicationContext().getString(R.string.varsayılan_parametreler_kaydedildi),Toast.LENGTH_LONG).show();
             }
+            return true;
         });
     }
     @Override
@@ -168,19 +155,14 @@ public class backdraft extends AppCompatActivity {
         //preventStatusBarExpansion(ctx);
 
 
-        KeyboardUtils.addKeyboardToggleListener(this, new KeyboardUtils.SoftKeyboardToggleListener()
-        {
-            @Override
-            public void onToggleSoftKeyboard(boolean isVisible)
+        KeyboardUtils.addKeyboardToggleListener(this, isVisible -> {
+            if(!isVisible)
             {
-                if(!isVisible)
-                {
-                    hide_system_ui();
-                }
-                else
-                {
-                    hide_system_ui();
-                }
+                hide_system_ui();
+            }
+            else
+            {
+                hide_system_ui();
             }
         });
         save_default_params();
@@ -199,7 +181,7 @@ public class backdraft extends AppCompatActivity {
         localLayoutParams.width = WindowManager.LayoutParams.MATCH_PARENT;
 
         int resId = context.getResources().getIdentifier("status_bar_height", "dimen", "android");
-        int result = 0;
+        int result;
         if (resId > 0) {
             result = context.getResources().getDimensionPixelSize(resId);
         } else {

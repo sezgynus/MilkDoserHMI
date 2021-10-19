@@ -1,22 +1,21 @@
 package com.menar.milkdoser;
 
-import androidx.appcompat.app.AlertDialog;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.constraintlayout.widget.ConstraintLayout;
-
+import android.annotation.SuppressLint;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Build;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import androidx.appcompat.app.AlertDialog;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.constraintlayout.widget.ConstraintLayout;
 
 public class errors extends AppCompatActivity {
 
@@ -44,67 +43,58 @@ public class errors extends AppCompatActivity {
             ConstraintLayout.LayoutParams.MATCH_PARENT
     );
 
+    @SuppressLint("ClickableViewAccessibility")
     public void initviews(){
-        error_lines[0]=(TextView)findViewById(R.id.error_error_line1);
-        error_lines[1]=(TextView)findViewById(R.id.error_error_line2);
-        error_lines[2]=(TextView)findViewById(R.id.error_error_line3);
-        error_lines[3]=(TextView)findViewById(R.id.error_error_line4);
-        error_lines[4]=(TextView)findViewById(R.id.error_error_line5);
-        time_lines[0]=(TextView)findViewById(R.id.error_time_line1);
-        time_lines[1]=(TextView)findViewById(R.id.error_time_line2);
-        time_lines[2]=(TextView)findViewById(R.id.error_time_line3);
-        time_lines[3]=(TextView)findViewById(R.id.error_time_line4);
-        time_lines[4]=(TextView)findViewById(R.id.error_time_line5);
-        date_lines[0]=(TextView)findViewById(R.id.error_date_line1);
-        date_lines[1]=(TextView)findViewById(R.id.error_date_line2);
-        date_lines[2]=(TextView)findViewById(R.id.error_date_line3);
-        date_lines[3]=(TextView)findViewById(R.id.error_date_line4);
-        date_lines[4]=(TextView)findViewById(R.id.error_date_line5);
-        rst_err_info=(ImageButton)findViewById(R.id.reset_errors);
+        error_lines[0]= findViewById(R.id.error_error_line1);
+        error_lines[1]= findViewById(R.id.error_error_line2);
+        error_lines[2]= findViewById(R.id.error_error_line3);
+        error_lines[3]= findViewById(R.id.error_error_line4);
+        error_lines[4]= findViewById(R.id.error_error_line5);
+        time_lines[0]= findViewById(R.id.error_time_line1);
+        time_lines[1]= findViewById(R.id.error_time_line2);
+        time_lines[2]= findViewById(R.id.error_time_line3);
+        time_lines[3]= findViewById(R.id.error_time_line4);
+        time_lines[4]= findViewById(R.id.error_time_line5);
+        date_lines[0]= findViewById(R.id.error_date_line1);
+        date_lines[1]= findViewById(R.id.error_date_line2);
+        date_lines[2]= findViewById(R.id.error_date_line3);
+        date_lines[3]= findViewById(R.id.error_date_line4);
+        date_lines[4]= findViewById(R.id.error_date_line5);
+        rst_err_info= findViewById(R.id.reset_errors);
 
         builder = new AlertDialog.Builder(errors.this);
         builder.setTitle("Verileri Sıfırla?");
         builder.setMessage("Hata günlüğünü sıfırlamak istediğinize eminmisiniz?");
-        builder.setNegativeButton("Hayır", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialogInterface, int i) {
-                hide_system_ui();
-            }
-        });
-        builder.setPositiveButton("Evet", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialogInterface, int i) {
-                editor.putInt("error_event_cnt",0);
-                editor.commit();
-                Toast.makeText(getApplicationContext(),"Hata günlüğü sıfırlandı",Toast.LENGTH_LONG).show();
-                reset_list();
-                hide_system_ui();
-            }
+        builder.setNegativeButton("Hayır", (dialogInterface, i) -> hide_system_ui());
+        builder.setPositiveButton("Evet", (dialogInterface, i) -> {
+            editor.putInt("error_event_cnt",0);
+            editor.commit();
+            Toast.makeText(getApplicationContext(),"Hata günlüğü sıfırlandı",Toast.LENGTH_LONG).show();
+            reset_list();
+            hide_system_ui();
         });
         dialog=builder.setCancelable(false).create();
 
-        rst_err_info.setOnTouchListener(new View.OnTouchListener() {
-            public boolean onTouch(View view, MotionEvent event) {
-                if (event.getAction() == android.view.MotionEvent.ACTION_DOWN) {
-                    params=(ConstraintLayout.LayoutParams)view.getLayoutParams();
-                    params.setMargins(8,0,8,0);
-                    view.setLayoutParams(params);
-                } else if (event.getAction() == android.view.MotionEvent.ACTION_UP) {
-                    params=(ConstraintLayout.LayoutParams)view.getLayoutParams();
-                    params.setMargins(0,0,0,0);
-                    view.setLayoutParams(params);
-                    dialog.getWindow().setFlags(WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE, WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE);
-                    dialog.show();
-                    dialog.getWindow().getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_LOW_PROFILE
-                            | View.SYSTEM_UI_FLAG_FULLSCREEN
-                            | View.SYSTEM_UI_FLAG_LAYOUT_STABLE
-                            | View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY
-                            | View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
-                            | View.SYSTEM_UI_FLAG_HIDE_NAVIGATION);
-                    dialog.getWindow().clearFlags(WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE);
-                }
-                return true;
+        rst_err_info.setOnTouchListener((view, event) -> {
+            if (event.getAction() == MotionEvent.ACTION_DOWN) {
+                params=(ConstraintLayout.LayoutParams)view.getLayoutParams();
+                params.setMargins(8,0,8,0);
+                view.setLayoutParams(params);
+            } else if (event.getAction() == MotionEvent.ACTION_UP) {
+                params=(ConstraintLayout.LayoutParams)view.getLayoutParams();
+                params.setMargins(0,0,0,0);
+                view.setLayoutParams(params);
+                dialog.getWindow().setFlags(WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE, WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE);
+                dialog.show();
+                dialog.getWindow().getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_LOW_PROFILE
+                        | View.SYSTEM_UI_FLAG_FULLSCREEN
+                        | View.SYSTEM_UI_FLAG_LAYOUT_STABLE
+                        | View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY
+                        | View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
+                        | View.SYSTEM_UI_FLAG_HIDE_NAVIGATION);
+                dialog.getWindow().clearFlags(WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE);
             }
+            return true;
         });
     }
     @Override
@@ -128,16 +118,10 @@ public class errors extends AppCompatActivity {
             getWindow().getDecorView().setSystemUiVisibility(flags);
             final View decorView = getWindow().getDecorView();
             decorView
-                    .setOnSystemUiVisibilityChangeListener(new View.OnSystemUiVisibilityChangeListener()
-                    {
-
-                        @Override
-                        public void onSystemUiVisibilityChange(int visibility)
+                    .setOnSystemUiVisibilityChangeListener(visibility -> {
+                        if((visibility & View.SYSTEM_UI_FLAG_FULLSCREEN) == 0)
                         {
-                            if((visibility & View.SYSTEM_UI_FLAG_FULLSCREEN) == 0)
-                            {
-                                decorView.setSystemUiVisibility(flags);
-                            }
+                            decorView.setSystemUiVisibility(flags);
                         }
                     });
         }
@@ -153,20 +137,26 @@ public class errors extends AppCompatActivity {
             date_lines[i].setText("");
         }
     }
+    @SuppressLint("SetTextI18n")
     public void show_saved_events(int event_index){
         int line_end=5;
         if(error_events.length<5)line_end=error_events.length;
         for(int i=0;i<line_end;i++)
         {
             if(error_events[i]!=null) {
-                if (error_events[error_events.length - 1 - i + event_index].error_type.equals("connection_error")) {
-                    error_lines[i].setText("I/O kartı ile olan bağlantı kesildi!");
-                } else if (error_events[error_events.length - 1 - i + event_index].error_type.equals("encoder_error")) {
-                    error_lines[i].setText("Kanal-" + error_events[error_events.length - 1 - i + event_index].error_channel + " enkoder arızası.");
-                } else if (error_events[error_events.length - 1 - i + event_index].error_type.equals("wash")) {
-                    error_lines[i].setText("");
-                } else {
+                switch (error_events[error_events.length - 1 - i + event_index].error_type) {
+                    case "connection_error":
+                        error_lines[i].setText("I/O kartı ile olan bağlantı kesildi!");
+                        break;
+                    case "encoder_error":
+                        error_lines[i].setText("Kanal-" + error_events[error_events.length - 1 - i + event_index].error_channel + " enkoder arızası.");
+                        break;
+                    case "wash":
+                        error_lines[i].setText("");
+                        break;
+                    default:
 
+                        break;
                 }
                 time_lines[i].setText(error_events[error_events.length - 1 - i + event_index].error_time);
                 date_lines[i].setText(error_events[error_events.length - 1 - i + event_index].error_date);
@@ -197,17 +187,11 @@ public class errors extends AppCompatActivity {
         {
             getWindow().getDecorView().setSystemUiVisibility(flags);
             final View decorView = getWindow().getDecorView();
-            decorView.setOnSystemUiVisibilityChangeListener(new View.OnSystemUiVisibilityChangeListener()
-            {
-
-                @Override
-                public void onSystemUiVisibilityChange(int visibility)
+            decorView.setOnSystemUiVisibilityChangeListener(visibility -> {
+                if((visibility & View.SYSTEM_UI_FLAG_FULLSCREEN) == 0)
                 {
-                    if((visibility & View.SYSTEM_UI_FLAG_FULLSCREEN) == 0)
-                    {
-                        hide_system_ui();
-                        decorView.setSystemUiVisibility(flags);
-                    }
+                    hide_system_ui();
+                    decorView.setSystemUiVisibility(flags);
                 }
             });
         }

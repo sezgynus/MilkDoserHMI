@@ -1,16 +1,16 @@
 package com.menar.milkdoser;
 
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.constraintlayout.widget.ConstraintLayout;
-
+import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
 import android.provider.Settings;
 import android.view.MotionEvent;
 import android.view.View;
-import android.view.WindowManager;
 import android.widget.ImageButton;
+
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.constraintlayout.widget.ConstraintLayout;
 
 import java.util.Timer;
 import java.util.TimerTask;
@@ -29,92 +29,85 @@ public class power_menu extends AppCompatActivity {
     int power_hold_counter=0;
     Timer timer;
     ImageButton power,wash,rinse,next;
+    @SuppressLint("ClickableViewAccessibility")
     public void initviews() {
-        power = (ImageButton) findViewById(R.id.power_button);
-        wash = (ImageButton) findViewById(R.id.wash_button);
-        rinse = (ImageButton) findViewById(R.id.rinse_button);
-        next = (ImageButton) findViewById(R.id.next_screen);
-        power.setOnTouchListener(new View.OnTouchListener() {
-            public boolean onTouch(View view, MotionEvent event) {
-                if (event.getAction() == android.view.MotionEvent.ACTION_DOWN) {
-                    params = (ConstraintLayout.LayoutParams) view.getLayoutParams();
-                    params.setMargins(8, 0, 8, 0);
-                    view.setLayoutParams(params);
-                    power.setImageResource(R.drawable.power_button_pressed);
-                    power_pressed=true;
-                    power_hold_counter=0;
-                } else if (event.getAction() == android.view.MotionEvent.ACTION_UP) {
-                    params = (ConstraintLayout.LayoutParams) view.getLayoutParams();
-                    params.setMargins(0, 0, 0, 0);
-                    view.setLayoutParams(params);
-                    power.setImageResource(R.drawable.power_button);
-                    power_pressed=false;
-                    power_hold_counter=0;
-                }
-                return true;
+        power = findViewById(R.id.power_button);
+        wash = findViewById(R.id.wash_button);
+        rinse = findViewById(R.id.rinse_button);
+        next = findViewById(R.id.next_screen);
+        power.setOnTouchListener((view, event) -> {
+            if (event.getAction() == MotionEvent.ACTION_DOWN) {
+                params = (ConstraintLayout.LayoutParams) view.getLayoutParams();
+                params.setMargins(8, 0, 8, 0);
+                view.setLayoutParams(params);
+                power.setImageResource(R.drawable.power_button_pressed);
+                power_pressed=true;
+                power_hold_counter=0;
+            } else if (event.getAction() == MotionEvent.ACTION_UP) {
+                params = (ConstraintLayout.LayoutParams) view.getLayoutParams();
+                params.setMargins(0, 0, 0, 0);
+                view.setLayoutParams(params);
+                power.setImageResource(R.drawable.power_button);
+                power_pressed=false;
+                power_hold_counter=0;
             }
+            return true;
         });
-        wash.setOnTouchListener(new View.OnTouchListener() {
-            public boolean onTouch(View view, MotionEvent event) {
-                if (event.getAction() == android.view.MotionEvent.ACTION_DOWN) {
-                    params = (ConstraintLayout.LayoutParams) view.getLayoutParams();
-                    params.setMargins(8, 0, 8, 0);
-                    view.setLayoutParams(params);
-                    wash.setImageResource(R.drawable.wash_button_pressed);
-                } else if (event.getAction() == android.view.MotionEvent.ACTION_UP) {
-                    params = (ConstraintLayout.LayoutParams) view.getLayoutParams();
-                    params.setMargins(0, 0, 0, 0);
-                    view.setLayoutParams(params);
-                    wash.setImageResource(R.drawable.wash_button);
-                    Intent i = new Intent(getApplicationContext(), dosing.class);
-                    i.putExtra("wash_button",true);
-                    startActivity(i);
-                }
-                return true;
+        wash.setOnTouchListener((view, event) -> {
+            if (event.getAction() == MotionEvent.ACTION_DOWN) {
+                params = (ConstraintLayout.LayoutParams) view.getLayoutParams();
+                params.setMargins(8, 0, 8, 0);
+                view.setLayoutParams(params);
+                wash.setImageResource(R.drawable.wash_button_pressed);
+            } else if (event.getAction() == MotionEvent.ACTION_UP) {
+                params = (ConstraintLayout.LayoutParams) view.getLayoutParams();
+                params.setMargins(0, 0, 0, 0);
+                view.setLayoutParams(params);
+                wash.setImageResource(R.drawable.wash_button);
+                Intent i = new Intent(getApplicationContext(), dosing.class);
+                i.putExtra("wash_button",true);
+                startActivity(i);
             }
+            return true;
         });
-        rinse.setOnTouchListener(new View.OnTouchListener() {
-            public boolean onTouch(View view, MotionEvent event) {
-                if (event.getAction() == android.view.MotionEvent.ACTION_DOWN) {
-                    params = (ConstraintLayout.LayoutParams) view.getLayoutParams();
-                    params.setMargins(8, 0, 8, 0);
-                    view.setLayoutParams(params);
-                    rinse.setImageResource(R.drawable.wash_button_pressed);
-                } else if (event.getAction() == android.view.MotionEvent.ACTION_UP) {
-                    params = (ConstraintLayout.LayoutParams) view.getLayoutParams();
-                    params.setMargins(0, 0, 0, 0);
-                    view.setLayoutParams(params);
-                    rinse.setImageResource(R.drawable.wash_button);
-                    Intent i = new Intent(getApplicationContext(), dosing.class);
-                    i.putExtra("rinse_button",true);
-                    startActivity(i);
-                }
-                return true;
+        rinse.setOnTouchListener((view, event) -> {
+            if (event.getAction() == MotionEvent.ACTION_DOWN) {
+                params = (ConstraintLayout.LayoutParams) view.getLayoutParams();
+                params.setMargins(8, 0, 8, 0);
+                view.setLayoutParams(params);
+                rinse.setImageResource(R.drawable.wash_button_pressed);
+            } else if (event.getAction() == MotionEvent.ACTION_UP) {
+                params = (ConstraintLayout.LayoutParams) view.getLayoutParams();
+                params.setMargins(0, 0, 0, 0);
+                view.setLayoutParams(params);
+                rinse.setImageResource(R.drawable.wash_button);
+                Intent i = new Intent(getApplicationContext(), dosing.class);
+                i.putExtra("rinse_button",true);
+                startActivity(i);
             }
+            return true;
         });
-        next.setOnTouchListener(new View.OnTouchListener() {
-            public boolean onTouch(View view, MotionEvent event) {
-                if (event.getAction() == android.view.MotionEvent.ACTION_DOWN) {
-                    params = (ConstraintLayout.LayoutParams) view.getLayoutParams();
-                    params.setMargins(0, 8, 0, 8);
-                    view.setLayoutParams(params);
-                } else if (event.getAction() == android.view.MotionEvent.ACTION_UP) {
-                    params = (ConstraintLayout.LayoutParams) view.getLayoutParams();
-                    params.setMargins(0, 0, 0, 0);
-                    view.setLayoutParams(params);
-                    Intent i = new Intent(getApplicationContext(), dosing.class);
-                    startActivity(i);
-                }
-                return true;
+        next.setOnTouchListener((view, event) -> {
+            if (event.getAction() == MotionEvent.ACTION_DOWN) {
+                params = (ConstraintLayout.LayoutParams) view.getLayoutParams();
+                params.setMargins(0, 8, 0, 8);
+                view.setLayoutParams(params);
+            } else if (event.getAction() == MotionEvent.ACTION_UP) {
+                params = (ConstraintLayout.LayoutParams) view.getLayoutParams();
+                params.setMargins(0, 0, 0, 0);
+                view.setLayoutParams(params);
+                Intent i = new Intent(getApplicationContext(), dosing.class);
+                startActivity(i);
             }
+            return true;
         });
     }
-    private int currentApiVersion;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         startKioskService();
-        currentApiVersion = android.os.Build.VERSION.SDK_INT;
+        int currentApiVersion = Build.VERSION.SDK_INT;
 
         final int flags = View.SYSTEM_UI_FLAG_LAYOUT_STABLE
                 | View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
@@ -126,15 +119,10 @@ public class power_menu extends AppCompatActivity {
         {
             getWindow().getDecorView().setSystemUiVisibility(flags);
             final View decorView = getWindow().getDecorView();
-            decorView.setOnSystemUiVisibilityChangeListener(new View.OnSystemUiVisibilityChangeListener()
-            {
-                @Override
-                public void onSystemUiVisibilityChange(int visibility)
+            decorView.setOnSystemUiVisibilityChangeListener(visibility -> {
+                if((visibility & View.SYSTEM_UI_FLAG_FULLSCREEN) == 0)
                 {
-                    if((visibility & View.SYSTEM_UI_FLAG_FULLSCREEN) == 0)
-                    {
-                        decorView.setSystemUiVisibility(flags);
-                    }
+                    decorView.setSystemUiVisibility(flags);
                 }
             });
         }

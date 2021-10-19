@@ -3,6 +3,7 @@ package com.menar.milkdoser;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.constraintlayout.widget.ConstraintLayout;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -16,7 +17,6 @@ import android.widget.Toast;
 
 public class machine_info extends AppCompatActivity {
 
-    private int currentApiVersion;
     TextView total_a_count,total_b_count,total_a_volume,total_b_volume,total_count;
     int TOTAL_A_COUNT,TOTAL_B_COUNT,TOTAL_A_VOLUME,TOTAL_B_VOLUME;
     ImageButton rst_mac_info;
@@ -26,34 +26,33 @@ public class machine_info extends AppCompatActivity {
             ConstraintLayout.LayoutParams.MATCH_PARENT,
             ConstraintLayout.LayoutParams.MATCH_PARENT
     );
+    @SuppressLint("ClickableViewAccessibility")
     public void initviews() {
-        total_a_count = (TextView) findViewById(R.id.total_a_count);
-        total_b_count = (TextView) findViewById(R.id.total_b_count);
-        total_a_volume = (TextView) findViewById(R.id.total_a_volume);
-        total_b_volume = (TextView) findViewById(R.id.total_b_volume);
-        total_count = (TextView) findViewById(R.id.total_count);
+        total_a_count = findViewById(R.id.total_a_count);
+        total_b_count = findViewById(R.id.total_b_count);
+        total_a_volume = findViewById(R.id.total_a_volume);
+        total_b_volume = findViewById(R.id.total_b_volume);
+        total_count = findViewById(R.id.total_count);
 
 
-        rst_mac_info=(ImageButton)findViewById(R.id.reset_machine_info);
-        rst_mac_info.setOnTouchListener(new View.OnTouchListener() {
-            public boolean onTouch(View view, MotionEvent event) {
-                if (event.getAction() == android.view.MotionEvent.ACTION_DOWN) {
-                    params=(ConstraintLayout.LayoutParams)view.getLayoutParams();
-                    params.setMargins(8,0,8,0);
-                    view.setLayoutParams(params);
-                } else if (event.getAction() == android.view.MotionEvent.ACTION_UP) {
-                    params=(ConstraintLayout.LayoutParams)view.getLayoutParams();
-                    params.setMargins(0,0,0,0);
-                    view.setLayoutParams(params);
-                    editor.putInt("error_event_cnt",0);
-                    editor.commit();
-                    Toast.makeText(getApplicationContext(),getApplicationContext().getString(R.string.makine_bilgileri_sifirlandi),Toast.LENGTH_LONG).show();
-                    save_default_params();
-                    init_params();
-                    load_params();
-                }
-                return true;
+        rst_mac_info= findViewById(R.id.reset_machine_info);
+        rst_mac_info.setOnTouchListener((view, event) -> {
+            if (event.getAction() == MotionEvent.ACTION_DOWN) {
+                params=(ConstraintLayout.LayoutParams)view.getLayoutParams();
+                params.setMargins(8,0,8,0);
+                view.setLayoutParams(params);
+            } else if (event.getAction() == MotionEvent.ACTION_UP) {
+                params=(ConstraintLayout.LayoutParams)view.getLayoutParams();
+                params.setMargins(0,0,0,0);
+                view.setLayoutParams(params);
+                editor.putInt("error_event_cnt",0);
+                editor.commit();
+                Toast.makeText(getApplicationContext(),getApplicationContext().getString(R.string.makine_bilgileri_sifirlandi),Toast.LENGTH_LONG).show();
+                save_default_params();
+                init_params();
+                load_params();
             }
+            return true;
         });
         load_params();
     }
@@ -62,7 +61,7 @@ public class machine_info extends AppCompatActivity {
         sharedPref = this.getSharedPreferences("sharedPref", Context.MODE_PRIVATE);
         editor = sharedPref.edit();
         super.onCreate(savedInstanceState);
-        currentApiVersion = android.os.Build.VERSION.SDK_INT;
+        int currentApiVersion = Build.VERSION.SDK_INT;
 
         final int flags = View.SYSTEM_UI_FLAG_LAYOUT_STABLE
                 | View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
@@ -75,16 +74,10 @@ public class machine_info extends AppCompatActivity {
             getWindow().getDecorView().setSystemUiVisibility(flags);
             final View decorView = getWindow().getDecorView();
             decorView
-                    .setOnSystemUiVisibilityChangeListener(new View.OnSystemUiVisibilityChangeListener()
-                    {
-
-                        @Override
-                        public void onSystemUiVisibilityChange(int visibility)
+                    .setOnSystemUiVisibilityChangeListener(visibility -> {
+                        if((visibility & View.SYSTEM_UI_FLAG_FULLSCREEN) == 0)
                         {
-                            if((visibility & View.SYSTEM_UI_FLAG_FULLSCREEN) == 0)
-                            {
-                                decorView.setSystemUiVisibility(flags);
-                            }
+                            decorView.setSystemUiVisibility(flags);
                         }
                     });
         }
@@ -107,6 +100,7 @@ public class machine_info extends AppCompatActivity {
         editor.putInt("b_volume_val",0);
         editor.commit();
     }
+    @SuppressLint("SetTextI18n")
     public void load_params()
     {
         total_a_count.setText(Integer.toString(TOTAL_A_COUNT));

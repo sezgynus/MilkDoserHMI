@@ -1,8 +1,6 @@
 package com.menar.milkdoser;
 
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.constraintlayout.widget.ConstraintLayout;
-
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -15,10 +13,12 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.widget.CheckBox;
-import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.Toast;
+
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.constraintlayout.widget.ConstraintLayout;
 
 public class rinse extends AppCompatActivity {
     private int currentApiVersion;
@@ -39,129 +39,113 @@ public class rinse extends AppCompatActivity {
     );
 
 
+    @SuppressLint("ClickableViewAccessibility")
     public void initviews() {
-        edit_t_rinse_trig=(EditText)findViewById(R.id.t_rinse_trig);
-        edit_n_rinse_trig=(EditText)findViewById(R.id.n_rinse_trig);
-        edit_t_rinse=(EditText)findViewById(R.id.t_rinse);
-        edit_a_sweep=(EditText)findViewById(R.id.a_sweep);
-        edit_b_sweep=(EditText)findViewById(R.id.b_sweep);
-        save_btn=(ImageButton) findViewById(R.id.save);
-        back_btn=(ImageButton) findViewById(R.id.back);
-        home_btn=(ImageButton) findViewById(R.id.home);
-        default_btn=(ImageButton) findViewById(R.id.load_default);
-        next_page=(ImageButton) findViewById(R.id.next_page_btn);
-        prev_page=(ImageButton) findViewById(R.id.prev_page_btn);
-        pump=(CheckBox) findViewById(R.id.pump_lock);
+        edit_t_rinse_trig= findViewById(R.id.t_rinse_trig);
+        edit_n_rinse_trig= findViewById(R.id.n_rinse_trig);
+        edit_t_rinse= findViewById(R.id.t_rinse);
+        edit_a_sweep= findViewById(R.id.a_sweep);
+        edit_b_sweep= findViewById(R.id.b_sweep);
+        save_btn= findViewById(R.id.save);
+        back_btn= findViewById(R.id.back);
+        home_btn= findViewById(R.id.home);
+        default_btn= findViewById(R.id.load_default);
+        next_page= findViewById(R.id.next_page_btn);
+        prev_page= findViewById(R.id.prev_page_btn);
+        pump= findViewById(R.id.pump_lock);
         load_params();
-        pump.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                PUMP_LOCK=isChecked;
+        pump.setOnCheckedChangeListener((buttonView, isChecked) -> PUMP_LOCK=isChecked);
+        next_page.setOnTouchListener((view, event) -> {
+            if (event.getAction() == MotionEvent.ACTION_DOWN) {
+                params=(ConstraintLayout.LayoutParams)view.getLayoutParams();
+                params.setMargins(8,0,8,0);
+                view.setLayoutParams(params);
+            } else if (event.getAction() == MotionEvent.ACTION_UP) {
+                params=(ConstraintLayout.LayoutParams)view.getLayoutParams();
+                params.setMargins(0,0,0,0);
+                view.setLayoutParams(params);
+                Intent i = new Intent(getApplicationContext(),wash.class);
+                startActivity(i);
             }
-        });
-        next_page.setOnTouchListener(new View.OnTouchListener() {
-            public boolean onTouch(View view, MotionEvent event) {
-                if (event.getAction() == android.view.MotionEvent.ACTION_DOWN) {
-                    params=(ConstraintLayout.LayoutParams)view.getLayoutParams();
-                    params.setMargins(8,0,8,0);
-                    view.setLayoutParams(params);
-                } else if (event.getAction() == android.view.MotionEvent.ACTION_UP) {
-                    params=(ConstraintLayout.LayoutParams)view.getLayoutParams();
-                    params.setMargins(0,0,0,0);
-                    view.setLayoutParams(params);
-                    Intent i = new Intent(getApplicationContext(),wash.class);
-                    startActivity(i);
-                }
-                return true;
-            }
+            return true;
         });
 
 
-        prev_page.setOnTouchListener(new View.OnTouchListener() {
-            public boolean onTouch(View view, MotionEvent event) {
-                if (event.getAction() == android.view.MotionEvent.ACTION_DOWN) {
-                    params=(ConstraintLayout.LayoutParams)view.getLayoutParams();
-                    params.setMargins(8,0,8,0);
-                    view.setLayoutParams(params);
-                } else if (event.getAction() == android.view.MotionEvent.ACTION_UP) {
-                    params=(ConstraintLayout.LayoutParams)view.getLayoutParams();
-                    params.setMargins(0,0,0,0);
-                    view.setLayoutParams(params);
-                    Intent i = new Intent(getApplicationContext(),backdraft.class);
-                    startActivity(i);
-                }
-                return true;
+        prev_page.setOnTouchListener((view, event) -> {
+            if (event.getAction() == MotionEvent.ACTION_DOWN) {
+                params=(ConstraintLayout.LayoutParams)view.getLayoutParams();
+                params.setMargins(8,0,8,0);
+                view.setLayoutParams(params);
+            } else if (event.getAction() == MotionEvent.ACTION_UP) {
+                params=(ConstraintLayout.LayoutParams)view.getLayoutParams();
+                params.setMargins(0,0,0,0);
+                view.setLayoutParams(params);
+                Intent i = new Intent(getApplicationContext(),backdraft.class);
+                startActivity(i);
             }
+            return true;
         });
 
-        save_btn.setOnTouchListener(new View.OnTouchListener() {
-            public boolean onTouch(View view, MotionEvent event) {
-                if (event.getAction() == android.view.MotionEvent.ACTION_DOWN) {
-                    params=(ConstraintLayout.LayoutParams)view.getLayoutParams();
-                    params.setMargins(8,0,8,0);
-                    view.setLayoutParams(params);
-                } else if (event.getAction() == android.view.MotionEvent.ACTION_UP) {
-                    params=(ConstraintLayout.LayoutParams)view.getLayoutParams();
-                    params.setMargins(0,0,0,0);
-                    view.setLayoutParams(params);
-                    save_params();
-                    Toast.makeText(getApplicationContext(),getApplicationContext().getString(R.string.ayarlanan_parametreler_kaydedildi),Toast.LENGTH_LONG).show();
-                }
-                return true;
+        save_btn.setOnTouchListener((view, event) -> {
+            if (event.getAction() == MotionEvent.ACTION_DOWN) {
+                params=(ConstraintLayout.LayoutParams)view.getLayoutParams();
+                params.setMargins(8,0,8,0);
+                view.setLayoutParams(params);
+            } else if (event.getAction() == MotionEvent.ACTION_UP) {
+                params=(ConstraintLayout.LayoutParams)view.getLayoutParams();
+                params.setMargins(0,0,0,0);
+                view.setLayoutParams(params);
+                save_params();
+                Toast.makeText(getApplicationContext(),getApplicationContext().getString(R.string.ayarlanan_parametreler_kaydedildi),Toast.LENGTH_LONG).show();
             }
+            return true;
         });
 
-        back_btn.setOnTouchListener(new View.OnTouchListener() {
-            public boolean onTouch(View view, MotionEvent event) {
-                if (event.getAction() == android.view.MotionEvent.ACTION_DOWN) {
-                    params=(ConstraintLayout.LayoutParams)view.getLayoutParams();
-                    params.setMargins(8,0,8,0);
-                    view.setLayoutParams(params);
-                } else if (event.getAction() == android.view.MotionEvent.ACTION_UP) {
-                    params=(ConstraintLayout.LayoutParams)view.getLayoutParams();
-                    params.setMargins(0,0,0,0);
-                    view.setLayoutParams(params);
-                    Intent i = new Intent(getApplicationContext(),settings.class);
-                    startActivity(i);
-                }
-                return true;
+        back_btn.setOnTouchListener((view, event) -> {
+            if (event.getAction() == MotionEvent.ACTION_DOWN) {
+                params=(ConstraintLayout.LayoutParams)view.getLayoutParams();
+                params.setMargins(8,0,8,0);
+                view.setLayoutParams(params);
+            } else if (event.getAction() == MotionEvent.ACTION_UP) {
+                params=(ConstraintLayout.LayoutParams)view.getLayoutParams();
+                params.setMargins(0,0,0,0);
+                view.setLayoutParams(params);
+                Intent i = new Intent(getApplicationContext(),settings.class);
+                startActivity(i);
             }
+            return true;
         });
 
-        home_btn.setOnTouchListener(new View.OnTouchListener() {
-            public boolean onTouch(View view, MotionEvent event) {
-                if (event.getAction() == android.view.MotionEvent.ACTION_DOWN) {
-                    params=(ConstraintLayout.LayoutParams)view.getLayoutParams();
-                    params.setMargins(8,0,8,0);
-                    view.setLayoutParams(params);
-                } else if (event.getAction() == android.view.MotionEvent.ACTION_UP) {
-                    params=(ConstraintLayout.LayoutParams)view.getLayoutParams();
-                    params.setMargins(0,0,0,0);
-                    view.setLayoutParams(params);
-                    Intent i = new Intent(getApplicationContext(),dosing.class);
-                    startActivity(i);
-                }
-                return true;
+        home_btn.setOnTouchListener((view, event) -> {
+            if (event.getAction() == MotionEvent.ACTION_DOWN) {
+                params=(ConstraintLayout.LayoutParams)view.getLayoutParams();
+                params.setMargins(8,0,8,0);
+                view.setLayoutParams(params);
+            } else if (event.getAction() == MotionEvent.ACTION_UP) {
+                params=(ConstraintLayout.LayoutParams)view.getLayoutParams();
+                params.setMargins(0,0,0,0);
+                view.setLayoutParams(params);
+                Intent i = new Intent(getApplicationContext(),dosing.class);
+                startActivity(i);
             }
+            return true;
         });
 
-        default_btn.setOnTouchListener(new View.OnTouchListener() {
-            public boolean onTouch(View view, MotionEvent event) {
-                if (event.getAction() == android.view.MotionEvent.ACTION_DOWN) {
-                    params=(ConstraintLayout.LayoutParams)view.getLayoutParams();
-                    params.setMargins(8,0,8,0);
-                    view.setLayoutParams(params);
-                } else if (event.getAction() == android.view.MotionEvent.ACTION_UP) {
-                    params=(ConstraintLayout.LayoutParams)view.getLayoutParams();
-                    params.setMargins(0,0,0,0);
-                    view.setLayoutParams(params);
-                    save_default_params();
-                    init_params();
-                    load_params();
-                    Toast.makeText(getApplicationContext(),getApplicationContext().getString(R.string.varsayılan_parametreler_kaydedildi),Toast.LENGTH_LONG).show();
-                }
-                return true;
+        default_btn.setOnTouchListener((view, event) -> {
+            if (event.getAction() == MotionEvent.ACTION_DOWN) {
+                params=(ConstraintLayout.LayoutParams)view.getLayoutParams();
+                params.setMargins(8,0,8,0);
+                view.setLayoutParams(params);
+            } else if (event.getAction() == MotionEvent.ACTION_UP) {
+                params=(ConstraintLayout.LayoutParams)view.getLayoutParams();
+                params.setMargins(0,0,0,0);
+                view.setLayoutParams(params);
+                save_default_params();
+                init_params();
+                load_params();
+                Toast.makeText(getApplicationContext(),getApplicationContext().getString(R.string.varsayılan_parametreler_kaydedildi),Toast.LENGTH_LONG).show();
             }
+            return true;
         });
 
     }
@@ -178,19 +162,14 @@ public class rinse extends AppCompatActivity {
         //preventStatusBarExpansion(ctx);
 
 
-        KeyboardUtils.addKeyboardToggleListener(this, new KeyboardUtils.SoftKeyboardToggleListener()
-        {
-            @Override
-            public void onToggleSoftKeyboard(boolean isVisible)
+        KeyboardUtils.addKeyboardToggleListener(this, isVisible -> {
+            if(!isVisible)
             {
-                if(!isVisible)
-                {
-                    hide_system_ui();
-                }
-                else
-                {
-                    hide_system_ui();
-                }
+                hide_system_ui();
+            }
+            else
+            {
+                hide_system_ui();
             }
         });
         //save_default_params();
@@ -209,7 +188,7 @@ public class rinse extends AppCompatActivity {
         localLayoutParams.width = WindowManager.LayoutParams.MATCH_PARENT;
 
         int resId = context.getResources().getIdentifier("status_bar_height", "dimen", "android");
-        int result = 0;
+        int result;
         if (resId > 0) {
             result = context.getResources().getDimensionPixelSize(resId);
         } else {
@@ -251,17 +230,11 @@ public class rinse extends AppCompatActivity {
 
             getWindow().getDecorView().setSystemUiVisibility(flags);
             final View decorView = getWindow().getDecorView();
-            decorView.setOnSystemUiVisibilityChangeListener(new View.OnSystemUiVisibilityChangeListener()
-            {
-
-                @Override
-                public void onSystemUiVisibilityChange(int visibility)
+            decorView.setOnSystemUiVisibilityChangeListener(visibility -> {
+                if((visibility & View.SYSTEM_UI_FLAG_FULLSCREEN) == 0)
                 {
-                    if((visibility & View.SYSTEM_UI_FLAG_FULLSCREEN) == 0)
-                    {
-                        hide_system_ui();
-                        decorView.setSystemUiVisibility(flags);
-                    }
+                    hide_system_ui();
+                    decorView.setSystemUiVisibility(flags);
                 }
             });
         }
@@ -307,6 +280,7 @@ public class rinse extends AppCompatActivity {
         editor.putBoolean("pump_lock", PUMP_LOCK);
         editor.commit();
     }
+    @SuppressLint("SetTextI18n")
     public void load_params()
     {
         pump.setChecked(PUMP_LOCK);

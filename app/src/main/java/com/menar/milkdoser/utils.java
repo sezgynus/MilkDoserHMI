@@ -11,7 +11,7 @@ public final class utils {
     }
     public static int pulse_to_ml(int pulse, float ppml, boolean conjugate)
     {
-        int millis=0;
+        int millis;
         if(conjugate)pulse=65535-pulse;
         millis=Math.round((pulse*100)/ppml);
         Log.d("Pulse > Mililitre","Mililitre: " + millis);
@@ -20,7 +20,7 @@ public final class utils {
     }
     public static int ml_to_pulse(int millis,float ppml, boolean conjugate)
     {
-        int pulse=0;
+        int pulse;
         pulse=Math.round((millis*ppml)/100);
         Log.d("Mililitre > Pulse","Mililitre: " + millis);
         Log.d("Mililitre > Pulse","Pulse : " + pulse);
@@ -51,9 +51,7 @@ public final class utils {
             os.writeBytes("exit\n");
             os.flush();
             process.waitFor();
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
+        } catch (InterruptedException | IOException e) {
             e.printStackTrace();
         }
     }

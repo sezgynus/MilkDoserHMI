@@ -1,9 +1,6 @@
 package com.menar.milkdoser;
 
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.constraintlayout.widget.ConstraintLayout;
-
-import android.app.AlarmManager;
+import android.annotation.SuppressLint;
 import android.app.TimePickerDialog;
 import android.content.Context;
 import android.content.Intent;
@@ -21,10 +18,11 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.TextView;
-import android.widget.TimePicker;
 import android.widget.Toast;
 
-import java.text.SimpleDateFormat;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.constraintlayout.widget.ConstraintLayout;
+
 import java.util.Calendar;
 
 public class wash extends AppCompatActivity {
@@ -35,10 +33,6 @@ public class wash extends AppCompatActivity {
     Button wash_time_button;
     Context ctx;
     Calendar c;
-    SimpleDateFormat df;
-    SimpleDateFormat tf;
-    String formattedDate;
-    String formattedTime;
     //Yıkama parametreleri
     int WASH_TAKE,WASH_DWELL,WASH_RINSE,WASH_CYCLE;
     int hour,minute;
@@ -49,152 +43,136 @@ public class wash extends AppCompatActivity {
             ConstraintLayout.LayoutParams.MATCH_PARENT
     );
 
+    @SuppressLint("ClickableViewAccessibility")
     public void initviews() {
-        edit_wash_take=(EditText)findViewById(R.id.t_wash_take);
-        edit_wash_dwell=(EditText)findViewById(R.id.t_wash_dwell);
-        edit_wash_rinse=(EditText)findViewById(R.id.t_wash_rinse);
-        edit_wash_cycle=(EditText)findViewById(R.id.n_wash_cycle);
-        save_btn=(ImageButton) findViewById(R.id.save);
-        back_btn=(ImageButton) findViewById(R.id.back);
-        home_btn=(ImageButton) findViewById(R.id.home);
-        default_btn=(ImageButton) findViewById(R.id.load_default);
-        next_page=(ImageButton) findViewById(R.id.next_page_btn);
-        prev_page=(ImageButton) findViewById(R.id.prev_page_btn);
-        wash_time_button=(Button)findViewById(R.id.washtimebtn);
-        washtmview=(TextView)findViewById(R.id.washtimeview);
+        edit_wash_take= findViewById(R.id.t_wash_take);
+        edit_wash_dwell= findViewById(R.id.t_wash_dwell);
+        edit_wash_rinse= findViewById(R.id.t_wash_rinse);
+        edit_wash_cycle= findViewById(R.id.n_wash_cycle);
+        save_btn= findViewById(R.id.save);
+        back_btn= findViewById(R.id.back);
+        home_btn= findViewById(R.id.home);
+        default_btn= findViewById(R.id.load_default);
+        next_page= findViewById(R.id.next_page_btn);
+        prev_page= findViewById(R.id.prev_page_btn);
+        wash_time_button= findViewById(R.id.washtimebtn);
+        washtmview= findViewById(R.id.washtimeview);
         load_params();
 
-        wash_time_button.setOnTouchListener(new View.OnTouchListener() {
-            public boolean onTouch(View view, MotionEvent event) {
+        wash_time_button.setOnTouchListener((view, event) -> {
 
-                if (event.getAction() == android.view.MotionEvent.ACTION_DOWN) {
-                    c = Calendar.getInstance();
+            if (event.getAction() == MotionEvent.ACTION_DOWN) {
+                c = Calendar.getInstance();
 
-                    TimePickerDialog tpd = new TimePickerDialog(wash.this,
-                            new TimePickerDialog.OnTimeSetListener() {
-                                @Override
-                                public void onTimeSet(TimePicker view, int hourOfDay_picker, int minute_picker) {
-                                    Log.d("Time","Hour:"+hourOfDay_picker+" Minute:"+minute_picker);
-                                    hour=hourOfDay_picker;
-                                    minute=minute_picker;
-                                    washtmview.setText(hourOfDay_picker+":"+minute_picker);
-                                    hide_system_ui();
-                                }
-                            }, hour, minute, true);
-                    tpd.setButton(TimePickerDialog.BUTTON_POSITIVE, "Seç", tpd);
-                    tpd.setButton(TimePickerDialog.BUTTON_NEGATIVE, "İptal", tpd);
-                    tpd.show();
-                    hide_system_ui();
-                }
-                else if (event.getAction() == android.view.MotionEvent.ACTION_UP) {
-
-                }
-                return true;
+                @SuppressLint("SetTextI18n") TimePickerDialog tpd = new TimePickerDialog(wash.this,
+                        (view1, hourOfDay_picker, minute_picker) -> {
+                            Log.d("Time","Hour:"+hourOfDay_picker+" Minute:"+minute_picker);
+                            hour=hourOfDay_picker;
+                            minute=minute_picker;
+                            washtmview.setText(hourOfDay_picker+":"+minute_picker);
+                            hide_system_ui();
+                        }, hour, minute, true);
+                tpd.setButton(TimePickerDialog.BUTTON_POSITIVE, "Seç", tpd);
+                tpd.setButton(TimePickerDialog.BUTTON_NEGATIVE, "İptal", tpd);
+                tpd.show();
+                hide_system_ui();
             }
+            else if (event.getAction() == MotionEvent.ACTION_UP) {
+
+            }
+            return true;
         });
-        next_page.setOnTouchListener(new View.OnTouchListener() {
-            public boolean onTouch(View view, MotionEvent event) {
-                if (event.getAction() == android.view.MotionEvent.ACTION_DOWN) {
-                    params=(ConstraintLayout.LayoutParams)view.getLayoutParams();
-                    params.setMargins(8,0,8,0);
-                    view.setLayoutParams(params);
-                } else if (event.getAction() == android.view.MotionEvent.ACTION_UP) {
-                    params=(ConstraintLayout.LayoutParams)view.getLayoutParams();
-                    params.setMargins(0,0,0,0);
-                    view.setLayoutParams(params);
-                    Intent i = new Intent(getApplicationContext(),motor_efficiency.class);
-                    startActivity(i);
-                }
-                return true;
+        next_page.setOnTouchListener((view, event) -> {
+            if (event.getAction() == MotionEvent.ACTION_DOWN) {
+                params=(ConstraintLayout.LayoutParams)view.getLayoutParams();
+                params.setMargins(8,0,8,0);
+                view.setLayoutParams(params);
+            } else if (event.getAction() == MotionEvent.ACTION_UP) {
+                params=(ConstraintLayout.LayoutParams)view.getLayoutParams();
+                params.setMargins(0,0,0,0);
+                view.setLayoutParams(params);
+                Intent i = new Intent(getApplicationContext(),motor_efficiency.class);
+                startActivity(i);
             }
+            return true;
         });
 
 
-        prev_page.setOnTouchListener(new View.OnTouchListener() {
-            public boolean onTouch(View view, MotionEvent event) {
-                if (event.getAction() == android.view.MotionEvent.ACTION_DOWN) {
-                    params=(ConstraintLayout.LayoutParams)view.getLayoutParams();
-                    params.setMargins(8,0,8,0);
-                    view.setLayoutParams(params);
-                } else if (event.getAction() == android.view.MotionEvent.ACTION_UP) {
-                    params=(ConstraintLayout.LayoutParams)view.getLayoutParams();
-                    params.setMargins(0,0,0,0);
-                    view.setLayoutParams(params);
-                    Intent i = new Intent(getApplicationContext(),rinse.class);
-                    startActivity(i);
-                }
-                return true;
+        prev_page.setOnTouchListener((view, event) -> {
+            if (event.getAction() == MotionEvent.ACTION_DOWN) {
+                params=(ConstraintLayout.LayoutParams)view.getLayoutParams();
+                params.setMargins(8,0,8,0);
+                view.setLayoutParams(params);
+            } else if (event.getAction() == MotionEvent.ACTION_UP) {
+                params=(ConstraintLayout.LayoutParams)view.getLayoutParams();
+                params.setMargins(0,0,0,0);
+                view.setLayoutParams(params);
+                Intent i = new Intent(getApplicationContext(),rinse.class);
+                startActivity(i);
             }
+            return true;
         });
 
-        save_btn.setOnTouchListener(new View.OnTouchListener() {
-            public boolean onTouch(View view, MotionEvent event) {
-                if (event.getAction() == android.view.MotionEvent.ACTION_DOWN) {
-                    params=(ConstraintLayout.LayoutParams)view.getLayoutParams();
-                    params.setMargins(8,0,8,0);
-                    view.setLayoutParams(params);
-                } else if (event.getAction() == android.view.MotionEvent.ACTION_UP) {
-                    params=(ConstraintLayout.LayoutParams)view.getLayoutParams();
-                    params.setMargins(0,0,0,0);
-                    view.setLayoutParams(params);
-                    save_params();
-                    Toast.makeText(getApplicationContext(),"Ayarlanan parametreler kaydedildi",Toast.LENGTH_LONG).show();
-                }
-                return true;
+        save_btn.setOnTouchListener((view, event) -> {
+            if (event.getAction() == MotionEvent.ACTION_DOWN) {
+                params=(ConstraintLayout.LayoutParams)view.getLayoutParams();
+                params.setMargins(8,0,8,0);
+                view.setLayoutParams(params);
+            } else if (event.getAction() == MotionEvent.ACTION_UP) {
+                params=(ConstraintLayout.LayoutParams)view.getLayoutParams();
+                params.setMargins(0,0,0,0);
+                view.setLayoutParams(params);
+                save_params();
+                Toast.makeText(getApplicationContext(),"Ayarlanan parametreler kaydedildi",Toast.LENGTH_LONG).show();
             }
+            return true;
         });
 
-        back_btn.setOnTouchListener(new View.OnTouchListener() {
-            public boolean onTouch(View view, MotionEvent event) {
-                if (event.getAction() == android.view.MotionEvent.ACTION_DOWN) {
-                    params=(ConstraintLayout.LayoutParams)view.getLayoutParams();
-                    params.setMargins(8,0,8,0);
-                    view.setLayoutParams(params);
-                } else if (event.getAction() == android.view.MotionEvent.ACTION_UP) {
-                    params=(ConstraintLayout.LayoutParams)view.getLayoutParams();
-                    params.setMargins(0,0,0,0);
-                    view.setLayoutParams(params);
-                    Intent i = new Intent(getApplicationContext(),settings.class);
-                    startActivity(i);
-                }
-                return true;
+        back_btn.setOnTouchListener((view, event) -> {
+            if (event.getAction() == MotionEvent.ACTION_DOWN) {
+                params=(ConstraintLayout.LayoutParams)view.getLayoutParams();
+                params.setMargins(8,0,8,0);
+                view.setLayoutParams(params);
+            } else if (event.getAction() == MotionEvent.ACTION_UP) {
+                params=(ConstraintLayout.LayoutParams)view.getLayoutParams();
+                params.setMargins(0,0,0,0);
+                view.setLayoutParams(params);
+                Intent i = new Intent(getApplicationContext(),settings.class);
+                startActivity(i);
             }
+            return true;
         });
 
-        home_btn.setOnTouchListener(new View.OnTouchListener() {
-            public boolean onTouch(View view, MotionEvent event) {
-                if (event.getAction() == android.view.MotionEvent.ACTION_DOWN) {
-                    params=(ConstraintLayout.LayoutParams)view.getLayoutParams();
-                    params.setMargins(8,0,8,0);
-                    view.setLayoutParams(params);
-                } else if (event.getAction() == android.view.MotionEvent.ACTION_UP) {
-                    params=(ConstraintLayout.LayoutParams)view.getLayoutParams();
-                    params.setMargins(0,0,0,0);
-                    view.setLayoutParams(params);
-                    Intent i = new Intent(getApplicationContext(),dosing.class);
-                    startActivity(i);
-                }
-                return true;
+        home_btn.setOnTouchListener((view, event) -> {
+            if (event.getAction() == MotionEvent.ACTION_DOWN) {
+                params=(ConstraintLayout.LayoutParams)view.getLayoutParams();
+                params.setMargins(8,0,8,0);
+                view.setLayoutParams(params);
+            } else if (event.getAction() == MotionEvent.ACTION_UP) {
+                params=(ConstraintLayout.LayoutParams)view.getLayoutParams();
+                params.setMargins(0,0,0,0);
+                view.setLayoutParams(params);
+                Intent i = new Intent(getApplicationContext(),dosing.class);
+                startActivity(i);
             }
+            return true;
         });
 
-        default_btn.setOnTouchListener(new View.OnTouchListener() {
-            public boolean onTouch(View view, MotionEvent event) {
-                if (event.getAction() == android.view.MotionEvent.ACTION_DOWN) {
-                    params=(ConstraintLayout.LayoutParams)view.getLayoutParams();
-                    params.setMargins(8,0,8,0);
-                    view.setLayoutParams(params);
-                } else if (event.getAction() == android.view.MotionEvent.ACTION_UP) {
-                    params=(ConstraintLayout.LayoutParams)view.getLayoutParams();
-                    params.setMargins(0,0,0,0);
-                    view.setLayoutParams(params);
-                    save_default_params();
-                    init_params();
-                    load_params();
-                    Toast.makeText(getApplicationContext(),"Varsayılan parametreler kaydedildi",Toast.LENGTH_LONG).show();
-                }
-                return true;
+        default_btn.setOnTouchListener((view, event) -> {
+            if (event.getAction() == MotionEvent.ACTION_DOWN) {
+                params=(ConstraintLayout.LayoutParams)view.getLayoutParams();
+                params.setMargins(8,0,8,0);
+                view.setLayoutParams(params);
+            } else if (event.getAction() == MotionEvent.ACTION_UP) {
+                params=(ConstraintLayout.LayoutParams)view.getLayoutParams();
+                params.setMargins(0,0,0,0);
+                view.setLayoutParams(params);
+                save_default_params();
+                init_params();
+                load_params();
+                Toast.makeText(getApplicationContext(),"Varsayılan parametreler kaydedildi",Toast.LENGTH_LONG).show();
             }
+            return true;
         });
     }
     @Override
@@ -210,19 +188,14 @@ public class wash extends AppCompatActivity {
         //preventStatusBarExpansion(ctx);
 
 
-        KeyboardUtils.addKeyboardToggleListener(this, new KeyboardUtils.SoftKeyboardToggleListener()
-        {
-            @Override
-            public void onToggleSoftKeyboard(boolean isVisible)
+        KeyboardUtils.addKeyboardToggleListener(this, isVisible -> {
+            if(!isVisible)
             {
-                if(!isVisible)
-                {
-                    hide_system_ui();
-                }
-                else
-                {
-                    hide_system_ui();
-                }
+                hide_system_ui();
+            }
+            else
+            {
+                hide_system_ui();
             }
         });
         //save_default_params();
@@ -241,7 +214,7 @@ public class wash extends AppCompatActivity {
         localLayoutParams.width = WindowManager.LayoutParams.MATCH_PARENT;
 
         int resId = context.getResources().getIdentifier("status_bar_height", "dimen", "android");
-        int result = 0;
+        int result;
         if (resId > 0) {
             result = context.getResources().getDimensionPixelSize(resId);
         } else {
@@ -283,17 +256,11 @@ public class wash extends AppCompatActivity {
 
             getWindow().getDecorView().setSystemUiVisibility(flags);
             final View decorView = getWindow().getDecorView();
-            decorView.setOnSystemUiVisibilityChangeListener(new View.OnSystemUiVisibilityChangeListener()
-            {
-
-                @Override
-                public void onSystemUiVisibilityChange(int visibility)
+            decorView.setOnSystemUiVisibilityChangeListener(visibility -> {
+                if((visibility & View.SYSTEM_UI_FLAG_FULLSCREEN) == 0)
                 {
-                    if((visibility & View.SYSTEM_UI_FLAG_FULLSCREEN) == 0)
-                    {
-                        hide_system_ui();
-                        decorView.setSystemUiVisibility(flags);
-                    }
+                    hide_system_ui();
+                    decorView.setSystemUiVisibility(flags);
                 }
             });
         }
@@ -335,6 +302,7 @@ public class wash extends AppCompatActivity {
         editor.putInt("wash_minute", minute);
         editor.commit();
     }
+    @SuppressLint("SetTextI18n")
     public void load_params()
     {
         edit_wash_take.setText(Integer.toString(WASH_TAKE));

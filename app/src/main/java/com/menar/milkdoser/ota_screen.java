@@ -1,11 +1,8 @@
 package com.menar.milkdoser;
 
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.constraintlayout.widget.ConstraintLayout;
-
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.Bitmap;
 import android.graphics.PixelFormat;
 import android.net.wifi.WifiInfo;
 import android.net.wifi.WifiManager;
@@ -20,15 +17,15 @@ import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.constraintlayout.widget.ConstraintLayout;
+
 import java.io.DataOutputStream;
 import java.io.IOException;
-import android.widget.ImageView;
 
 public class ota_screen extends AppCompatActivity {
 
     Process p;
-    private int currentApiVersion;
-    ImageView rotating_prgrss;
     ImageButton back_btn,home_btn;
     TextView myIP;
     Context ctx;
@@ -57,7 +54,7 @@ public class ota_screen extends AppCompatActivity {
         localLayoutParams.width = WindowManager.LayoutParams.MATCH_PARENT;
 
         int resId = context.getResources().getIdentifier("status_bar_height", "dimen", "android");
-        int result = 0;
+        int result;
         if (resId > 0) {
             result = context.getResources().getDimensionPixelSize(resId);
         } else {
@@ -72,44 +69,41 @@ public class ota_screen extends AppCompatActivity {
         manager.addView(view, localLayoutParams);
     }
 
+    @SuppressLint({"ClickableViewAccessibility", "SetTextI18n"})
     public void initviews(){
-        back_btn=(ImageButton)findViewById(R.id.back);
-        home_btn=(ImageButton)findViewById(R.id.home);
-        myIP=(TextView)findViewById(R.id.text_myIP);
+        back_btn= findViewById(R.id.back);
+        home_btn= findViewById(R.id.home);
+        myIP= findViewById(R.id.text_myIP);
 
-        back_btn.setOnTouchListener(new View.OnTouchListener() {
-            public boolean onTouch(View view, MotionEvent event) {
-                if (event.getAction() == android.view.MotionEvent.ACTION_DOWN) {
-                    params=(ConstraintLayout.LayoutParams)view.getLayoutParams();
-                    params.setMargins(8,0,8,0);
-                    view.setLayoutParams(params);
-                } else if (event.getAction() == android.view.MotionEvent.ACTION_UP) {
-                    params=(ConstraintLayout.LayoutParams)view.getLayoutParams();
-                    params.setMargins(0,0,0,0);
-                    view.setLayoutParams(params);
-                    //adbd_stop();
-                    Intent i = new Intent(getApplicationContext(),settings.class);
-                    startActivity(i);
-                }
-                return true;
+        back_btn.setOnTouchListener((view, event) -> {
+            if (event.getAction() == MotionEvent.ACTION_DOWN) {
+                params=(ConstraintLayout.LayoutParams)view.getLayoutParams();
+                params.setMargins(8,0,8,0);
+                view.setLayoutParams(params);
+            } else if (event.getAction() == MotionEvent.ACTION_UP) {
+                params=(ConstraintLayout.LayoutParams)view.getLayoutParams();
+                params.setMargins(0,0,0,0);
+                view.setLayoutParams(params);
+                //adbd_stop();
+                Intent i = new Intent(getApplicationContext(),settings.class);
+                startActivity(i);
             }
+            return true;
         });
-        home_btn.setOnTouchListener(new View.OnTouchListener() {
-            public boolean onTouch(View view, MotionEvent event) {
-                if (event.getAction() == android.view.MotionEvent.ACTION_DOWN) {
-                    params=(ConstraintLayout.LayoutParams)view.getLayoutParams();
-                    params.setMargins(8,0,8,0);
-                    view.setLayoutParams(params);
-                } else if (event.getAction() == android.view.MotionEvent.ACTION_UP) {
-                    params=(ConstraintLayout.LayoutParams)view.getLayoutParams();
-                    params.setMargins(0,0,0,0);
-                    view.setLayoutParams(params);
-                    //adbd_stop();
-                    Intent i = new Intent(getApplicationContext(),dosing.class);
-                    startActivity(i);
-                }
-                return true;
+        home_btn.setOnTouchListener((view, event) -> {
+            if (event.getAction() == MotionEvent.ACTION_DOWN) {
+                params=(ConstraintLayout.LayoutParams)view.getLayoutParams();
+                params.setMargins(8,0,8,0);
+                view.setLayoutParams(params);
+            } else if (event.getAction() == MotionEvent.ACTION_UP) {
+                params=(ConstraintLayout.LayoutParams)view.getLayoutParams();
+                params.setMargins(0,0,0,0);
+                view.setLayoutParams(params);
+                //adbd_stop();
+                Intent i = new Intent(getApplicationContext(),dosing.class);
+                startActivity(i);
             }
+            return true;
         });
         myIP.setText("IP: "+ipAddress);
     }
@@ -118,7 +112,7 @@ public class ota_screen extends AppCompatActivity {
 
         super.onCreate(null);
         startKioskService();
-        currentApiVersion = android.os.Build.VERSION.SDK_INT;
+        int currentApiVersion = Build.VERSION.SDK_INT;
         wifiMgr = (WifiManager) getApplicationContext().getSystemService(WIFI_SERVICE);
         wifiInfo = wifiMgr.getConnectionInfo();
         ip = wifiInfo.getIpAddress();
@@ -134,15 +128,10 @@ public class ota_screen extends AppCompatActivity {
 
             getWindow().getDecorView().setSystemUiVisibility(flags);
             final View decorView = getWindow().getDecorView();
-            decorView.setOnSystemUiVisibilityChangeListener(new View.OnSystemUiVisibilityChangeListener()
-            {
-                @Override
-                public void onSystemUiVisibilityChange(int visibility)
+            decorView.setOnSystemUiVisibilityChangeListener(visibility -> {
+                if((visibility & View.SYSTEM_UI_FLAG_FULLSCREEN) == 0)
                 {
-                    if((visibility & View.SYSTEM_UI_FLAG_FULLSCREEN) == 0)
-                    {
-                        decorView.setSystemUiVisibility(flags);
-                    }
+                    decorView.setSystemUiVisibility(flags);
                 }
             });
         }

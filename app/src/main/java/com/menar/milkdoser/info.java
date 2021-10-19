@@ -1,22 +1,19 @@
 package com.menar.milkdoser;
 
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.constraintlayout.widget.ConstraintLayout;
-
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.net.wifi.WifiManager;
 import android.os.Build;
 import android.os.Bundle;
 import android.provider.Settings;
-import android.text.format.Formatter;
-import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.ImageButton;
-import android.widget.ImageView;
 import android.widget.TextView;
+
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.constraintlayout.widget.ConstraintLayout;
 
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -31,7 +28,6 @@ public class info extends AppCompatActivity {
             ConstraintLayout.LayoutParams.MATCH_PARENT,
             ConstraintLayout.LayoutParams.MATCH_PARENT
     );
-    private int currentApiVersion;
     Context ctx;
     ImageButton previous_btn;
     TextView date,time,counters,volumes,device_id;
@@ -39,6 +35,7 @@ public class info extends AppCompatActivity {
     int TOTAL_A_COUNT,TOTAL_B_COUNT,TOTAL_A_VOLUME,TOTAL_B_VOLUME;
     SharedPreferences sharedPref;
     SharedPreferences.Editor editor;
+    @SuppressLint("SetTextI18n")
     public void init_params()
     {
         TOTAL_A_COUNT=sharedPref.getInt("a_count_val",0);
@@ -50,30 +47,29 @@ public class info extends AppCompatActivity {
         counters.setText(TOTAL_COUNT+" Adet");
         volumes.setText(TOTAL_VOLUME+" mL");
     }
+    @SuppressLint({"HardwareIds", "ClickableViewAccessibility"})
     public void initviews() {
-        previous_btn = (ImageButton) findViewById(R.id.previous_page);
-        date = (TextView) findViewById(R.id.date_view);
-        time = (TextView) findViewById(R.id.time_view);
-        counters  = (TextView) findViewById(R.id.counter_view);
-        volumes = (TextView) findViewById(R.id.volume_view);
-        device_id = (TextView) findViewById(R.id.textView28);
+        previous_btn = findViewById(R.id.previous_page);
+        date = findViewById(R.id.date_view);
+        time = findViewById(R.id.time_view);
+        counters  = findViewById(R.id.counter_view);
+        volumes = findViewById(R.id.volume_view);
+        device_id = findViewById(R.id.textView28);
         device_id.setText(Settings.Secure.getString(this.getContentResolver(), Settings.Secure.ANDROID_ID));
 
-        previous_btn.setOnTouchListener(new View.OnTouchListener() {
-            public boolean onTouch(View view, MotionEvent event) {
-                if (event.getAction() == android.view.MotionEvent.ACTION_DOWN) {
-                    params = (ConstraintLayout.LayoutParams) view.getLayoutParams();
-                    params.setMargins(0, 8, 0, 8);
-                    view.setLayoutParams(params);
-                } else if (event.getAction() == android.view.MotionEvent.ACTION_UP) {
-                    params = (ConstraintLayout.LayoutParams) view.getLayoutParams();
-                    params.setMargins(0, 0, 0, 0);
-                    view.setLayoutParams(params);
-                    Intent i = new Intent(getApplicationContext(), dosing.class);
-                    startActivity(i);
-                }
-                return true;
+        previous_btn.setOnTouchListener((view, event) -> {
+            if (event.getAction() == MotionEvent.ACTION_DOWN) {
+                params = (ConstraintLayout.LayoutParams) view.getLayoutParams();
+                params.setMargins(0, 8, 0, 8);
+                view.setLayoutParams(params);
+            } else if (event.getAction() == MotionEvent.ACTION_UP) {
+                params = (ConstraintLayout.LayoutParams) view.getLayoutParams();
+                params.setMargins(0, 0, 0, 0);
+                view.setLayoutParams(params);
+                Intent i = new Intent(getApplicationContext(), dosing.class);
+                startActivity(i);
             }
+            return true;
         });
     }
     @Override
@@ -82,7 +78,7 @@ public class info extends AppCompatActivity {
         editor = sharedPref.edit();
         super.onCreate(null);
         startKioskService();
-        currentApiVersion = android.os.Build.VERSION.SDK_INT;
+        int currentApiVersion = Build.VERSION.SDK_INT;
         final int flags = View.SYSTEM_UI_FLAG_LAYOUT_STABLE
                 | View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
                 | View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
@@ -94,17 +90,12 @@ public class info extends AppCompatActivity {
 
             getWindow().getDecorView().setSystemUiVisibility(flags);
             final View decorView = getWindow().getDecorView();
-            decorView.setOnSystemUiVisibilityChangeListener(new View.OnSystemUiVisibilityChangeListener()
-                {
-                    @Override
-                    public void onSystemUiVisibilityChange(int visibility)
-                    {
-                    if((visibility & View.SYSTEM_UI_FLAG_FULLSCREEN) == 0)
-                    {
-                        decorView.setSystemUiVisibility(flags);
-                    }
-                }
-            });
+            decorView.setOnSystemUiVisibilityChangeListener(visibility -> {
+            if((visibility & View.SYSTEM_UI_FLAG_FULLSCREEN) == 0)
+            {
+                decorView.setSystemUiVisibility(flags);
+            }
+        });
         }
         setContentView(R.layout.activity_info);
         initviews();
@@ -118,17 +109,14 @@ public class info extends AppCompatActivity {
     final TimerTask time_timer_task = new TimerTask() {
         @Override
         public void run() {
-            runOnUiThread(new Runnable() {
-                @Override
-                public void run() {
-                    Calendar c = Calendar.getInstance();
-                    SimpleDateFormat df = new SimpleDateFormat("dd.MM.yyyy");
-                    SimpleDateFormat tf = new SimpleDateFormat("HH.mm");
-                    String formattedDate = df.format(c.getTime());
-                    String formattedTime = tf.format(c.getTime());
-                    date.setText(formattedDate);
-                    time.setText(formattedTime);
-                }
+            runOnUiThread(() -> {
+                Calendar c = Calendar.getInstance();
+                @SuppressLint("SimpleDateFormat") SimpleDateFormat df = new SimpleDateFormat("dd.MM.yyyy");
+                @SuppressLint("SimpleDateFormat") SimpleDateFormat tf = new SimpleDateFormat("HH.mm");
+                String formattedDate = df.format(c.getTime());
+                String formattedTime = tf.format(c.getTime());
+                date.setText(formattedDate);
+                time.setText(formattedTime);
             });
         }
     };
