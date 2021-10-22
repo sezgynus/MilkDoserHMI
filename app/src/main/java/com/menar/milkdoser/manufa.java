@@ -3,42 +3,60 @@ package com.menar.milkdoser;
 import android.annotation.SuppressLint;
 import android.content.BroadcastReceiver;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.SharedPreferences;
+import android.content.res.Configuration;
+import android.content.res.Resources;
 import android.graphics.PixelFormat;
+import android.net.wifi.ScanResult;
 import android.net.wifi.WifiManager;
 import android.os.Build;
 import android.os.Bundle;
+import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.ImageButton;
+import android.widget.ListView;
 import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toast;
+import android.widget.AdapterView.OnItemClickListener;
 
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.constraintlayout.widget.ConstraintLayout;
 
+
+import java.util.Arrays;
+import java.util.List;
+import java.util.Locale;
 import java.util.Timer;
 import java.util.TimerTask;
 
 public class manufa extends AppCompatActivity {
     private int currentApiVersion;
     boolean channel_mode=false;
+
+    Resources resources;
     ImageButton save_btn,back_btn,home_btn;
-    EditText mac;
-    TextView rssi;
+    TextView rssi,mac;
+    ListView w_list;
     Switch mono_mode_sw;
     Context ctx;
     SharedPreferences sharedPref;
     SharedPreferences.Editor editor;
     WifiManager wManager;
     Timer timer;
+    String[] devs = new String[0];
     ConstraintLayout layout;
     ConstraintLayout.LayoutParams params = new ConstraintLayout.LayoutParams(
             ConstraintLayout.LayoutParams.MATCH_PARENT,
@@ -54,6 +72,7 @@ public class manufa extends AppCompatActivity {
         mono_mode_sw= findViewById(R.id.switch1);
         save_btn = findViewById(R.id.save);
         rssi = findViewById(R.id.rssi_viewer);
+        w_list = findViewById(R.id.wifi_list);
         rssi.setText("Bağlantı Kalitesi: "+ wManager.getConnectionInfo().getRssi() +"dBm");
         mac = findViewById(R.id.mac_number);
         mac.setText(sharedPref.getString("wifi_name",""));
@@ -93,7 +112,6 @@ public class manufa extends AppCompatActivity {
             }
             return true;
         });
-
         save_btn.setOnTouchListener((view, event) -> {
             if (event.getAction() == MotionEvent.ACTION_DOWN) {
                 params = (ConstraintLayout.LayoutParams) view.getLayoutParams();
@@ -105,9 +123,37 @@ public class manufa extends AppCompatActivity {
                 view.setLayoutParams(params);
                 editor.putString("wifi_name", (String.valueOf(mac.getText())).toUpperCase());
                 editor.commit();
-                Toast.makeText(getApplicationContext(), getApplicationContext().getString(R.string.ayarlanan_parametreler_kaydedildi), Toast.LENGTH_LONG).show();
+                Toast.makeText(getApplicationContext(), resources.getString(R.string.ayarlanan_parametreler_kaydedildi), Toast.LENGTH_LONG).show();
             }
             return true;
+        });
+        w_list.setOnItemClickListener(new OnItemClickListener() {
+
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position,
+                                    long id) {
+
+                AlertDialog.Builder diyalogOlusturucu =
+                        new AlertDialog.Builder(manufa.this);
+
+                diyalogOlusturucu.setMessage("Bu cihaz ile eşleştirilsinmi?")
+                        .setCancelable(true)
+                        .setPositiveButton("Tamam", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                mac.setText(devs[position]);
+                                dialog.dismiss();
+                            }
+                        })
+                        .setNegativeButton("İptal", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                dialog.dismiss();
+                            }
+                        });
+                diyalogOlusturucu.create().show();
+
+            }
         });
     }
     @Override
@@ -134,10 +180,19 @@ public class manufa extends AppCompatActivity {
         });
         //save_default_params();
         init_params();
+        /////////////////
+        Configuration conf = getResources().getConfiguration();
+        conf.locale = new Locale(sharedPref.getString("running_lang","tr")); //french language locale
+        DisplayMetrics metrics = new DisplayMetrics();
+        getWindowManager().getDefaultDisplay().getMetrics(metrics);
+        resources = new Resources(getAssets(), metrics, conf);
+        ////////////////
         initviews();
         timer = new Timer();
         timer.schedule(timerTask, 200, 500);
-
+        registerReceiver(mWifiScanReceiver,
+                new IntentFilter(WifiManager.SCAN_RESULTS_AVAILABLE_ACTION));
+        wManager.startScan();
     }
 
     final TimerTask timerTask = new TimerTask() {
@@ -148,9 +203,33 @@ public class manufa extends AppCompatActivity {
                 WifiManager wifiMan=(WifiManager)getApplicationContext().getSystemService(Context.WIFI_SERVICE);
                 wifiMan.startScan();
                 int newRssi = wifiMan.getConnectionInfo().getRssi();
-                rssi.setText("Bağlantı Kalitesi: "+String.valueOf(newRssi)+"dBm");
+                rssi.setText("Bağlantı Kalitesi: "+ newRssi +"dBm");
                 //Log.d("RSSI Level",""+String.valueOf(newRssi));
             });
+        }
+    };
+    private final BroadcastReceiver mWifiScanReceiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context c, Intent intent) {
+            if(intent.getAction().equals(WifiManager.SCAN_RESULTS_AVAILABLE_ACTION))
+            {
+                List<ScanResult> scanResults = wManager.getScanResults();
+                devs = new String[0];
+                for (ScanResult result:
+                        scanResults) {
+                    if(result.SSID.contains("MilkDoser"))
+                    {
+                        devs = Arrays.copyOf(devs, devs.length + 1);
+                        devs[devs.length-1]=result.SSID.replace("MilkDoser-","");
+                    }
+                }
+                ArrayAdapter<String> veriAdaptoru=new ArrayAdapter<String>
+                    (manufa.this, android.R.layout.simple_list_item_1, android.R.id.text1, devs);
+
+                //(C) adımı
+                w_list.setAdapter(veriAdaptoru);
+                // Write your logic to show in the list
+            }
         }
     };
     private BroadcastReceiver myRssiChangeReceiver
@@ -216,7 +295,6 @@ public class manufa extends AppCompatActivity {
                 | View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY;
         if(currentApiVersion >= Build.VERSION_CODES.KITKAT)
         {
-
             getWindow().getDecorView().setSystemUiVisibility(flags);
             final View decorView = getWindow().getDecorView();
             decorView.setOnSystemUiVisibilityChangeListener(visibility -> {

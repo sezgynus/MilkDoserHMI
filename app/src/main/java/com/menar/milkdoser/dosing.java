@@ -1126,10 +1126,24 @@ public class dosing extends AppCompatActivity {
 
             List<WifiNetworkSuggestion> suggestionsList = new ArrayList<>();
             suggestionsList.add(networkSuggestion1);
-
-            wManager.addNetworkSuggestions(suggestionsList);
-            wManager.setWifiEnabled(false);
-            wManager.setWifiEnabled(true);
+            final int status1 = wManager.removeNetworkSuggestions(suggestionsList);
+            if (status1 != WifiManager.STATUS_NETWORK_SUGGESTIONS_SUCCESS) {
+                Log.d("Suggestion_del_error",""+status1);
+            }
+            else
+            {
+                Log.d("Suggestion_del","success");
+            }
+            final int status = wManager.addNetworkSuggestions(suggestionsList);
+            if (status != WifiManager.STATUS_NETWORK_SUGGESTIONS_SUCCESS) {
+                Log.d("Suggestion_add_error",""+status);
+            }
+            else
+            {
+                Log.d("Suggestion_add","success");
+            }
+            //wManager.setWifiEnabled(false);
+            //wManager.setWifiEnabled(true);
         }
 
         else {

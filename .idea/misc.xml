@@ -8,6 +8,9 @@
   <component name="DesignSurface">
     <option name="filePathToZoomLevelMap">
       <map>
+        <entry key="..\:/Users/sezgi/AppData/Local/Android/Sdk/platforms/android-29/data/res/layout/simple_list_item_1.xml" value="0.6875" />
+        <entry key="..\:/Users/sezgi/AppData/Local/Android/Sdk/platforms/android-29/data/res/layout/simple_list_item_2.xml" value="0.6875" />
+        <entry key="..\:/Users/sezgi/Desktop/Android/MilkDoser/app/src/main/res/layout/activity_manufa.xml" value="1.0048828125" />
         <entry key="..\:/Users/sezgi/Desktop/Android/MilkDoser/app/src/main/res/layout/activity_power_menu.xml" value="0.6875" />
         <entry key="..\:/Users/swift/Desktop/Android/MilkDoser/app/src/main/res/layout/activity_dosing.xml" value="0.36666666666666664" />
       </map>
