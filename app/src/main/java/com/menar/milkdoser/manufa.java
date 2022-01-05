@@ -1,5 +1,6 @@
 package com.menar.milkdoser;
 
+import android.Manifest;
 import android.annotation.SuppressLint;
 import android.content.BroadcastReceiver;
 import android.content.Context;
@@ -7,11 +8,18 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.SharedPreferences;
+import android.content.pm.PackageManager;
 import android.content.res.Configuration;
 import android.content.res.Resources;
 import android.graphics.PixelFormat;
+import android.net.ConnectivityManager;
+import android.net.Network;
+import android.net.NetworkCapabilities;
+import android.net.NetworkRequest;
 import android.net.wifi.ScanResult;
+import android.net.wifi.WifiConfiguration;
 import android.net.wifi.WifiManager;
+import android.net.wifi.WifiNetworkSpecifier;
 import android.os.Build;
 import android.os.Bundle;
 import android.util.DisplayMetrics;
@@ -31,9 +39,12 @@ import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.AdapterView.OnItemClickListener;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.constraintlayout.widget.ConstraintLayout;
+import androidx.core.app.ActivityCompat;
 
 
 import java.util.Arrays;
@@ -44,17 +55,17 @@ import java.util.TimerTask;
 
 public class manufa extends AppCompatActivity {
     private int currentApiVersion;
-    boolean channel_mode=false;
+    boolean channel_mode = false;
 
+    WifiManager wManager;
     Resources resources;
-    ImageButton save_btn,back_btn,home_btn;
-    TextView rssi,mac;
+    ImageButton save_btn, back_btn, home_btn;
+    TextView rssi, mac;
     ListView w_list;
     Switch mono_mode_sw;
     Context ctx;
     SharedPreferences sharedPref;
     SharedPreferences.Editor editor;
-    WifiManager wManager;
     Timer timer;
     String[] devs = new String[0];
     ConstraintLayout layout;
@@ -67,47 +78,45 @@ public class manufa extends AppCompatActivity {
     @SuppressLint({"SetTextI18n", "ClickableViewAccessibility"})
     public void initviews() {
 
-        back_btn= findViewById(R.id.back);
-        home_btn= findViewById(R.id.home);
-        mono_mode_sw= findViewById(R.id.switch1);
+        back_btn = findViewById(R.id.back);
+        home_btn = findViewById(R.id.home);
+        mono_mode_sw = findViewById(R.id.switch1);
         save_btn = findViewById(R.id.save);
         rssi = findViewById(R.id.rssi_viewer);
         w_list = findViewById(R.id.wifi_list);
-        rssi.setText("Bağlantı Kalitesi: "+ wManager.getConnectionInfo().getRssi() +"dBm");
+        rssi.setText("Bağlantı Kalitesi: " + wManager.getConnectionInfo().getRssi() + "dBm");
         mac = findViewById(R.id.mac_number);
-        mac.setText(sharedPref.getString("wifi_name",""));
-        mono_mode_sw.setChecked(!sharedPref.getBoolean("mono_mode",false));
+        mac.setText(sharedPref.getString("wifi_name", ""));
+        mono_mode_sw.setChecked(!sharedPref.getBoolean("mono_mode", false));
         mono_mode_sw.setOnCheckedChangeListener((buttonView, isChecked) -> {
-            editor.putBoolean("mono_mode",!isChecked);
+            editor.putBoolean("mono_mode", !isChecked);
             editor.commit();
-            Log.d("Swithc",":"+isChecked);
+            Log.d("Swithc", ":" + isChecked);
         });
-
         back_btn.setOnTouchListener((view, event) -> {
             if (event.getAction() == MotionEvent.ACTION_DOWN) {
-                params=(ConstraintLayout.LayoutParams)view.getLayoutParams();
-                params.setMargins(8,0,8,0);
+                params = (ConstraintLayout.LayoutParams) view.getLayoutParams();
+                params.setMargins(8, 0, 8, 0);
                 view.setLayoutParams(params);
             } else if (event.getAction() == MotionEvent.ACTION_UP) {
-                params=(ConstraintLayout.LayoutParams)view.getLayoutParams();
-                params.setMargins(0,0,0,0);
+                params = (ConstraintLayout.LayoutParams) view.getLayoutParams();
+                params.setMargins(0, 0, 0, 0);
                 view.setLayoutParams(params);
-                Intent i = new Intent(getApplicationContext(),dosing.class);
+                Intent i = new Intent(getApplicationContext(), dosing.class);
                 startActivity(i);
             }
             return true;
         });
-
         home_btn.setOnTouchListener((view, event) -> {
             if (event.getAction() == MotionEvent.ACTION_DOWN) {
-                params=(ConstraintLayout.LayoutParams)view.getLayoutParams();
-                params.setMargins(8,0,8,0);
+                params = (ConstraintLayout.LayoutParams) view.getLayoutParams();
+                params.setMargins(8, 0, 8, 0);
                 view.setLayoutParams(params);
             } else if (event.getAction() == MotionEvent.ACTION_UP) {
-                params=(ConstraintLayout.LayoutParams)view.getLayoutParams();
-                params.setMargins(0,0,0,0);
+                params = (ConstraintLayout.LayoutParams) view.getLayoutParams();
+                params.setMargins(0, 0, 0, 0);
                 view.setLayoutParams(params);
-                Intent i = new Intent(getApplicationContext(),dosing.class);
+                Intent i = new Intent(getApplicationContext(), dosing.class);
                 startActivity(i);
             }
             return true;
@@ -139,6 +148,7 @@ public class manufa extends AppCompatActivity {
                 diyalogOlusturucu.setMessage("Bu cihaz ile eşleştirilsinmi?")
                         .setCancelable(true)
                         .setPositiveButton("Tamam", new DialogInterface.OnClickListener() {
+                            @RequiresApi(api = Build.VERSION_CODES.Q)
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
                                 mac.setText(devs[position]);
@@ -178,6 +188,7 @@ public class manufa extends AppCompatActivity {
                 hide_system_ui();
             }
         });
+        wManager = (WifiManager) this.getApplicationContext().getSystemService(Context.WIFI_SERVICE);
         //save_default_params();
         init_params();
         /////////////////
@@ -225,10 +236,7 @@ public class manufa extends AppCompatActivity {
                 }
                 ArrayAdapter<String> veriAdaptoru=new ArrayAdapter<String>
                     (manufa.this, android.R.layout.simple_list_item_1, android.R.id.text1, devs);
-
-                //(C) adımı
                 w_list.setAdapter(veriAdaptoru);
-                // Write your logic to show in the list
             }
         }
     };
@@ -240,7 +248,6 @@ public class manufa extends AppCompatActivity {
             WifiManager wifiMan=(WifiManager)getApplicationContext().getSystemService(Context.WIFI_SERVICE);
             wifiMan.startScan();
             int newRssi = wifiMan.getConnectionInfo().getRssi();
-
             rssi.setText("Bağlantı Kalitesi: "+ newRssi +"dBm");
             //Log.d("RSSI Level",""+String.valueOf(newRssi));
         }

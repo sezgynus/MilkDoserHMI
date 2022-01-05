@@ -4,6 +4,8 @@ import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.pm.PackageInfo;
+import android.content.pm.PackageManager;
 import android.os.Build;
 import android.os.Bundle;
 import android.provider.Settings;
@@ -30,7 +32,7 @@ public class info extends AppCompatActivity {
     );
     Context ctx;
     ImageButton previous_btn;
-    TextView date,time,counters,volumes,device_id;
+    TextView date,time,counters,volumes,device_id,model;
     Timer time_tmr;
     int TOTAL_A_COUNT,TOTAL_B_COUNT,TOTAL_A_VOLUME,TOTAL_B_VOLUME;
     SharedPreferences sharedPref;
@@ -55,8 +57,16 @@ public class info extends AppCompatActivity {
         counters  = findViewById(R.id.counter_view);
         volumes = findViewById(R.id.volume_view);
         device_id = findViewById(R.id.textView28);
+        model = findViewById(R.id.textView5);
         device_id.setText(Settings.Secure.getString(this.getContentResolver(), Settings.Secure.ANDROID_ID));
-
+        PackageManager manager = this.getPackageManager();
+        PackageInfo info = null;
+        try {
+            info = manager.getPackageInfo(this.getPackageName(), PackageManager.GET_ACTIVITIES);
+        } catch (PackageManager.NameNotFoundException e) {
+            e.printStackTrace();
+        }
+        model.setText("MILKMASTERPIECE FW: v"+info.versionName);
         previous_btn.setOnTouchListener((view, event) -> {
             if (event.getAction() == MotionEvent.ACTION_DOWN) {
                 params = (ConstraintLayout.LayoutParams) view.getLayoutParams();

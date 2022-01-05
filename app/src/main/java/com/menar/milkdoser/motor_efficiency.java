@@ -364,7 +364,8 @@ public class motor_efficiency extends AppCompatActivity {
     public void save_default_params() {
         editor.putInt("channel_a_pwm", 1023);
         editor.putInt("channel_b_pwm", 1023);
-        editor.putFloat("ppml", (float) 3043.44);
+        editor.putFloat("ppml_a", (float) 3043.44);
+        editor.putFloat("ppml_b", (float) 3043.44);
         editor.commit();
     }
 

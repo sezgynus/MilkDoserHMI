@@ -2,6 +2,7 @@ package com.menar.milkdoser;
 
 import android.Manifest;
 import android.annotation.SuppressLint;
+import android.app.PendingIntent;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -14,9 +15,14 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.PixelFormat;
 import android.net.ConnectivityManager;
+import android.net.Network;
+import android.net.NetworkCapabilities;
 import android.net.NetworkInfo;
+import android.net.NetworkRequest;
 import android.net.wifi.WifiConfiguration;
+import android.net.wifi.WifiInfo;
 import android.net.wifi.WifiManager;
+import android.net.wifi.WifiNetworkSpecifier;
 import android.net.wifi.WifiNetworkSuggestion;
 import android.os.BatteryManager;
 import android.os.Build;
@@ -36,6 +42,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.constraintlayout.widget.ConstraintLayout;
@@ -71,7 +78,7 @@ public class dosing extends AppCompatActivity {
     WifiManager wManager;
     WifiConfiguration conf;
 
-    String networkSSID = "MilkDoser-";
+    String networkSSID = "";
     String networkPass = "12345678";
 
     Socket socket;
@@ -162,6 +169,13 @@ public class dosing extends AppCompatActivity {
     long encoder_l_value_last=0, encoder_r_value_last=0;
     Resources resources;
 
+    private static final String[] REQUIRED_SDK_PERMISSIONS = new String[] {
+            Manifest.permission.ACCESS_FINE_LOCATION,
+            Manifest.permission.ACCESS_COARSE_LOCATION,
+            Manifest.permission.READ_PHONE_STATE,
+            Manifest.permission.WRITE_EXTERNAL_STORAGE,
+            Manifest.permission.READ_EXTERNAL_STORAGE };
+
     @SuppressLint("ClickableViewAccessibility")
     public void initviews() {
         cb1 = findViewById(R.id.bar);
@@ -223,7 +237,7 @@ public class dosing extends AppCompatActivity {
         params.setMargins(8, 0, 8, 0);
         r_hot.setLayoutParams(params);
 
-        Bitmap bmp = BitmapFactory.decodeFile(home + "/logo/logo.bmp");
+        //Bitmap bmp = BitmapFactory.decodeFile(home + "/logo/logo.bmp");
         //logo_view.setImageBitmap(bmp);
         settings_button.setOnTouchListener((view, event) -> {
             if (event.getAction() == MotionEvent.ACTION_DOWN) {
@@ -971,10 +985,19 @@ public class dosing extends AppCompatActivity {
         x4r_cncl.setVisibility(View.INVISIBLE);
     }
 
+    public void checkPermission(String[] permission, int requestCode)
+    {
+
+        // Checking if permission is not granted
+        //if (ContextCompat.checkSelfPermission(dosing.this, permission) == PackageManager.PERMISSION_DENIED) {
+        ActivityCompat.requestPermissions(dosing.this, permission , requestCode);
+
+    }
     @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        checkPermission(REQUIRED_SDK_PERMISSIONS,1);
         sharedPref = this.getSharedPreferences("sharedPref", Context.MODE_PRIVATE);
         editor = sharedPref.edit();
         home = Environment.getExternalStorageDirectory().getPath() + "/Android/data/com.menar.milkdoser";
@@ -1031,23 +1054,21 @@ public class dosing extends AppCompatActivity {
         if (mono_mode) setContentView(R.layout.activity_dosing_mono);
         else setContentView(R.layout.activity_dosing);
         initviews();
-        reset_wifi();
+        //reset_wifi();
         menu_change = false;
         connManager = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
         mWifi = connManager.getNetworkInfo(ConnectivityManager.TYPE_WIFI);
         wManager = (WifiManager) this.getApplicationContext().getSystemService(Context.WIFI_SERVICE);
         //wManager.setWifiEnabled(true);
-        connect_wifi();
-        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.READ_PHONE_STATE) != PackageManager.PERMISSION_GRANTED) {
-            // TODO: Consider calling
-            //    ActivityCompat#requestPermissions
-            return;
-        } else {
-            device_id = Settings.Secure.getString(this.getContentResolver(), Settings.Secure.ANDROID_ID);
-            if (!Objects.equals(device_id, sharedPref.getString("saved_device_id", ""))) {
-                Log.d("Android", "Android ID : Kayıtlı değil >> " + device_id);
-            }
+        WifiInfo currentWifi = wManager.getConnectionInfo();
+        Log.d("connectedwifi",currentWifi.getSSID());
+        if((!currentWifi.getSSID().equals("\"MilkDoser-"+ networkSSID+"\""))&(!networkSSID.equals("")))connect_wifi();
+
+        device_id = Settings.Secure.getString(this.getContentResolver(), Settings.Secure.ANDROID_ID);
+        if (!Objects.equals(device_id, sharedPref.getString("saved_device_id", ""))) {
+            Log.d("Android", "Android ID : Kayıtlı değil >> " + device_id);
         }
+
         //startKioskService();
         if (!sharedPref.getBoolean("power_flag", false)) {
             save_using_events("A", "power_on");
@@ -1113,37 +1134,14 @@ public class dosing extends AppCompatActivity {
         //preventStatusBarExpansion(ctx);
         //Toast.makeText(getApplicationContext(),"dosing activity",Toast.LENGTH_LONG).show();
     }
-
     private void connect_wifi() {
         if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
             Log.d("SDK","Q");
-
-            WifiNetworkSuggestion networkSuggestion1 =
-                    new WifiNetworkSuggestion.Builder()
-                            .setSsid("MilkDoser-"+networkSSID)
-                            .setWpa2Passphrase(networkPass)
-                            .build();
-
-            List<WifiNetworkSuggestion> suggestionsList = new ArrayList<>();
-            suggestionsList.add(networkSuggestion1);
-            final int status1 = wManager.removeNetworkSuggestions(suggestionsList);
-            if (status1 != WifiManager.STATUS_NETWORK_SUGGESTIONS_SUCCESS) {
-                Log.d("Suggestion_del_error",""+status1);
+            try {
+                Runtime.getRuntime().exec(new String[]{"su","-c","am start -n com.steinwurf.adbjoinwifi/com.steinwurf.adbjoinwifi.MainActivity -e ssid "+"MilkDoser-"+ networkSSID +" -e password_type WPA -e password 12345678"});
+            } catch (IOException e) {
+                e.printStackTrace();
             }
-            else
-            {
-                Log.d("Suggestion_del","success");
-            }
-            final int status = wManager.addNetworkSuggestions(suggestionsList);
-            if (status != WifiManager.STATUS_NETWORK_SUGGESTIONS_SUCCESS) {
-                Log.d("Suggestion_add_error",""+status);
-            }
-            else
-            {
-                Log.d("Suggestion_add","success");
-            }
-            //wManager.setWifiEnabled(false);
-            //wManager.setWifiEnabled(true);
         }
 
         else {
@@ -1809,31 +1807,31 @@ public class dosing extends AppCompatActivity {
         editor.commit();
     }
     public void init_params() {
-        ENCSET_A_11 = sharedPref.getInt("1a1_value", 64208);
-        ENCSET_A_12 = sharedPref.getInt("1a2_value", 63220);
-        ENCSET_A_13 = sharedPref.getInt("1a3_value", 62671);
-        ENCSET_A_14 = sharedPref.getInt("1a4_value", 61692);
-        ENCSET_A_21 = sharedPref.getInt("2a1_value", 64592);
-        ENCSET_A_22 = sharedPref.getInt("2a2_value", 64281);
-        ENCSET_A_23 = sharedPref.getInt("2a3_value", 63860);
-        ENCSET_A_24 = sharedPref.getInt("2a4_value", 65535);
-        ENCSET_A_31 = sharedPref.getInt("3a1_value", 63952);
-        ENCSET_A_32 = sharedPref.getInt("3a2_value", 63393);
-        ENCSET_A_33 = sharedPref.getInt("3a3_value", 62982);
-        ENCSET_A_34 = sharedPref.getInt("3a4_value", 65535);
+        ENCSET_A_11 = sharedPref.getInt("1a1_value", 100);
+        ENCSET_A_12 = sharedPref.getInt("1a2_value", 200);
+        ENCSET_A_13 = sharedPref.getInt("1a3_value", 300);
+        ENCSET_A_14 = sharedPref.getInt("1a4_value", 400);
+        ENCSET_A_21 = sharedPref.getInt("2a1_value", 125);
+        ENCSET_A_22 = sharedPref.getInt("2a2_value", 225);
+        ENCSET_A_23 = sharedPref.getInt("2a3_value", 325);
+        ENCSET_A_24 = sharedPref.getInt("2a4_value", 425);
+        ENCSET_A_31 = sharedPref.getInt("3a1_value", 150);
+        ENCSET_A_32 = sharedPref.getInt("3a2_value", 250);
+        ENCSET_A_33 = sharedPref.getInt("3a3_value", 350);
+        ENCSET_A_34 = sharedPref.getInt("3a4_value", 450);
 
-        ENCSET_B_11 = sharedPref.getInt("1b1_value", 64208);
-        ENCSET_B_12 = sharedPref.getInt("1b2_value", 63220);
-        ENCSET_B_13 = sharedPref.getInt("1b3_value", 62671);
-        ENCSET_B_14 = sharedPref.getInt("1b4_value", 61692);
-        ENCSET_B_21 = sharedPref.getInt("2b1_value", 64592);
-        ENCSET_B_22 = sharedPref.getInt("2b2_value", 64281);
-        ENCSET_B_23 = sharedPref.getInt("2b3_value", 63860);
-        ENCSET_B_24 = sharedPref.getInt("2b4_value", 65535);
-        ENCSET_B_31 = sharedPref.getInt("3b1_value", 63952);
-        ENCSET_B_32 = sharedPref.getInt("3b2_value", 63393);
-        ENCSET_B_33 = sharedPref.getInt("3b3_value", 62982);
-        ENCSET_B_34 = sharedPref.getInt("3b4_value", 65535);
+        ENCSET_B_11 = sharedPref.getInt("1b1_value", 100);
+        ENCSET_B_12 = sharedPref.getInt("1b2_value", 200);
+        ENCSET_B_13 = sharedPref.getInt("1b3_value", 300);
+        ENCSET_B_14 = sharedPref.getInt("1b4_value", 400);
+        ENCSET_B_21 = sharedPref.getInt("2b1_value", 125);
+        ENCSET_B_22 = sharedPref.getInt("2b2_value", 225);
+        ENCSET_B_23 = sharedPref.getInt("2b3_value", 325);
+        ENCSET_B_24 = sharedPref.getInt("2b4_value", 425);
+        ENCSET_B_31 = sharedPref.getInt("3b1_value", 150);
+        ENCSET_B_32 = sharedPref.getInt("3b2_value", 250);
+        ENCSET_B_33 = sharedPref.getInt("3b3_value", 350);
+        ENCSET_B_34 = sharedPref.getInt("3b4_value", 450);
 
         ENCSET_PIPE_ADD = sharedPref.getInt("pipe_add_value", 2000);
         ENCSET_A_BACK = sharedPref.getInt("a_back_value", 50);
@@ -2116,7 +2114,7 @@ public class dosing extends AppCompatActivity {
                     });
                     if(!menu_change)save_error_events("A","connection_error");
                     Log.d("Socket status:","Connection reset!");
-                    e.printStackTrace();
+                    //e.printStackTrace();
                 }
             }
         }
@@ -2298,7 +2296,7 @@ public class dosing extends AppCompatActivity {
                     socket.close();
                     Log.d("Socket: ","closed");
                 } catch (IOException e) {
-                    e.printStackTrace();
+                    //e.printStackTrace();
                 }
             }
         }
