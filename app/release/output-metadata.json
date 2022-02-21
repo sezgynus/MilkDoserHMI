@@ -4,15 +4,15 @@
     "type": "APK",
     "kind": "Directory"
   },
-  "applicationId": "com.menar.milkdoser",
+  "applicationId": "com.menar.milkdoserhmi",
   "variantName": "release",
   "elements": [
     {
       "type": "SINGLE",
       "filters": [],
       "attributes": [],
-      "versionCode": 2,
-      "versionName": "1.1",
+      "versionCode": 10,
+      "versionName": "0.1.1",
       "outputFile": "app-release.apk"
     }
   ],

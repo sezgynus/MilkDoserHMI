@@ -1,8 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    package="com.menar.milkdoser">
+    package="com.menar.milkdoserhmi">
 
+    <uses-feature
+        android:name="android.hardware.usb.host"
+        android:required="true" />
+    <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW" />
+    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
+    <uses-permission android:name="android.permission.EXPAND_STATUS_BAR"/>
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
     <uses-permission android:name="android.permission.READ_PHONE_STATE" />
@@ -30,64 +36,73 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.AppCompat.NoActionBar">
-        <activity android:name=".manufa"
+        <meta-data
+            android:name="com.google.android.actions"
+            android:resource="@xml/usb_device_filter" />
+        <activity android:name="com.menar.milkdoserhmi.manufa"
             android:screenOrientation="landscape"/>
-        <activity android:name=".motor_efficiency"
+        <activity android:name="com.menar.milkdoserhmi.motor_efficiency"
             android:screenOrientation="landscape"/>
-        <activity android:name=".time_menu"
+        <activity android:name="com.menar.milkdoserhmi.time_menu"
             android:screenOrientation="landscape"/>
-        <activity android:name=".using_info"
+        <activity android:name="com.menar.milkdoserhmi.using_info"
             android:screenOrientation="landscape"/>
-        <activity android:name=".errors"
+        <activity android:name="com.menar.milkdoserhmi.errors"
             android:screenOrientation="landscape"/>
-        <activity android:name=".operator_menu"
+        <activity android:name="com.menar.milkdoserhmi.operator_menu"
             android:screenOrientation="landscape"/>
-        <activity android:name=".cleaning_journal"
+        <activity android:name="com.menar.milkdoserhmi.cleaning_journal"
             android:screenOrientation="landscape"/>
-        <activity android:name=".conctact_viewer"
+        <activity android:name="com.menar.milkdoserhmi.conctact_viewer"
             android:screenOrientation="landscape"/>
-        <activity android:name=".machine_info"
+        <activity android:name="com.menar.milkdoserhmi.machine_info"
             android:screenOrientation="landscape"/>
-        <activity android:name=".brightness_screen"
+        <activity android:name="com.menar.milkdoserhmi.brightness_screen"
             android:screenOrientation="landscape"/>
-        <activity android:name=".lang_screen"
+        <activity android:name="com.menar.milkdoserhmi.lang_screen"
             android:screenOrientation="landscape"/>
-        <activity android:name=".poweron_screen"
+        <activity android:name="com.menar.milkdoserhmi.poweron_screen"
             android:screenOrientation="landscape"/>
-        <activity android:name=".power_menu"
+        <activity android:name="com.menar.milkdoserhmi.power_menu"
             android:screenOrientation="landscape"/>
-        <activity android:name=".info"
+        <activity android:name="com.menar.milkdoserhmi.info"
             android:screenOrientation="landscape"/>
-        <activity android:name=".ota_screen"
+        <activity android:name="com.menar.milkdoserhmi.ota_screen"
             android:screenOrientation="landscape"/>
-        <activity android:name=".counters"
+        <activity android:name="com.menar.milkdoserhmi.counters"
             android:screenOrientation="landscape"/>
-        <activity android:name=".wash"
+        <activity android:name="com.menar.milkdoserhmi.wash"
             android:screenOrientation="landscape"/>
-        <activity android:name=".rinse"
+        <activity android:name="com.menar.milkdoserhmi.rinse"
             android:screenOrientation="landscape"/>
-        <activity android:name=".backdraft"
+        <activity android:name="com.menar.milkdoserhmi.backdraft"
             android:screenOrientation="landscape"/>
-        <activity android:name=".parameters1"
+        <activity android:name="com.menar.milkdoserhmi.parameters1"
             android:screenOrientation="landscape"/>
-        <activity android:name=".settings"
+        <activity android:name="com.menar.milkdoserhmi.settings"
             android:screenOrientation="landscape"/>
         <activity
-            android:name=".pincode"
+            android:name="com.menar.milkdoserhmi.pincode"
             android:screenOrientation="landscape"/>
         <activity
-            android:name=".dosing"
+            android:name="com.menar.milkdoserhmi.dosing"
             android:label="Milk Doser"
-            android:screenOrientation="landscape">
+            android:screenOrientation="landscape"
+            android:directBootAware="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.HOME" />
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
+            <intent-filter>
+                <action android:name="android.hardware.usb.action.USB_DEVICE_ATTACHED"/>
+            </intent-filter>
+            <meta-data
+                android:name="android.hardware.usb.action.USB_DEVICE_ATTACHED"
+                android:resource="@xml/usb_device_filter" />
         </activity>
         <receiver
-            android:name="com.menar.milkdoser.AdminReceiver"
+            android:name="com.menar.milkdoserhmi.AdminReceiver"
             android:label="@string/app_name"
             android:permission="android.permission.BIND_DEVICE_ADMIN" >
             <meta-data
@@ -98,8 +113,11 @@
             </intent-filter>
         </receiver>
         <service
-            android:name=".KioskService"
+            android:name="com.menar.milkdoserhmi.KioskService"
             android:exported="false" />
+        <service
+            android:name="com.menar.milkdoserhmi.UsbService"
+            android:enabled="true"></service>
     </application>
 
 </manifest>

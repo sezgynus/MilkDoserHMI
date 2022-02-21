@@ -44,7 +44,7 @@
         app:layout_constraintTop_toTopOf="@+id/guideline196"
         app:srcCompat="@drawable/power_on" />
 
-    <com.menar.milkdoser.CircleProgressBar
+    <com.menar.milkdoserhmi.CircleProgressBar
         android:id="@+id/custom_progressBar"
         android:layout_width="0dp"
         android:layout_height="0dp"

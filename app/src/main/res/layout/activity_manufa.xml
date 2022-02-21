@@ -32,13 +32,6 @@
         app:layout_constraintGuide_percent="0.68" />
 
     <androidx.constraintlayout.widget.Guideline
-        android:id="@+id/guideline365"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        app:layout_constraintGuide_percent="0.8" />
-
-    <androidx.constraintlayout.widget.Guideline
         android:id="@+id/guideline366"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -139,7 +132,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        app:layout_constraintGuide_percent="0.67" />
+        app:layout_constraintGuide_percent="0.74" />
 
     <androidx.constraintlayout.widget.Guideline
         android:id="@+id/guideline338"
@@ -205,71 +198,55 @@
         android:id="@+id/switch1"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:minHeight="48dp"
         android:text="@string/kanal_modu"
         android:textOff="@string/mono"
         android:textOn="@string/duo"
-        app:layout_constraintBottom_toTopOf="@+id/guideline337"
+        app:layout_constraintBottom_toTopOf="@+id/guideline366"
         app:layout_constraintEnd_toStartOf="@+id/guideline336"
         app:layout_constraintStart_toStartOf="@+id/guideline335"
-        app:layout_constraintTop_toTopOf="@+id/guideline338" />
+        app:layout_constraintTop_toTopOf="@+id/guideline337" />
 
-    <TextView
-        android:id="@+id/rssi_viewer"
+    <Button
+        android:id="@+id/enablesys"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Bağlantı Kalitesi:"
-        android:textColor="#FFFFFF"
-        android:textSize="18sp"
-        app:layout_constraintBottom_toTopOf="@+id/guideline365"
-        app:layout_constraintEnd_toStartOf="@+id/guideline336"
-        app:layout_constraintStart_toStartOf="@+id/guideline335"
-        app:layout_constraintTop_toTopOf="@+id/guideline364" />
-
-    <ListView
-        android:id="@+id/wifi_list"
-        android:layout_width="0dp"
-        android:layout_height="0dp"
-        android:textAlignment="center"
+        android:text="Enable System UI"
         app:layout_constraintBottom_toTopOf="@+id/guideline355"
-        app:layout_constraintEnd_toStartOf="@+id/guideline152"
-        app:layout_constraintStart_toStartOf="@+id/guideline151"
-        app:layout_constraintTop_toTopOf="@+id/guideline356"
-        tools:listfooter="Cihaz listesi"
-        tools:listheader="Cihaz Listesi" />
-
-    <TextView
-        android:id="@+id/mac_number"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:textColor="#FFFFFF"
-        android:textSize="16sp"
-        android:textStyle="bold"
-        app:layout_constraintBottom_toTopOf="@+id/guideline338"
-        app:layout_constraintEnd_toStartOf="@+id/guideline152"
-        app:layout_constraintStart_toStartOf="@+id/guideline335"
-        app:layout_constraintTop_toTopOf="@+id/guideline355" />
-
-    <TextView
-        android:id="@+id/textView45"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:text="Eşleştirilen Cihaz:"
-        android:textColor="#FFFFFF"
-        android:textSize="16sp"
-        android:textStyle="bold"
-        app:layout_constraintBottom_toTopOf="@+id/guideline338"
         app:layout_constraintEnd_toStartOf="@+id/guideline335"
         app:layout_constraintStart_toStartOf="@+id/guideline151"
-        app:layout_constraintTop_toTopOf="@+id/guideline355" />
+        app:layout_constraintTop_toTopOf="@+id/guideline356" />
 
-    <TextView
-        android:id="@+id/textView46"
+    <Button
+        android:id="@+id/disablesys"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Bulunun Cihazlar:"
-        app:layout_constraintBottom_toTopOf="@+id/guideline356"
+        android:text="Disable System UI"
+        app:layout_constraintBottom_toTopOf="@+id/guideline355"
         app:layout_constraintEnd_toStartOf="@+id/guideline152"
-        app:layout_constraintStart_toStartOf="@+id/guideline151"
-        app:layout_constraintTop_toTopOf="@+id/guideline122" />
+        app:layout_constraintStart_toStartOf="@+id/guideline336"
+        app:layout_constraintTop_toTopOf="@+id/guideline356" />
+
+    <Button
+        android:id="@+id/reboot_sys"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="REBOOT"
+        android:visibility="invisible"
+        app:layout_constraintBottom_toTopOf="@+id/guideline338"
+        app:layout_constraintEnd_toStartOf="@+id/guideline336"
+        app:layout_constraintStart_toStartOf="@+id/guideline335"
+        app:layout_constraintTop_toTopOf="@+id/guideline355" />
+
+    <Button
+        android:id="@+id/wifi_settings"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="WIFI"
+        android:visibility="invisible"
+        app:layout_constraintBottom_toTopOf="@+id/guideline338"
+        app:layout_constraintEnd_toStartOf="@+id/guideline336"
+        app:layout_constraintStart_toStartOf="@+id/guideline335"
+        app:layout_constraintTop_toTopOf="@+id/guideline355" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

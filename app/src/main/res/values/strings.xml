@@ -61,4 +61,6 @@
     <string name="makine_bilgileri_sifirlandi">Makine bilgileri sıfırlandı</string>
     <string name="OTA_servisi_acildi">OTA Servisi Açıldı</string>
     <string name="OTA_servisi_kapatildi">OTA Servisi Kapatıldı</string>
+    <string name="time_set" />
+    <string name="cancel" />
 </resources>
